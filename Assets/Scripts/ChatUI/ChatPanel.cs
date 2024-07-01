@@ -50,15 +50,15 @@ namespace ChatUI
 
             GameObject newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
-            pos.y = -(totalLineCount + 1) * lineHeight;
+            pos.y = -totalLineCount  * lineHeight;
             newMessage.transform.localPosition = pos;
-            totalLineCount += newMessage.GetComponent<Message>().Init("233", messageInput.text);
+            totalLineCount += newMessage.GetComponent<Message>().Init("233", messageInput.text) + 1;
             Vector2 size = content.sizeDelta;
             size.y = lineHeight * (totalLineCount + 2);
             content.sizeDelta = size;
             messageInput.text = null;
             if (size.y >= 700)
-                content.localPosition = new(0, size.y - 700);
+                content.localPosition = new Vector3(0, size.y - 700);
         }
 
         public void SendChatMessage(string sender, string message)
