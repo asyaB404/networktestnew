@@ -838,11 +838,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f949d3328964cdb45a9785862f423d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
-  content: {fileID: 309637573495724677}
-  messageInput: {fileID: 0}
+  content: {fileID: 6658918694447942400}
+  messageInput: {fileID: 3175264617440693921}
   totalLineCount: 0
   messagePrefab: {fileID: 932797467922521988, guid: 6c4e435b4c7336d46b983d695898f648, type: 3}
   lineHeight: 40

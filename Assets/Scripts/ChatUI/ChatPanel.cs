@@ -1,9 +1,10 @@
 using FishNet;
 using FishNet.Broadcast;
+using FishNet.Connection;
 using FishNet.Object;
+using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace ChatUI
@@ -14,7 +15,7 @@ namespace ChatUI
         public string Message;
     }
 
-    public class ChatPanel : NetworkBehaviour
+    public class ChatPanel : MonoBehaviour
     {
         [SerializeField] private RectTransform content;
         private Button[] _buttons;
@@ -32,17 +33,31 @@ namespace ChatUI
 
         private void OnEnable()
         {
-            _buttons[0].onClick.AddListener(BroadCast);
+            _buttons[0].onClick.AddListener(SendChatMessage);
+            InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnChatMessageReceived);
+            InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
         }
 
         private void OnDisable()
         {
-            _buttons[0].onClick.RemoveListener(BroadCast);
+            _buttons[0].onClick.RemoveListener(SendChatMessage);
+            InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnChatMessageReceived);
+            InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
         }
 
-        private void BroadCast()
+        private void OnChatMessageReceived(ChatMessage chatMessage, Channel channel)
         {
-            // SendChatMessage(Owner.ClientId.ToString(), messageText.text);
+            SpawnMsg(chatMessage);
+        }
+
+        private void OnClientChatMessageReceived(NetworkConnection networkConnection, ChatMessage chatMessage,
+            Channel channel)
+        {
+            InstanceFinder.ServerManager.Broadcast(chatMessage);
+        }
+
+        private void SpawnMsg(ChatMessage chatMessage)
+        {
             if (string.IsNullOrEmpty(messageInput.text))
             {
                 return;
@@ -50,9 +65,9 @@ namespace ChatUI
 
             GameObject newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
-            pos.y = -totalLineCount  * lineHeight;
+            pos.y = -totalLineCount * lineHeight;
             newMessage.transform.localPosition = pos;
-            totalLineCount += newMessage.GetComponent<Message>().Init("233", messageInput.text) + 1;
+            totalLineCount += newMessage.GetComponent<Message>().Init(chatMessage.Sender, chatMessage.Message) + 1;
             Vector2 size = content.sizeDelta;
             size.y = lineHeight * (totalLineCount + 2);
             content.sizeDelta = size;
@@ -61,18 +76,21 @@ namespace ChatUI
                 content.localPosition = new Vector3(0, size.y - 700);
         }
 
-        public void SendChatMessage(string sender, string message)
+        public void SendChatMessage()
         {
             ChatMessage chatMessage = new ChatMessage
             {
-                Sender = sender,
-                Message = message
+                Sender = "233:",
+                Message = messageInput.text
             };
-            // int i = messageText.GetTextInfo(messageText.text).lineCount();
-
-
-            // 发送广播消息到所有客户端
-            InstanceFinder.ServerManager.Broadcast<ChatMessage>(chatMessage);
+            if (InstanceFinder.IsServer)
+            {
+                InstanceFinder.ServerManager.Broadcast(chatMessage);
+            }
+            else if (InstanceFinder.IsClient)
+            {
+                InstanceFinder.ClientManager.Broadcast(chatMessage);
+            }
         }
     }
 }
