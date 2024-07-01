@@ -16,9 +16,9 @@ namespace ChatUI
 
     public class ChatPanel : NetworkBehaviour
     {
-        [SerializeField] private GameObject content;
+        [SerializeField] private RectTransform content;
         private Button[] _buttons;
-        [FormerlySerializedAs("messageText")] [SerializeField] private TextMeshProUGUI messageInput;
+        [SerializeField] private TMP_InputField messageInput;
         public int totalLineCount = 0;
 
         [SerializeField] private GameObject messagePrefab;
@@ -32,22 +32,27 @@ namespace ChatUI
 
         private void OnEnable()
         {
-            _buttons[0].onClick.AddListener(ButtonOnClick);
+            _buttons[0].onClick.AddListener(BroadCast);
         }
 
         private void OnDisable()
         {
-            _buttons[0].onClick.RemoveListener(ButtonOnClick);
+            _buttons[0].onClick.RemoveListener(BroadCast);
         }
 
-        private void ButtonOnClick()
+        private void BroadCast()
         {
             // SendChatMessage(Owner.ClientId.ToString(), messageText.text);
-            GameObject newMessage = Instantiate(messagePrefab, content.transform, false);
-            Vector2 pos = newMessage.transform.position;
+            GameObject newMessage = Instantiate(messagePrefab, content, false);
+            Vector2 pos = newMessage.transform.localPosition;
             pos.y = -totalLineCount * lineHeight;
-            newMessage.transform.position = pos;
+            newMessage.transform.localPosition = pos;
             totalLineCount += newMessage.GetComponent<Message>().Init("233",messageInput.text);
+            Vector2 size = content.sizeDelta;
+            size.y = lineHeight * totalLineCount;
+            content.sizeDelta = size;
+            
+            messageInput.text = null;
         }
 
         public void SendChatMessage(string sender, string message)
