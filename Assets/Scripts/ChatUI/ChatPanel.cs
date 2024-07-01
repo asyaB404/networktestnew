@@ -15,23 +15,23 @@ public struct ChatMessage : IBroadcast
 public class ChatPanel : NetworkBehaviour
 {
     [SerializeField] private GameObject content;
-    [SerializeField] private Button[] buttons;
+    private Button[] _buttons;
     [SerializeField] private TextMeshProUGUI messageText;
 
 
     private void Awake()
     {
-        buttons = GetComponentsInChildren<Button>(true);
+        _buttons = GetComponentsInChildren<Button>(true);
     }
 
     private void OnEnable()
     {
-        buttons[0].onClick.AddListener(ButtonOnClick);
+        _buttons[0].onClick.AddListener(ButtonOnClick);
     }
 
     private void OnDisable()
     {
-        buttons[0].onClick.RemoveListener(ButtonOnClick);
+        _buttons[0].onClick.RemoveListener(ButtonOnClick);
     }
 
     private void ButtonOnClick()
@@ -46,6 +46,8 @@ public class ChatPanel : NetworkBehaviour
             Sender = sender,
             Message = message
         };
+        // int i = messageText.GetTextInfo(messageText.text).lineCount();
+        
 
         // 发送广播消息到所有客户端
         InstanceFinder.ServerManager.Broadcast<ChatMessage>(chatMessage);
