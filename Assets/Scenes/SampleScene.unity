@@ -1597,7 +1597,10 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 451469923}
   _networkObjectCache: {fileID: 451469923}
   content: {fileID: 1283767863}
-  messageText: {fileID: 1348919367}
+  messageInput: {fileID: 1348919367}
+  totalLineCount: 0
+  messagePrefab: {fileID: 0}
+  lineHeight: 40
 --- !u!1 &2112234530
 GameObject:
   m_ObjectHideFlags: 0

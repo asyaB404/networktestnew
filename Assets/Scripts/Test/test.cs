@@ -1,4 +1,5 @@
 using System;
+using ChatUI;
 using FishNet;
 using FishNet.Object;
 using FishNet.Transporting;
