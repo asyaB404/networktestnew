@@ -1,3 +1,4 @@
+using System.Linq;
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
@@ -58,7 +59,7 @@ namespace ChatUI
 
         private void SpawnMsg(ChatMessage chatMessage)
         {
-            if (string.IsNullOrEmpty(messageInput.text))
+            if (string.IsNullOrEmpty(chatMessage.Message))
             {
                 return;
             }
