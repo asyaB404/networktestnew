@@ -1,15 +1,14 @@
 using System;
 using FishNet;
-using FishNet.Broadcast;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
 
-public struct ChatMessage : IBroadcast
-{
-    public string Sender;
-    public string Message;
-}
+// public struct ChatMessage : IBroadcast
+// {
+//     public string Sender;
+//     public string Message;
+// }
 
 public class ChatManager : NetworkBehaviour
 {
