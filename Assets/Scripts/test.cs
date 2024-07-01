@@ -12,17 +12,7 @@ using UnityEngine;
 
 public class ChatManager : NetworkBehaviour
 {
-    public void SendChatMessage(string sender, string message)
-    {
-        ChatMessage chatMessage = new ChatMessage
-        {
-            Sender = sender,
-            Message = message
-        };
-
-        // 发送广播消息到所有客户端
-        InstanceFinder.ServerManager.Broadcast<ChatMessage>(chatMessage);
-    }
+    
 }
 
 public class ChatListener : MonoBehaviour
