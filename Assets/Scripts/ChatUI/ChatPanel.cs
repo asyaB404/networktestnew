@@ -17,6 +17,7 @@ public class ChatPanel : NetworkBehaviour
     [SerializeField] private GameObject content;
     private Button[] _buttons;
     [SerializeField] private TextMeshProUGUI messageText;
+    public int totalLineCount = 0;
 
 
     private void Awake()
@@ -47,7 +48,7 @@ public class ChatPanel : NetworkBehaviour
             Message = message
         };
         // int i = messageText.GetTextInfo(messageText.text).lineCount();
-        
+
 
         // 发送广播消息到所有客户端
         InstanceFinder.ServerManager.Broadcast<ChatMessage>(chatMessage);
