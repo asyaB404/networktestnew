@@ -842,7 +842,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 0}
   content: {fileID: 309637573495724677}
-  messageInput: {fileID: 8809830060308781370}
+  messageInput: {fileID: 0}
   totalLineCount: 0
   messagePrefab: {fileID: 932797467922521988, guid: 6c4e435b4c7336d46b983d695898f648, type: 3}
   lineHeight: 40

@@ -43,16 +43,22 @@ namespace ChatUI
         private void BroadCast()
         {
             // SendChatMessage(Owner.ClientId.ToString(), messageText.text);
+            if (string.IsNullOrEmpty(messageInput.text))
+            {
+                return;
+            }
+
             GameObject newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
-            pos.y = -totalLineCount * lineHeight;
+            pos.y = -(totalLineCount + 1) * lineHeight;
             newMessage.transform.localPosition = pos;
-            totalLineCount += newMessage.GetComponent<Message>().Init("233",messageInput.text);
+            totalLineCount += newMessage.GetComponent<Message>().Init("233", messageInput.text);
             Vector2 size = content.sizeDelta;
-            size.y = lineHeight * totalLineCount;
+            size.y = lineHeight * (totalLineCount + 2);
             content.sizeDelta = size;
-            
             messageInput.text = null;
+            if (size.y >= 700)
+                content.localPosition = new(0, size.y - 700);
         }
 
         public void SendChatMessage(string sender, string message)
