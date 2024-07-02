@@ -84,11 +84,11 @@ namespace ChatUI
                 Sender = "233:",
                 Message = messageInput.text
             };
-            if (InstanceFinder.IsServer)
+            if (InstanceFinder.IsServerStarted)
             {
                 InstanceFinder.ServerManager.Broadcast(chatMessage);
             }
-            else if (InstanceFinder.IsClient)
+            else if (InstanceFinder.IsClientStarted)
             {
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
             }
