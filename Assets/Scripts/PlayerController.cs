@@ -2,7 +2,7 @@ using System.Globalization;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -10,11 +10,10 @@ public class PlayerController : NetworkBehaviour
     public GameObject bullet;
     public SyncVar<float> Health { get; } = new(10f);
     [SerializeField] private int score;
-    [SerializeField] private TextMeshProUGUI healthGui;
+    [SerializeField] private Text healthGui;
 
     private void Update()
     {
-        healthGui.text = Health.Value.ToString(CultureInfo.InvariantCulture);
         if (IsOwner)
         {
             var x = Input.GetAxisRaw("Horizontal");

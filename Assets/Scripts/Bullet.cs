@@ -6,8 +6,23 @@ using UnityEngine;
 public class Bullet : NetworkBehaviour
 {
     [SerializeField] private Vector2 velocity;
+    private float _flyTime = 0;
 
     private Rigidbody2D rb;
+
+
+    private void Update()
+    {
+        if (!base.IsServerStarted) return;
+        if (_flyTime <= 5)
+        {
+            _flyTime += Time.deltaTime;
+        }
+        else
+        {
+            Despawn();
+        }
+    }
 
     private void Awake()
     {
@@ -26,9 +41,13 @@ public class Bullet : NetworkBehaviour
         rb.velocity = velocity;
     }
 
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(gameObject);
+        if (IsServerStarted)
+        {
+            Despawn();
+        }
     }
 
     [ServerRpc]
@@ -36,4 +55,10 @@ public class Bullet : NetworkBehaviour
     {
         playerController.Health.Value -= 1;
     }
+
+    // [ServerRpc]
+    // private void Despawn()
+    // {
+    //     ServerManager.Despawn(gameObject);
+    // }
 }

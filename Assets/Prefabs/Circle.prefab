@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1102243600306467340}
   - component: {fileID: 3060871133860453019}
   - component: {fileID: -1760510338432611396}
+  - component: {fileID: 4544331768355631294}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -105,6 +106,7 @@ MonoBehaviour:
   vector: {x: 0, y: 0}
   bullet: {fileID: 5660959609371157645, guid: 8d844c4b5dacc3542ad080dee7937335, type: 3}
   score: 0
+  healthGui: {fileID: 0}
 --- !u!114 &3060871133860453019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +135,7 @@ MonoBehaviour:
   _isSpawnable: 1
   _isGlobal: 0
   _initializeOrder: 0
-  _defaultDespawnType: 0
+  _defaultDespawnType: 1
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 2
@@ -148,7 +150,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 4
+  <PrefabId>k__BackingField: 5
   <SpawnableCollectionId>k__BackingField: 0
   <SceneId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9890418979742979923
@@ -197,3 +199,38 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!58 &4544331768355631294
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771345056764946820}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
