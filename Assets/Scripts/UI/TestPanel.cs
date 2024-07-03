@@ -8,7 +8,7 @@ namespace UI
 {
     public class TestPanel : BasePanel<TestPanel>
     {
-        private NetworkManager _networkManager = FindObjectOfType<NetworkManager>();
+        private readonly NetworkManager _networkManager = FindObjectOfType<NetworkManager>();
         private TextMeshProUGUI _ipPortText;
         private TMP_InputField _ipInput;
         private TMP_InputField _portInput;
@@ -20,8 +20,7 @@ namespace UI
         protected override void Awake()
         {
             base.Awake();
-            _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
-            _ipInput = GetControl<TMP_InputField>("ipInput");
+            Init();
             _createRoom.onClick.AddListener(() =>
             {
                 if (_networkManager == null)
@@ -57,6 +56,15 @@ namespace UI
                     }
                 }
             });
+        }
+
+        void Init()
+        {
+            _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
+            _ipInput = GetControl<TMP_InputField>("ipInput");
+            _portInput = GetControl<TMP_InputField>("portInput");
+            _joinRoom = GetControl<Button>("join");
+            _joinRoom = GetControl<Button>("create");
         }
 
         private void Start()
