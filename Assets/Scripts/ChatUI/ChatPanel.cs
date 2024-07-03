@@ -33,23 +33,23 @@ namespace ChatUI
         private void OnEnable()
         {
             _buttons[0].onClick.AddListener(SendChatMessage);
-            InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnChatMessageReceived);
-            InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
+            InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
+            InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
 
         private void OnDisable()
         {
             _buttons[0].onClick.RemoveListener(SendChatMessage);
-            InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnChatMessageReceived);
-            InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
+            InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
+            InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
 
-        private void OnChatMessageReceived(ChatMessage chatMessage, Channel channel)
+        private void OnClientChatMessageReceived(ChatMessage chatMessage, Channel channel)
         {
             SpawnMsg(chatMessage);
         }
 
-        private void OnClientChatMessageReceived(NetworkConnection networkConnection, ChatMessage chatMessage,
+        private void OnServerChatMessageReceived(NetworkConnection networkConnection, ChatMessage chatMessage,
             Channel channel)
         {
             InstanceFinder.ServerManager.Broadcast(chatMessage);
