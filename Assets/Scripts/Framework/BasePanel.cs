@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary>
-/// 面板基类 
-/// 帮助我门通过代码快速的找到所有的子控件
-/// 方便我们在子类中处理逻辑 
-/// 节约找控件的工作量
-/// </summary>
+//需要优化同名问题
 public class BasePanel<T> : MonoBehaviour where T : class
 {
     public static T Instance { get; private set; }
-    public bool IsShowing { get; private set; }
+    public bool IsActive { get; private set; }
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
 
     protected virtual void Awake()
@@ -21,6 +17,7 @@ public class BasePanel<T> : MonoBehaviour where T : class
         FindChildrenControl<Button>();
         FindChildrenControl<Image>();
         FindChildrenControl<Text>();
+        FindChildrenControl<TextMeshProUGUI>();
         FindChildrenControl<Toggle>();
         FindChildrenControl<Slider>();
         FindChildrenControl<ScrollRect>();
@@ -29,17 +26,17 @@ public class BasePanel<T> : MonoBehaviour where T : class
 
     public virtual void ShowMe()
     {
-        IsShowing = true;
+        IsActive = true;
     }
 
     public virtual void HideMe()
     {
-        IsShowing = false;
+        IsActive = false;
     }
 
     public virtual void Change()
     {
-        if (IsShowing)
+        if (IsActive)
             HideMe();
         else
             ShowMe();
@@ -53,7 +50,7 @@ public class BasePanel<T> : MonoBehaviour where T : class
     protected virtual void OnValueChanged(string toggleName, bool value)
     {
     }
-    
+
     protected T GetControl<T>(string controlName) where T : UIBehaviour
     {
         if (!_controlDic.ContainsKey(controlName)) return null;
@@ -67,10 +64,10 @@ public class BasePanel<T> : MonoBehaviour where T : class
 
         return null;
     }
-    
+
     private void FindChildrenControl<T>() where T : UIBehaviour
     {
-        T[] controls = this.GetComponentsInChildren<T>();
+        T[] controls = GetComponentsInChildren<T>(true);
         for (int i = 0; i < controls.Length; ++i)
         {
             string objName = controls[i].gameObject.name;
@@ -82,7 +79,7 @@ public class BasePanel<T> : MonoBehaviour where T : class
             {
                 _controlDic.Add(objName, new List<UIBehaviour>() { controls[i] });
             }
-            
+
             if (controls[i] is Button)
             {
                 (controls[i] as Button)?.onClick.AddListener(() => { OnClick(objName); });
