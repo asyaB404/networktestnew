@@ -9,12 +9,15 @@ using UnityEngine.UI;
 /// 方便我们在子类中处理逻辑 
 /// 节约找控件的工作量
 /// </summary>
-public class BasePanel : MonoBehaviour
+public class BasePanel<T> : MonoBehaviour where T : class
 {
-    //通过里式转换原则 来存储所有的控件
+    public static T Instance { get; private set; }
+    public bool IsShowing { get; private set; }
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
-    
-	protected virtual void Awake () {
+
+    protected virtual void Awake()
+    {
+        Instance = this as T;
         FindChildrenControl<Button>();
         FindChildrenControl<Image>();
         FindChildrenControl<Text>();
@@ -23,31 +26,38 @@ public class BasePanel : MonoBehaviour
         FindChildrenControl<ScrollRect>();
         FindChildrenControl<InputField>();
     }
-    
+
     public virtual void ShowMe()
     {
-        
+        IsShowing = true;
     }
-    
+
     public virtual void HideMe()
     {
-        
+        IsShowing = false;
+    }
+
+    public virtual void Change()
+    {
+        if (IsShowing)
+            HideMe();
+        else
+            ShowMe();
     }
 
     //可以在这里选择添加音效等
-    protected virtual void OnClick(string btnName) { }
-    protected virtual void OnValueChanged(string toggleName, bool value) { }
+    protected virtual void OnClick(string btnName)
+    {
+    }
 
-    /// <summary>
-    /// 得到对应名字的对应控件脚本
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="controlName"></param>
-    /// <returns></returns>
+    protected virtual void OnValueChanged(string toggleName, bool value)
+    {
+    }
+    
     protected T GetControl<T>(string controlName) where T : UIBehaviour
     {
         if (!_controlDic.ContainsKey(controlName)) return null;
-        for( int i = 0; i <_controlDic[controlName].Count; ++i )
+        for (int i = 0; i < _controlDic[controlName].Count; ++i)
         {
             if (_controlDic[controlName][i] is T)
             {
@@ -57,12 +67,8 @@ public class BasePanel : MonoBehaviour
 
         return null;
     }
-
-    /// <summary>
-    /// 找到子对象的对应控件
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    private void FindChildrenControl<T>() where T:UIBehaviour
+    
+    private void FindChildrenControl<T>() where T : UIBehaviour
     {
         T[] controls = this.GetComponentsInChildren<T>();
         for (int i = 0; i < controls.Length; ++i)
@@ -76,21 +82,16 @@ public class BasePanel : MonoBehaviour
             {
                 _controlDic.Add(objName, new List<UIBehaviour>() { controls[i] });
             }
+
             //如果是按钮控件
-            if(controls[i] is Button)
+            if (controls[i] is Button)
             {
-                (controls[i] as Button)?.onClick.AddListener(()=>
-                {
-                    OnClick(objName);
-                });
+                (controls[i] as Button)?.onClick.AddListener(() => { OnClick(objName); });
             }
             //如果是单选框或者多选框
-            else if(controls[i] is Toggle)
+            else if (controls[i] is Toggle)
             {
-                (controls[i] as Toggle)?.onValueChanged.AddListener((value) =>
-                {
-                    OnValueChanged(objName, value);
-                });
+                (controls[i] as Toggle)?.onValueChanged.AddListener((value) => { OnValueChanged(objName, value); });
             }
         }
     }
