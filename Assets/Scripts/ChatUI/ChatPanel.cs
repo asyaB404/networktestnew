@@ -49,7 +49,9 @@ namespace ChatUI
             SpawnMsg(chatMessage);
         }
 
-        private void OnServerChatMessageReceived(NetworkConnection networkConnection, ChatMessage chatMessage,
+        private void OnServerChatMessageReceived(
+            NetworkConnection networkConnection,
+            ChatMessage chatMessage,
             Channel channel)
         {
             InstanceFinder.ServerManager.Broadcast(chatMessage);
