@@ -30,7 +30,32 @@ namespace UI
                 if (_serverState != LocalConnectionState.Stopped)
                     _networkManager.ServerManager.StopConnection(true);
                 else
-                    _networkManager.ServerManager.StartConnection();
+                {
+                    if (string.IsNullOrEmpty(_portInput.text))
+                        _networkManager.ServerManager.StartConnection();
+                    else
+                        _networkManager.ServerManager.StartConnection(ushort.Parse(_portInput.text));
+                }
+            });
+            _joinRoom.onClick.AddListener(() =>
+            {
+                if (_networkManager == null)
+                    return;
+
+                if (_clientState != LocalConnectionState.Stopped)
+                    _networkManager.ClientManager.StopConnection();
+                else
+                {
+                    if (string.IsNullOrEmpty(_ipInput.text))
+                        _networkManager.ClientManager.StartConnection();
+                    else
+                    {
+                        if (string.IsNullOrEmpty(_portInput.text))
+                            _networkManager.ClientManager.StartConnection(_ipInput.text);
+                        else
+                            _networkManager.ClientManager.StartConnection(_ipInput.text, ushort.Parse(_portInput.text));
+                    }
+                }
             });
         }
 
