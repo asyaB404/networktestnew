@@ -18,6 +18,7 @@ public class BasePanel<T> : MonoBehaviour where T : class
         FindChildrenControl<Image>();
         FindChildrenControl<Text>();
         FindChildrenControl<TextMeshProUGUI>();
+        FindChildrenControl<TMP_InputField>();
         FindChildrenControl<Toggle>();
         FindChildrenControl<Slider>();
         FindChildrenControl<ScrollRect>();
