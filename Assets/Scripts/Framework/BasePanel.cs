@@ -82,13 +82,11 @@ public class BasePanel<T> : MonoBehaviour where T : class
             {
                 _controlDic.Add(objName, new List<UIBehaviour>() { controls[i] });
             }
-
-            //如果是按钮控件
+            
             if (controls[i] is Button)
             {
                 (controls[i] as Button)?.onClick.AddListener(() => { OnClick(objName); });
             }
-            //如果是单选框或者多选框
             else if (controls[i] is Toggle)
             {
                 (controls[i] as Toggle)?.onValueChanged.AddListener((value) => { OnValueChanged(objName, value); });
