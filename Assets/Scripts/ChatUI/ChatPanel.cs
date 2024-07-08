@@ -72,7 +72,6 @@ namespace ChatUI
             Vector2 size = content.sizeDelta;
             size.y = lineHeight * (totalLineCount + 2);
             content.sizeDelta = size;
-            messageInput.text = null;
             if (size.y >= 700)
                 content.localPosition = new Vector3(0, size.y - 700);
         }
@@ -87,10 +86,12 @@ namespace ChatUI
             if (InstanceFinder.IsServerStarted)
             {
                 InstanceFinder.ServerManager.Broadcast(chatMessage);
+                messageInput.text = null;
             }
             else if (InstanceFinder.IsClientStarted)
             {
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
+                messageInput.text = null;
             }
         }
     }
