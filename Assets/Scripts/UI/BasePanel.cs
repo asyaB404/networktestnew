@@ -52,14 +52,14 @@ public class BasePanel<T> : MonoBehaviour where T : class
     {
     }
 
-    protected T GetControl<T>(string controlName) where T : UIBehaviour
+    protected T1 GetControl<T1>(string controlName) where T1 : UIBehaviour
     {
         if (!_controlDic.ContainsKey(controlName)) return null;
         for (int i = 0; i < _controlDic[controlName].Count; ++i)
         {
-            if (_controlDic[controlName][i] is T)
+            if (_controlDic[controlName][i] is T1)
             {
-                return _controlDic[controlName][i] as T;
+                return _controlDic[controlName][i] as T1;
             }
         }
 

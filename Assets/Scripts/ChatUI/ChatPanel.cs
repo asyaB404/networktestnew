@@ -1,6 +1,7 @@
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
+using FishNet.Object;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
@@ -93,6 +94,11 @@ namespace ChatUI
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
                 messageInput.text = null;
             }
+        }
+
+        //[TargetRpc]
+        public void SendTarget(NetworkConnection connection)
+        {
         }
     }
 }
