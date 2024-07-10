@@ -74,6 +74,13 @@ namespace UI
             networkManager.ServerManager.OnServerConnectionState += ServerManager_OnServerConnectionState;
             networkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
         }
+        
+        private void Update()
+        {
+            _ipPortText.text = networkManager.ClientManager.Connection.ToString();
+            // Transport transport = networkManager.TransportManager.Transport;
+            // transport.GetConnectionAddress(networkManager.ClientManager.Connection.ClientId);
+        }
 
         private void OnDestroy()
         {

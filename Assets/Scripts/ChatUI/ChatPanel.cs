@@ -1,3 +1,4 @@
+using System;
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
@@ -94,11 +95,6 @@ namespace ChatUI
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
                 messageInput.text = null;
             }
-        }
-
-        //[TargetRpc]
-        public void SendTarget(NetworkConnection connection)
-        {
         }
     }
 }
