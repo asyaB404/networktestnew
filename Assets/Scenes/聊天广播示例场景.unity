@@ -392,6 +392,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chat
       objectReference: {fileID: 0}
+    - target: {fileID: 8129793470996744914, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129793470996744914, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8129793470996744914, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

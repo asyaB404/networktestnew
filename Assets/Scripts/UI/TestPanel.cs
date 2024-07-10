@@ -66,7 +66,7 @@ namespace UI
             _ipInput = GetControl<TMP_InputField>("ipInput");
             _portInput = GetControl<TMP_InputField>("portInput");
             _joinRoom = GetControl<Button>("join");
-            _joinRoom = GetControl<Button>("create");
+            _createRoom = GetControl<Button>("create");
         }
 
         private void Start()
