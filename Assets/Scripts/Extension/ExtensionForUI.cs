@@ -5,6 +5,11 @@ namespace Extension
 {
     public static class ExtensionForUI
     {
+        /// <summary>
+        /// 以text组件的文本内容行数正确设置该组件的大小
+        /// </summary>
+        /// <param name="textMeshProUGUI"></param>
+        /// <returns></returns>
         public static int ReSetHeightFromText(this TextMeshProUGUI textMeshProUGUI)
         {
             int line = textMeshProUGUI.GetTextInfo(textMeshProUGUI.text).lineCount;
@@ -15,6 +20,11 @@ namespace Extension
             return line;
         }
 
+        /// <summary>
+        /// 以text组件的文本内容行数以及自己所给的单行高度来正确设置该组件的大小
+        /// </summary>
+        /// <param name="textMeshProUGUI"></param>
+        /// <returns></returns>
         public static int ReSetHeightFromText(this TextMeshProUGUI textMeshProUGUI, float height)
         {
             int line = textMeshProUGUI.GetTextInfo(textMeshProUGUI.text).lineCount;

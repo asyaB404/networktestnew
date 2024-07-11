@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class MusicMgr
 {
-    public GameObject soundOBJ = null;
-    private readonly List<AudioSource> soundList = new();
-    private readonly Dictionary<string, AudioClip> soundDict = new();
-    private float soundValue = 1;
+    private GameObject _soundObj = null;
+    private readonly List<AudioSource> _soundList = new();
+    private float _soundValue = 1;
 
     /// <summary>
     /// 音效大小(0-1)
@@ -16,8 +15,8 @@ public class MusicMgr
     {
         set
         {
-            soundValue = value;
-            foreach (var source in soundList)
+            _soundValue = value;
+            foreach (var source in _soundList)
             {
                 if (source)
                 {
@@ -31,34 +30,35 @@ public class MusicMgr
     /// 播放音效
     /// </summary>
     /// <param name="name"></param>
+    /// <param name="isLoop"></param>
+    /// <param name="i"></param>
     public AudioSource PlaySound(string name, bool isLoop = false, int i = 0)
     {
-        if (soundOBJ == null)
+        if (_soundObj == null)
         {
-            soundOBJ = new GameObject("soundOBJ");
-            soundOBJ.transform.position = Camera.main.transform.position;
+            _soundObj = new GameObject("soundOBJ");
+            if (Camera.main != null) _soundObj.transform.position = Camera.main.transform.position;
         }
 
-        AudioSource source = soundOBJ.AddComponent<AudioSource>();
+        var source = _soundObj.AddComponent<AudioSource>();
         AudioClip audioClip;
         name = "Sounds/" + name;
         if (i == 0)
         {
-            if (!soundDict.ContainsKey(name))
-                LoadRes(name);
-            audioClip = soundDict[name];
+            // if (!_soundDict.ContainsKey(name))
+            //     LoadRes(name);
+            // audioClip = _soundDict[name];
+            audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
         }
         else
         {
             name += MyRandom.Instance.NextInt(1, i + 1);
-            if (!soundDict.ContainsKey(name))
-                LoadRes(name);
-            audioClip = soundDict[name];
+            audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
         }
 
-        source.clip = GameObject.Instantiate(audioClip);
-        soundList.Add(source);
-        source.volume = soundValue;
+        source.clip = Object.Instantiate(audioClip);
+        _soundList.Add(source);
+        source.volume = _soundValue;
         source.loop = isLoop;
         source.Play();
         return source;
@@ -70,44 +70,39 @@ public class MusicMgr
     /// <param name="source"></param>
     public void StopSound(AudioSource source)
     {
-        if (soundList.Contains(source))
-        {
-            source.Stop();
-            soundList.Remove(source);
-            GameObject.Destroy(source);
-        }
+        if (!_soundList.Contains(source)) return;
+        source.Stop();
+        _soundList.Remove(source);
+        Object.Destroy(source);
     }
 
-    public AudioSource bkMusic = null;
-    private float bkValue = 1;
+    private AudioSource _bkMusic = null;
+    private float _bkValue = 1;
+
     public float BkValue
     {
         set
         {
-            bkValue = value;
-            if (bkMusic)
+            _bkValue = value;
+            if (_bkMusic)
             {
-                bkMusic.volume = bkValue;
+                _bkMusic.volume = _bkValue;
             }
         }
     }
 
-    private static MusicMgr instance;
+    private static MusicMgr _instance;
+
     public static MusicMgr Instance
     {
         get
         {
-            instance ??= new MusicMgr();
-            instance.Check();
-            return instance;
+            _instance ??= new MusicMgr();
+            _instance.Check();
+            return _instance;
         }
     }
 
-    private void LoadRes(string name)
-    {
-        soundDict[name] = Resources.Load<AudioClip>(name);
-        Debug.Log("加载资源" + soundDict[name]);
-    }
 
     /// <summary>
     /// 播放背景音乐
@@ -115,20 +110,18 @@ public class MusicMgr
     /// <param name="name"></param>
     public void PlayBkMusic(string name)
     {
-        if (bkMusic == null)
+        if (_bkMusic == null)
         {
-            bkMusic = new GameObject("BkMusic").AddComponent<AudioSource>();
-            bkMusic.transform.position = Camera.main.transform.position;
+            _bkMusic = new GameObject("BkMusic").AddComponent<AudioSource>();
+            if (Camera.main != null) _bkMusic.transform.position = Camera.main.transform.position;
         }
-        AudioClip audioClip;
+
         name = "Sounds/" + name;
-        if (!soundDict.ContainsKey(name))
-            LoadRes(name);
-        audioClip = soundDict[name];
-        bkMusic.clip = GameObject.Instantiate(audioClip);
-        bkMusic.volume = bkValue;
-        bkMusic.loop = true;
-        bkMusic.Play();
+        var audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
+        _bkMusic.clip = Object.Instantiate(audioClip);
+        _bkMusic.volume = _bkValue;
+        _bkMusic.loop = true;
+        _bkMusic.Play();
     }
 
     /// <summary>
@@ -136,9 +129,9 @@ public class MusicMgr
     /// </summary>
     public void StopMusic()
     {
-        if (bkMusic == null)
+        if (_bkMusic == null)
             return;
-        bkMusic.Stop();
+        _bkMusic.Stop();
     }
 
     /// <summary>
@@ -146,20 +139,18 @@ public class MusicMgr
     /// </summary>
     public void PauseBkMusic()
     {
-        if (bkMusic == null)
+        if (_bkMusic == null)
             return;
-        bkMusic.Pause();
+        _bkMusic.Pause();
     }
 
-    public void Check()
+    private void Check()
     {
-        for (int i = soundList.Count - 1; i >= 0; i--)
+        for (int i = _soundList.Count - 1; i >= 0; i--)
         {
-            if (soundList[i] && !soundList[i].isPlaying)
-            {
-                GameObject.Destroy(soundList[i]);
-                soundList.RemoveAt(i);
-            }
+            if (!_soundList[i] || _soundList[i].isPlaying) continue;
+            Object.Destroy(_soundList[i]);
+            _soundList.RemoveAt(i);
         }
     }
 }
