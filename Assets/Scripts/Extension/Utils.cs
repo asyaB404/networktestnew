@@ -13,7 +13,7 @@ public static class Utils
         var values = Enum.GetValues(typeof(T));
         return (T)values.GetValue(MyRandom.Instance.NextInt(values.Length));
     }
-    
+
     public static void DestroyAllChildren(this Transform transform)
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -21,23 +21,23 @@ public static class Utils
             Object.DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
-    
+
     public static void ShuffleArray<T>(this IList<T> array)
     {
         Random rand = new();
 
-        for (int i = array.Count() - 1; i > 0; i--)
+        for (int i = array.Count - 1; i > 0; i--)
         {
             int j = rand.Next(0, i + 1);
             (array[j], array[i]) = (array[i], array[j]);
         }
     }
 
-    public static void ShuffleArray<T>(this IList<T> array, int iseed)
+    public static void ShuffleArray<T>(this IList<T> array, int seed)
     {
-        Random rand = new(iseed);
+        Random rand = new(seed);
 
-        for (int i = array.Count() - 1; i > 0; i--)
+        for (int i = array.Count - 1; i > 0; i--)
         {
             int j = rand.Next(0, i + 1);
             (array[j], array[i]) = (array[i], array[j]);

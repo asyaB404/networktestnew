@@ -24,6 +24,7 @@ namespace Extension
         /// 以text组件的文本内容行数以及自己所给的单行高度来正确设置该组件的大小
         /// </summary>
         /// <param name="textMeshProUGUI"></param>
+        /// <param name="height">单行高度</param>
         /// <returns></returns>
         public static int ReSetHeightFromText(this TextMeshProUGUI textMeshProUGUI, float height)
         {

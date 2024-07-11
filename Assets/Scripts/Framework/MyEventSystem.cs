@@ -3,41 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public interface IEventInfos { }
+public interface IEventInfos
+{
+}
 
 public class EventInfos<T, T1> : IEventInfos
 {
-    public UnityAction<T, T1> unityActions;
+    public UnityAction<T, T1> UnityActions;
 
-    public EventInfos() { }
+    public EventInfos()
+    {
+    }
 
     public EventInfos(UnityAction<T, T1> unityActions)
     {
-        this.unityActions = unityActions;
+        this.UnityActions = unityActions;
     }
 }
 
 public class EventInfos<T> : IEventInfos
 {
-    public UnityAction<T> unityActions;
+    public UnityAction<T> UnityActions;
 
-    public EventInfos() { }
+    public EventInfos()
+    {
+    }
 
     public EventInfos(UnityAction<T> unityActions)
     {
-        this.unityActions = unityActions;
+        this.UnityActions = unityActions;
     }
 }
 
 public class EventInfos : IEventInfos
 {
-    public UnityAction unityActions;
+    public UnityAction UnityActions;
 
-    public EventInfos() { }
+    public EventInfos()
+    {
+    }
 
     public EventInfos(UnityAction unityActions)
     {
-        this.unityActions = unityActions;
+        this.UnityActions = unityActions;
     }
 }
 
@@ -46,61 +54,63 @@ public class EventInfos : IEventInfos
 /// </summary>
 public class MyEventSystem
 {
-    private static MyEventSystem instance;
+    private static MyEventSystem _instance;
+
     public static MyEventSystem Instance
     {
         get
         {
-            instance ??= new();
-            return instance;
+            _instance ??= new MyEventSystem();
+            return _instance;
         }
     }
-    private readonly Dictionary<string, IEventInfos> eventDict = new();
+
+    private readonly Dictionary<string, IEventInfos> _eventDict = new();
 
     public void AddEventListener(string eventName, UnityAction action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos).unityActions += action;
+            (existingAction as EventInfos).UnityActions += action;
         }
         else
         {
             EventInfos eventInfos = new(action);
-            eventDict.Add(eventName, eventInfos);
+            _eventDict.Add(eventName, eventInfos);
         }
     }
 
     public void AddEventListener<T>(string eventName, UnityAction<T> action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T>).unityActions += action;
+            (existingAction as EventInfos<T>).UnityActions += action;
         }
         else
         {
             EventInfos<T> eventInfos = new(action);
-            eventDict.Add(eventName, eventInfos);
+            _eventDict.Add(eventName, eventInfos);
         }
     }
 
     public void AddEventListener<T, T1>(string eventName, UnityAction<T, T1> action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T, T1>).unityActions += action;
+            (existingAction as EventInfos<T, T1>).UnityActions += action;
         }
         else
         {
             EventInfos<T, T1> eventInfos = new(action);
-            eventDict.Add(eventName, eventInfos);
+            _eventDict.Add(eventName, eventInfos);
         }
     }
 
     public void RemoveEventListener(string eventName, UnityAction action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos).unityActions -= action;
+            (existingAction as EventInfos).UnityActions -= action;
         }
         else
         {
@@ -110,9 +120,9 @@ public class MyEventSystem
 
     public void RemoveEventListener<T>(string eventName, UnityAction<T> action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T>).unityActions -= action;
+            (existingAction as EventInfos<T>).UnityActions -= action;
         }
         else
         {
@@ -122,9 +132,9 @@ public class MyEventSystem
 
     public void RemoveEventListener<T, T1>(string eventName, UnityAction<T, T1> action)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T, T1>).unityActions -= action;
+            (existingAction as EventInfos<T, T1>).UnityActions -= action;
         }
         else
         {
@@ -134,9 +144,9 @@ public class MyEventSystem
 
     public void EventTrigger(string eventName)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos).unityActions?.Invoke();
+            (existingAction as EventInfos).UnityActions?.Invoke();
         }
         else
         {
@@ -146,9 +156,9 @@ public class MyEventSystem
 
     public void EventTrigger<T>(string eventName, T eventData)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T>).unityActions?.Invoke(eventData);
+            (existingAction as EventInfos<T>).UnityActions?.Invoke(eventData);
         }
         else
         {
@@ -158,9 +168,9 @@ public class MyEventSystem
 
     public void EventTrigger<T, T1>(string eventName, T eventData, T1 eventData1)
     {
-        if (eventDict.TryGetValue(eventName, out IEventInfos existingAction))
+        if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
-            (existingAction as EventInfos<T, T1>).unityActions?.Invoke(eventData, eventData1);
+            (existingAction as EventInfos<T, T1>).UnityActions?.Invoke(eventData, eventData1);
         }
         else
         {
@@ -170,11 +180,11 @@ public class MyEventSystem
 
     public void Clear(string eventName)
     {
-        eventDict.Remove(eventName);
+        _eventDict.Remove(eventName);
     }
 
     public void Clear()
     {
-        eventDict.Clear();
+        _eventDict.Clear();
     }
 }

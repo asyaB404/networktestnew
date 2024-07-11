@@ -5,30 +5,25 @@ using UnityEngine.Events;
 
 public class MyABMgr : MonoBehaviour
 {
-    private static MyABMgr instance;
+    private static MyABMgr _instance;
+
     public static MyABMgr Instance
     {
         get
         {
-            if (instance == null)
-            {
-                GameObject gobj = new(typeof(MyABMgr).ToString());
-                instance = gobj.AddComponent<MyABMgr>();
-            }
-            return instance;
+            if (_instance != null) return _instance;
+            GameObject gobj = new(typeof(MyABMgr).ToString());
+            DontDestroyOnLoad(gobj);
+            _instance = gobj.AddComponent<MyABMgr>();
+            return _instance;
         }
     }
-    private AssetBundle mainAB;
-    private AssetBundleManifest manifest;
-    private readonly Dictionary<string, AssetBundle> abDic = new();
 
-    private string PathUrl
-    {
-        get
-        {
-            return Application.streamingAssetsPath + "/";
-        }
-    }
+    private AssetBundle _mainAb;
+    private AssetBundleManifest _manifest;
+    private readonly Dictionary<string, AssetBundle> _abDic = new();
+
+    private string PathUrl => Application.streamingAssetsPath + "/";
 
     private string MainABname
     {
@@ -44,96 +39,93 @@ public class MyABMgr : MonoBehaviour
         }
     }
 
-    public void LoadAB(string ab)
+    private void LoadAB(string ab)
     {
-        if (!mainAB)
+        if (!_mainAb)
         {
-            mainAB = AssetBundle.LoadFromFile(PathUrl + MainABname);
-            manifest = mainAB.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            _mainAb = AssetBundle.LoadFromFile(PathUrl + MainABname);
+            _manifest = _mainAb.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
         }
-        string[] strs = manifest.GetAllDependencies(ab);
+
+        string[] strs = _manifest.GetAllDependencies(ab);
         //临时变量 
         AssetBundle assetBundle;
-        foreach (string str in strs)
+        foreach (var str in strs)
         {
-            if (!abDic.ContainsKey(str))
-            {
-                assetBundle = AssetBundle.LoadFromFile(PathUrl + str);
-                abDic.Add(str, assetBundle);
-            }
+            if (_abDic.ContainsKey(str)) continue;
+            assetBundle = AssetBundle.LoadFromFile(PathUrl + str);
+            _abDic.Add(str, assetBundle);
         }
-        if (!abDic.ContainsKey(ab))
+
+        if (!_abDic.ContainsKey(ab))
         {
             assetBundle = AssetBundle.LoadFromFile(PathUrl + ab);
-            abDic.Add(ab, assetBundle);
+            _abDic.Add(ab, assetBundle);
         }
     }
 
-    public Object LoadRes(string ab, string name)
+    public Object LoadRes(string ab, string resName)
     {
         LoadAB(ab);
-        Object obj = abDic[ab].LoadAsset(name);
+        var obj = _abDic[ab].LoadAsset(resName);
+        return obj is GameObject ? Instantiate(obj) : obj;
+    }
+
+    public Object LoadRes(string ab, string resName, System.Type type)
+    {
+        LoadAB(ab);
+        var obj = _abDic[ab].LoadAsset(resName, type);
+        return obj is GameObject ? Instantiate(obj) : obj;
+    }
+
+    public T LoadRes<T>(string ab, string resName) where T : Object
+    {
+        LoadAB(ab);
+        T obj = _abDic[ab].LoadAsset<T>(resName);
         if (obj is GameObject)
             return Instantiate(obj);
         return obj;
     }
 
-    public Object LoadRes(string ab, string name, System.Type type)
+    public void LoadResAsync(string ab, string resName, UnityAction<Object> callback)
     {
-        LoadAB(ab);
-        Object obj = abDic[ab].LoadAsset(name, type);
-        if (obj is GameObject)
-            return Instantiate(obj);
-        return obj;
+        StartCoroutine(Enumerator(ab, resName, callback));
     }
 
-    public T LoadRes<T>(string ab, string name) where T : Object
+    private IEnumerator Enumerator(string ab, string resName, UnityAction<Object> callback)
     {
         LoadAB(ab);
-        T obj = abDic[ab].LoadAsset<T>(name);
-        if (obj is GameObject)
-            return Instantiate(obj);
-        return obj;
-    }
-
-    public void LoadResAsync(string ab, string name, UnityAction<Object> callback)
-    {
-        StartCoroutine(Enumerator(ab, name, callback));
-    }
-    private IEnumerator Enumerator(string ab, string name, UnityAction<Object> callback)
-    {
-        LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = abDic[ab].LoadAssetAsync(name);
+        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync(resName);
         yield return assetBundleRequest;
-        if (assetBundleRequest.asset is GameObject)
-            callback(Instantiate(assetBundleRequest.asset));
-        else
-            callback(assetBundleRequest.asset);
+        callback(assetBundleRequest.asset is GameObject
+            ? Instantiate(assetBundleRequest.asset)
+            : assetBundleRequest.asset);
     }
 
-    public void LoadResAsync(string ab, string name, System.Type type, UnityAction<Object> callback)
+    public void LoadResAsync(string ab, string resName, System.Type type, UnityAction<Object> callback)
     {
-        StartCoroutine(Enumerator(ab, name, type, callback));
+        StartCoroutine(Enumerator(ab, resName, type, callback));
     }
-    private IEnumerator Enumerator(string ab, string name, System.Type type, UnityAction<Object> callback)
+
+    private IEnumerator Enumerator(string ab, string resName, System.Type type, UnityAction<Object> callback)
     {
         LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = abDic[ab].LoadAssetAsync(name, type);
+        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync(resName, type);
         yield return assetBundleRequest;
-        if (assetBundleRequest.asset is GameObject)
-            callback(Instantiate(assetBundleRequest.asset));
-        else
-            callback(assetBundleRequest.asset);
+        callback(assetBundleRequest.asset is GameObject
+            ? Instantiate(assetBundleRequest.asset)
+            : assetBundleRequest.asset);
     }
 
-    public void LoadResAsync<T>(string ab, string name, UnityAction<T> callback) where T : Object
+    public void LoadResAsync<T>(string ab, string resName, UnityAction<T> callback) where T : Object
     {
-        StartCoroutine(Enumerator<T>(ab, name, callback));
+        StartCoroutine(Enumerator(ab, resName, callback));
     }
-    private IEnumerator Enumerator<T>(string ab, string name, UnityAction<T> callback) where T : Object
+
+    private IEnumerator Enumerator<T>(string ab, string resName, UnityAction<T> callback) where T : Object
     {
         LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = abDic[ab].LoadAssetAsync<T>(name);
+        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync<T>(resName);
         yield return assetBundleRequest;
         if (assetBundleRequest.asset is GameObject)
             callback(Instantiate(assetBundleRequest.asset as T));
@@ -144,18 +136,18 @@ public class MyABMgr : MonoBehaviour
 
     public void UnLoad(string ab, bool flag = false)
     {
-        if (abDic.TryGetValue(ab, out AssetBundle assetBundle))
+        if (_abDic.TryGetValue(ab, out AssetBundle assetBundle))
         {
             assetBundle.Unload(flag);
-            abDic.Remove(ab);
+            _abDic.Remove(ab);
         }
     }
 
-    public void ClearAB(bool flag = false)
+    public void Clear(bool flag = false)
     {
         AssetBundle.UnloadAllAssetBundles(flag);
-        abDic.Clear();
-        mainAB = null;
-        manifest = null;
+        _abDic.Clear();
+        _mainAb = null;
+        _manifest = null;
     }
 }

@@ -10,49 +10,42 @@ public class ScenesMgr : MonoBehaviour
     {
         get
         {
-            if (instance == null)
+            if (_instance == null)
             {
                 GameObject obj = new(nameof(ScenesMgr));
-                instance = obj.AddComponent<ScenesMgr>();
+                _instance = obj.AddComponent<ScenesMgr>();
                 DontDestroyOnLoad(obj);
             }
 
-            return instance;
+            return _instance;
         }
     }
 
-    private static ScenesMgr instance;
+    private static ScenesMgr _instance;
 
     private void Clear()
     {
         PoolManager.Instance.Clear();
-        MyABMgr.Instance.ClearAB();
+        ResourcesMgr.Instance.Clear();
+        MyABMgr.Instance.Clear();
     }
 
-    public void LoadScene(string name, UnityAction callback = null)
+    public void LoadScene(string sceneName, UnityAction callback = null)
     {
         Clear();
-        SceneManager.LoadScene(name);
+        SceneManager.LoadScene(sceneName);
         callback?.Invoke();
     }
 
-    public void LoadSceneAsyn(string name, UnityAction callback = null)
+    public void LoadSceneAsyn(string sceneName, UnityAction callback = null)
     {
-        StartCoroutine(LoadSceneCoroutine(name, callback));
+        StartCoroutine(LoadSceneCoroutine(sceneName, callback));
     }
 
-    private IEnumerator LoadSceneCoroutine(string name, UnityAction callback)
+    private IEnumerator LoadSceneCoroutine(string sceneName, UnityAction callback)
     {
         Clear();
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(name);
-        float y = 0;
-        while (y < 0.8)
-        {
-            MyEventSystem.Instance.EventTrigger<float>("update_progress", y);
-            y += 0.2f;
-            yield return null;
-        }
-
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         while (!asyncOperation.isDone)
         {
             yield return asyncOperation.progress;

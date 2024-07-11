@@ -31,8 +31,8 @@ public class MusicMgr
     /// </summary>
     /// <param name="name"></param>
     /// <param name="isLoop"></param>
-    /// <param name="i"></param>
-    public AudioSource PlaySound(string name, bool isLoop = false, int i = 0)
+    /// <param name="count"></param>
+    public AudioSource PlaySound(string name, bool isLoop = false, int count = 1)
     {
         if (_soundObj == null)
         {
@@ -43,19 +43,9 @@ public class MusicMgr
         var source = _soundObj.AddComponent<AudioSource>();
         AudioClip audioClip;
         name = "Sounds/" + name;
-        if (i == 0)
-        {
-            // if (!_soundDict.ContainsKey(name))
-            //     LoadRes(name);
-            // audioClip = _soundDict[name];
-            audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
-        }
-        else
-        {
-            name += MyRandom.Instance.NextInt(1, i + 1);
-            audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
-        }
-
+        if (count >= 2)
+            name += MyRandom.Instance.NextInt(1, count + 1);
+        audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(name);
         source.clip = Object.Instantiate(audioClip);
         _soundList.Add(source);
         source.volume = _soundValue;
@@ -117,7 +107,7 @@ public class MusicMgr
         }
 
         name = "Sounds/" + name;
-        var audioClip = ResourceMgr.Instance.LoadRes<AudioClip>(name);
+        var audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(name);
         _bkMusic.clip = Object.Instantiate(audioClip);
         _bkMusic.volume = _bkValue;
         _bkMusic.loop = true;

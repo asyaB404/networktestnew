@@ -56,6 +56,6 @@ public class MyRandom
 
     public bool NextBool()
     {
-        return _random.Next(0, 2) == 0;
+        return _random.Next(2) == 0;
     }
 }
