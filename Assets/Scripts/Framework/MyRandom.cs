@@ -14,9 +14,19 @@ public class MyRandom
         }
     }
 
-    public MyRandom()
+    public static void Set(int seed)
     {
-        _random = new();
+        _instance = new MyRandom(seed);
+    }
+
+    private MyRandom()
+    {
+        _random = new Random();
+    }
+
+    private MyRandom(int seed)
+    {
+        _random = new Random(seed);
     }
 
     public int NextInt()

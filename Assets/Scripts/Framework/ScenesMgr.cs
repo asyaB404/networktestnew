@@ -16,17 +16,17 @@ public class ScenesMgr : MonoBehaviour
                 instance = obj.AddComponent<ScenesMgr>();
                 DontDestroyOnLoad(obj);
             }
+
             return instance;
         }
     }
+
     private static ScenesMgr instance;
 
     private void Clear()
     {
         PoolManager.Instance.Clear();
-        MainUI.Instance.ClearPanels();
         MyABMgr.Instance.ClearAB();
-        UIForMap.Instance.Clear();
     }
 
     public void LoadScene(string name, UnityAction callback = null)
@@ -52,11 +52,13 @@ public class ScenesMgr : MonoBehaviour
             y += 0.2f;
             yield return null;
         }
+
         while (!asyncOperation.isDone)
         {
             yield return asyncOperation.progress;
             MyEventSystem.Instance.EventTrigger<float>("update_progress", asyncOperation.progress);
         }
+
         yield return asyncOperation;
         yield return new WaitForSeconds(0.5f);
         callback?.Invoke();
