@@ -6,24 +6,48 @@ using UnityEngine.UI;
 
 public interface IBasePanel
 {
+    /// <summary>
+    /// 初始化方法
+    /// </summary>
     void Init();
+
+    /// <summary>
+    /// 是否打开该面板
+    /// </summary>
     bool IsActive { get; }
+
+    /// <summary>
+    /// showme的同时会将其存入栈内
+    /// </summary>
     void ShowMe();
+
+    /// <summary>
+    /// hideme的同时会尝试将其弹出，注意不能调用栈顶以外面板的hideme
+    /// </summary>
     void HideMe();
+
+    /// <summary>
+    /// 根据isactive来决定激活showme还是hideme
+    /// </summary>
     void ChangeMe();
+
+    /// <summary>
+    /// 回调，当uimanager中的栈顶元素变化自己为调用
+    /// </summary>
+    void CallBack(bool flag);
 }
 
 //需要优化同名问题
-public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
+public class BasePanel<T> : MonoBehaviour, IBasePanel where T : class
 {
-    public static T1 Instance { get; private set; }
+    public static T Instance { get; private set; }
     private bool _isActive;
     public bool IsActive => _isActive;
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
 
     public virtual void Init()
     {
-        Instance = this as T1;
+        Instance = this as T;
         FindChildrenControl<Button>();
         FindChildrenControl<Image>();
         FindChildrenControl<Text>();
@@ -54,13 +78,6 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
         {
             _isActive = false;
             UIManager.Instance.PopPanel();
-            if (
-                UIManager.Instance.Peek() != null
-                && ((MonoBehaviour)UIManager.Instance.Peek()).gameObject.activeSelf == false
-            )
-            {
-                (UIManager.Instance.Peek() as MonoBehaviour)?.gameObject.SetActive(true);
-            }
         }
         else
         {
@@ -74,6 +91,14 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
             HideMe();
         else
             ShowMe();
+    }
+
+    /// <summary>
+    /// true表示该面板作为新的元素入栈顶时的标记（可以写渐渐出现的逻辑），false时表示新的元素入栈后原来的栈顶（this）的标记（可以写消失的逻辑）
+    /// </summary>
+    /// <param name="flag">true表示为栈顶，flag表示有新的元素替代了原来的栈顶</param>
+    public virtual void CallBack(bool flag)
+    {
     }
 
     //可以在这里选择添加音效等

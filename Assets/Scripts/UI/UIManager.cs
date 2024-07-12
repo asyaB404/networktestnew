@@ -20,19 +20,34 @@ public class UIManager : MonoBehaviour
     {
         foreach (var panel in _panels)
         {
-            PopPanel();
+            PopPanel(false);
             (panel as MonoBehaviour)?.gameObject.SetActive(false);
         }
 
         _panels.Clear();
     }
 
-    public void PushPanel(IBasePanel basePanel)
+    public void PushPanel(IBasePanel basePanel, bool callback = true)
     {
+        if (basePanel.IsActive)
+        {
+            Debug.LogWarning("已经存在于栈内，无法再将其存入栈内");
+            return;
+        }
+
+        if (Peek() != null)
+        {
+            Peek().CallBack(false);
+        }
+
         _panels.Push(basePanel);
+        if (callback)
+        {
+            basePanel.CallBack(true);
+        }
     }
 
-    public IBasePanel PopPanel()
+    public IBasePanel PopPanel(bool callback = true)
     {
         if (_panels.Count <= 0)
         {
@@ -40,7 +55,13 @@ public class UIManager : MonoBehaviour
             return null;
         }
 
-        return _panels.Pop();
+        var res = _panels.Pop();
+        if (callback && Peek() != null)
+        {
+            Peek().CallBack(true);
+        }
+
+        return res;
     }
 
     public IBasePanel Peek()
