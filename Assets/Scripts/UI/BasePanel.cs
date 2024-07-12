@@ -4,14 +4,24 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public interface IBasePanel
+{
+    void Init();
+    bool IsActive { get; }
+    void ShowMe();
+    void HideMe();
+    void ChangeMe();
+}
+
 //需要优化同名问题
-public class BasePanel<T1> : MonoBehaviour where T1 : class
+public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
 {
     public static T1 Instance { get; private set; }
-    public bool IsActive { get; private set; }
+    private bool _isActive;
+    public bool IsActive => _isActive;
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
 
-    protected virtual void Awake()
+    public virtual void Init()
     {
         Instance = this as T1;
         FindChildrenControl<Button>();
@@ -25,17 +35,40 @@ public class BasePanel<T1> : MonoBehaviour where T1 : class
         FindChildrenControl<InputField>();
     }
 
+
     public virtual void ShowMe()
     {
-        IsActive = true;
+        if (_isActive) return;
+        _isActive = true;
+        UIManager.Instance.PushPanel(this);
+        gameObject.SetActive(true);
+        gameObject.transform.SetAsLastSibling();
     }
 
     public virtual void HideMe()
     {
-        IsActive = false;
+        if (!_isActive) return;
+        if (
+            ReferenceEquals(UIManager.Instance.Peek(), this)
+        )
+        {
+            _isActive = false;
+            UIManager.Instance.PopPanel();
+            if (
+                UIManager.Instance.Peek() != null
+                && ((MonoBehaviour)UIManager.Instance.Peek()).gameObject.activeSelf == false
+            )
+            {
+                (UIManager.Instance.Peek() as MonoBehaviour)?.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("你不能关闭栈顶以为的面板");
+        }
     }
 
-    public virtual void Change()
+    public virtual void ChangeMe()
     {
         if (IsActive)
             HideMe();

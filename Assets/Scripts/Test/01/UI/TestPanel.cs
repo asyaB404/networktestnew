@@ -19,9 +19,8 @@ namespace UI
         private LocalConnectionState _clientState;
         private LocalConnectionState _serverState;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             Init();
             _createRoom.onClick.AddListener(() =>
             {
@@ -60,8 +59,9 @@ namespace UI
             });
         }
 
-        void Init()
+        protected override void Init()
         {
+            base.Init();
             _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
             _ipInput = GetControl<TMP_InputField>("ipInput");
             _portInput = GetControl<TMP_InputField>("portInput");
@@ -74,7 +74,7 @@ namespace UI
             networkManager.ServerManager.OnServerConnectionState += ServerManager_OnServerConnectionState;
             networkManager.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
         }
-        
+
         private void Update()
         {
             _ipPortText.text = networkManager.ClientManager.Connection.ToString();
