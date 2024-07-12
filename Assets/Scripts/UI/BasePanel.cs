@@ -38,16 +38,16 @@ public interface IBasePanel
 }
 
 //需要优化同名问题
-public class BasePanel<T> : MonoBehaviour, IBasePanel where T : class
+public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
 {
-    public static T Instance { get; private set; }
+    public static T1 Instance { get; private set; }
     private bool _isActive;
     public bool IsActive => _isActive;
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
 
     public virtual void Init()
     {
-        Instance = this as T;
+        Instance = this as T1;
         FindChildrenControl<Button>();
         FindChildrenControl<Image>();
         FindChildrenControl<Text>();
@@ -110,14 +110,14 @@ public class BasePanel<T> : MonoBehaviour, IBasePanel where T : class
     {
     }
 
-    protected T1 GetControl<T1>(string controlName) where T1 : UIBehaviour
+    protected T GetControl<T>(string controlName) where T : UIBehaviour
     {
         if (!_controlDic.ContainsKey(controlName)) return null;
         for (int i = 0; i < _controlDic[controlName].Count; ++i)
         {
-            if (_controlDic[controlName][i] is T1)
+            if (_controlDic[controlName][i] is T)
             {
-                return _controlDic[controlName][i] as T1;
+                return _controlDic[controlName][i] as T;
             }
         }
 

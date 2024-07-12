@@ -59,7 +59,7 @@ namespace UI
             });
         }
 
-        protected override void Init()
+        public override void Init()
         {
             base.Init();
             _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
