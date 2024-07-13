@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +6,17 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
     private readonly Stack<IBasePanel> _panels = new();
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Peek() != null)
+            {
+                Peek().HideMe();
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -51,7 +63,7 @@ public class UIManager : MonoBehaviour
     {
         if (_panels.Count <= 0)
         {
-            Debug.LogError("栈为空");
+            Debug.LogError("栈为空,不能弹出");
             return null;
         }
 
@@ -68,7 +80,6 @@ public class UIManager : MonoBehaviour
     {
         if (_panels.Count <= 0)
         {
-            Debug.LogError("栈为空");
             return null;
         }
 

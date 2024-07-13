@@ -44,18 +44,18 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
     private bool _isActive;
     public bool IsActive => _isActive;
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
-    [SerializeField] protected CanvasGroup canvasGroup;
+    private CanvasGroup _canvasGroup;
 
     protected CanvasGroup MyCanvasGroup
     {
         get
         {
-            if (canvasGroup == null)
+            if (_canvasGroup == null)
             {
-                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+                _canvasGroup = gameObject.AddComponent<CanvasGroup>();
             }
 
-            return canvasGroup;
+            return _canvasGroup;
         }
     }
 
@@ -77,10 +77,10 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
     public virtual void ShowMe()
     {
         if (_isActive) return;
-        _isActive = true;
         UIManager.Instance.PushPanel(this);
         gameObject.SetActive(true);
         gameObject.transform.SetAsLastSibling();
+        _isActive = true;
     }
 
     public virtual void HideMe()
@@ -90,8 +90,8 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
             ReferenceEquals(UIManager.Instance.Peek(), this)
         )
         {
-            _isActive = false;
             UIManager.Instance.PopPanel();
+            _isActive = false;
         }
         else
         {

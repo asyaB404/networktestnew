@@ -1,14 +1,14 @@
 using DG.Tweening;
 using UnityEngine.UI;
 
-
-public class StartPanel : BasePanel<StartPanel>
+public class MulPlayPanel : BasePanel<MulPlayPanel>
 {
     public override void Init()
     {
         base.Init();
-        GetControl<Button>("mulplay")?.onClick.AddListener(() => { MulPlayPanel.Instance.ShowMe(); });
-        ShowMe();
+        GetControl<Button>("create")?.onClick.AddListener(() => { });
+        GetControl<Button>("join")?.onClick.AddListener(() => { });
+        GetControl<Button>("exit")?.onClick.AddListener(HideMe);
     }
 
     public override void CallBack(bool flag)
