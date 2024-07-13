@@ -1,25 +1,25 @@
-using UnityEngine.UI;
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine;
 
 public class StartPanel : BasePanel<StartPanel>
 {
-    public override void Init()
+    private void Awake()
     {
-        base.Init();
-        GetControl<Button>("Button2")?.onClick.AddListener(() => { });
+
     }
 
     public override void CallBack(bool flag)
     {
         if (flag)
         {
-            MyCanvasGroup.interactable = true;
             gameObject.SetActive(true);
         }
         else
         {
-            MyCanvasGroup.interactable = false;
-            gameObject.SetActive(false);
+            
         }
     }
 }
