@@ -44,6 +44,20 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
     private bool _isActive;
     public bool IsActive => _isActive;
     private readonly Dictionary<string, List<UIBehaviour>> _controlDic = new();
+    [SerializeField] protected CanvasGroup canvasGroup;
+
+    protected CanvasGroup MyCanvasGroup
+    {
+        get
+        {
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+
+            return canvasGroup;
+        }
+    }
 
     public virtual void Init()
     {
