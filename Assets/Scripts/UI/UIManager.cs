@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -65,6 +66,11 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("栈为空,不能弹出");
             return null;
+        }
+
+        if (Peek() != null)
+        {
+            Peek().CallBack(false);
         }
 
         var res = _panels.Pop();

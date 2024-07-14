@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -113,6 +114,7 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
     /// <param name="flag">true表示为栈顶，flag表示有新的元素替代了原来的栈顶</param>
     public virtual void CallBack(bool flag)
     {
+        transform.DOKill(true);
     }
 
     //可以在这里选择添加音效等
