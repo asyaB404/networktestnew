@@ -1,9 +1,7 @@
-using System;
 using FishNet.Managing;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI
