@@ -1,6 +1,7 @@
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
 using TMPro;
+using UnityEngine.UI;
 
 public class CreateRoomPanel : BasePanel<CreateRoomPanel>
 {
@@ -14,5 +15,7 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
             _tugboat.SetServerBindAddress(s, IPAddressType.IPv4);
         });
         GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) => { _tugboat.SetPort(ushort.Parse(s)); });
+        GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(); });
+        GetControl<Button>("exit").onClick.AddListener(HideMe);
     }
 }

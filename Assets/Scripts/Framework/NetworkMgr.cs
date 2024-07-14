@@ -18,26 +18,23 @@ public class NetworkMgr : MonoBehaviour
         networkManager = GetComponent<NetworkManager>();
     }
 
-    public void StartOrCloseRoom()
+    public void CreateOrCloseRoom()
     {
         if (networkManager == null)
             return;
-
         if (_serverState != LocalConnectionState.Stopped)
             networkManager.ServerManager.StopConnection(true);
         else
-        {
             networkManager.ServerManager.StartConnection();
-        }
     }
 
     public void JoinOrExitRoom()
     {
+        if (networkManager == null)
+            return;
         if (_clientState != LocalConnectionState.Stopped)
             networkManager.ClientManager.StopConnection();
         else
-        {
             networkManager.ClientManager.StartConnection();
-        }
     }
 }
