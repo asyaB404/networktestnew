@@ -115,6 +115,18 @@ public class BasePanel<T1> : MonoBehaviour, IBasePanel where T1 : class
     public virtual void CallBack(bool flag)
     {
         transform.DOKill(true);
+        if (flag)
+        {
+            MyCanvasGroup.interactable = true;
+            gameObject.SetActive(true);
+            transform.localPosition = new Vector3(-1500, 0, 0);
+            transform.DOLocalMoveX(0, Const.UIDuration);
+        }
+        else
+        {
+            MyCanvasGroup.interactable = false;
+            transform.DOLocalMoveX(-1500, Const.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
+        }
     }
 
     //可以在这里选择添加音效等
