@@ -1,6 +1,5 @@
 using FishNet.Transporting.Tugboat;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class JoinRoomPanel : BasePanel<JoinRoomPanel>
