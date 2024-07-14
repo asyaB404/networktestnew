@@ -509,6 +509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166357684}
   - component: {fileID: 166357686}
+  - component: {fileID: 166357687}
   m_Layer: 5
   m_Name: CreateRoomPanel
   m_TagString: Untagged
@@ -547,6 +548,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166357683}
   m_CullTransparentMesh: 1
+--- !u!114 &166357687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166357683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5350e453e8aa40b981addb9675613076, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &235610290
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,6 +1134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 366844166}
   - component: {fileID: 366844168}
+  - component: {fileID: 366844169}
   m_Layer: 5
   m_Name: JoinRoomPanel
   m_TagString: Untagged
@@ -1159,6 +1173,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 366844165}
   m_CullTransparentMesh: 1
+--- !u!114 &366844169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366844165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47fb8ec3e934cf687085b19a9e9810e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &427142957
 GameObject:
   m_ObjectHideFlags: 0
