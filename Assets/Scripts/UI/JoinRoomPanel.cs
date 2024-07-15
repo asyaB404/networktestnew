@@ -1,5 +1,7 @@
+using System;
 using FishNet.Transporting;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class JoinRoomPanel : BasePanel<JoinRoomPanel>
@@ -7,16 +9,6 @@ public class JoinRoomPanel : BasePanel<JoinRoomPanel>
     public override void Init()
     {
         base.Init();
-        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += (ClientConnectionStateArgs obj) =>
-        {
-            if (obj.ConnectionState == LocalConnectionState.Started)
-            {
-                RoomPanel.Instance.ShowMe();
-            }
-            else
-            {
-            }
-        };
         GetControl<TMP_InputField>("IP").onValueChanged.AddListener((s) =>
         {
             if (string.IsNullOrEmpty(s)) return;
@@ -29,6 +21,28 @@ public class JoinRoomPanel : BasePanel<JoinRoomPanel>
         });
         GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinOrExitRoom(); });
         GetControl<Button>("exit").onClick.AddListener(HideMe);
+    }
+
+    private void OnEnable()
+    {
+        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+    }
+
+    private void OnDisable()
+    {
+        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnClientConnection;
+    }
+
+    private void OnClientConnection(ClientConnectionStateArgs obj)
+    {
+        if (obj.ConnectionState == LocalConnectionState.Started)
+        {
+            RoomPanel.Instance.ShowMe();
+        }
+        else if (obj.ConnectionState == LocalConnectionState.Starting)
+        {
+            Debug.Log("连接中。。。");
+        }
     }
 
     private void UpdateAddress()

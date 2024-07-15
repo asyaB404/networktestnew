@@ -1,5 +1,7 @@
+using System;
 using FishNet.Transporting;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class CreateRoomPanel : BasePanel<CreateRoomPanel>
@@ -25,6 +27,33 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
             NetworkMgr.Instance.JoinOrExitRoom(true);
         });
         GetControl<Button>("exit").onClick.AddListener(HideMe);
+    }
+
+
+    private void OnEnable()
+    {
+        NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
+    }
+
+    private void OnDisable()
+    {
+        NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState -= OnServerConnection;
+    }
+
+    private void OnServerConnection(ServerConnectionStateArgs obj)
+    {
+        if (obj.ConnectionState == LocalConnectionState.Started)
+        {
+            RoomPanel.Instance.ShowMe();
+        }
+        else if (obj.ConnectionState == LocalConnectionState.Starting)
+        {
+            Debug.Log("连接中。。。");
+        }
+        else if (obj.ConnectionState == LocalConnectionState.Stopped)
+        {
+            Debug.Log("开启失败，请检查端口是否被占用");
+        }
     }
 
     private void UpdateAddress()

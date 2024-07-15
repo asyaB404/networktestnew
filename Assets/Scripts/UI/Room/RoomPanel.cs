@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using FishNet.Transporting;
@@ -13,7 +14,7 @@ public class RoomPanel : BasePanel<RoomPanel>
     public override void Init()
     {
         base.Init();
-        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+        
         GetControl<Button>("exit").onClick.AddListener(() =>
         {
             HideMe();
@@ -21,7 +22,12 @@ public class RoomPanel : BasePanel<RoomPanel>
         });
     }
 
-    private void OnDestroy()
+    private void OnEnable()
+    {
+        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+    }
+
+    private void OnDisable()
     {
         NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
     }
@@ -31,8 +37,10 @@ public class RoomPanel : BasePanel<RoomPanel>
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
         }
-        else
+
+        if (obj.ConnectionState == LocalConnectionState.Stopped)
         {
+            HideMe();
         }
     }
 
