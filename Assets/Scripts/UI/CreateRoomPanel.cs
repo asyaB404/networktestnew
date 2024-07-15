@@ -20,12 +20,7 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
             if (string.IsNullOrEmpty(s)) return;
             tugboat.SetPort(ushort.Parse(s));
         });
-        GetControl<Button>("create").onClick.AddListener(() =>
-        {
-            RoomPanel.Instance.ShowMe();
-            NetworkMgr.Instance.CreateOrCloseRoom(true);
-            NetworkMgr.Instance.JoinOrExitRoom(true);
-        });
+        GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(true); });
         GetControl<Button>("exit").onClick.AddListener(HideMe);
     }
 
@@ -45,6 +40,7 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
             RoomPanel.Instance.ShowMe();
+            Debug.Log("开启成功");
         }
         else if (obj.ConnectionState == LocalConnectionState.Starting)
         {

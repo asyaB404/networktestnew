@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 public class RoomPanel : BasePanel<RoomPanel>
 {
     [SerializeField] private List<RoomPanel> rooms = new(4);
-    [SerializeField] private GameObject playerPrefab;
+    
     private int _playerCount;
 
     public override void Init()
@@ -19,12 +20,14 @@ public class RoomPanel : BasePanel<RoomPanel>
         {
             HideMe();
             NetworkMgr.Instance.CreateOrCloseRoom(false);
+            NetworkMgr.Instance.JoinOrExitRoom(false);
         });
     }
 
     private void OnEnable()
     {
         NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+        // NetworkMgr.Instance.networkManager.ClientManager.OnConnectedClients
     }
 
     private void OnDisable()
@@ -36,6 +39,7 @@ public class RoomPanel : BasePanel<RoomPanel>
     {
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
+            Debug.Log("生成一个玩家");
         }
 
         if (obj.ConnectionState == LocalConnectionState.Stopped)
@@ -43,12 +47,9 @@ public class RoomPanel : BasePanel<RoomPanel>
             HideMe();
         }
     }
-
+    
     private void SpawnPlayer()
     {
-        GameObject playerObj = Instantiate(playerPrefab);
-        NetworkMgr.Instance.networkManager.ServerManager.Spawn(playerObj);
-        _playerCount++;
     }
 
     public override void CallBack(bool flag)

@@ -20,44 +20,32 @@ public class NetworkMgr : MonoBehaviour
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
     }
 
-    public void CreateOrCloseRoom()
+    public bool CreateOrCloseRoom()
     {
         if (networkManager == null)
-            return;
-        if (ServerState != LocalConnectionState.Stopped)
-            networkManager.ServerManager.StopConnection(true);
-        else
-            networkManager.ServerManager.StartConnection();
+            return false;
+        return ServerState != LocalConnectionState.Stopped ? networkManager.ServerManager.StopConnection(true) : networkManager.ServerManager.StartConnection();
     }
 
-    public void CreateOrCloseRoom(bool open)
+    public bool CreateOrCloseRoom(bool open)
     {
         if (networkManager == null)
-            return;
-        if (open)
-            networkManager.ServerManager.StartConnection();
-        else
-            networkManager.ServerManager.StopConnection(true);
+            return false;
+        return open ? networkManager.ServerManager.StartConnection() : networkManager.ServerManager.StopConnection(true);
     }
 
-    public void JoinOrExitRoom()
+    public bool JoinOrExitRoom()
     {
         if (networkManager == null)
-            return;
-        if (ClientState != LocalConnectionState.Stopped)
-            networkManager.ClientManager.StopConnection();
-        else
-            networkManager.ClientManager.StartConnection();
+            return false;
+        return ClientState != LocalConnectionState.Stopped ? networkManager.ClientManager.StopConnection() : networkManager.ClientManager.StartConnection();
     }
 
-    public void JoinOrExitRoom(bool open)
+    public bool JoinOrExitRoom(bool open)
     {
         if (networkManager == null)
-            return;
-        if (open)
-            networkManager.ClientManager.StartConnection();
-        else
-            networkManager.ClientManager.StopConnection();
+            return false;
+        return open ? networkManager.ClientManager.StartConnection() : networkManager.ClientManager.StopConnection();
     }
 
     private void OnServerConnection(ServerConnectionStateArgs obj)

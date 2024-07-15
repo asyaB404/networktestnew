@@ -19,7 +19,7 @@ public class JoinRoomPanel : BasePanel<JoinRoomPanel>
             if (string.IsNullOrEmpty(s)) return;
             NetworkMgr.Instance.tugboat.SetPort(ushort.Parse(s));
         });
-        GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinOrExitRoom(); });
+        GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinOrExitRoom(true); });
         GetControl<Button>("exit").onClick.AddListener(HideMe);
     }
 
