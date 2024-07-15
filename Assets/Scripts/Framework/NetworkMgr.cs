@@ -7,8 +7,8 @@ public class NetworkMgr : MonoBehaviour
 {
     public Tugboat tugboat;
     public NetworkManager networkManager;
-    public LocalConnectionState clientState;
-    public LocalConnectionState serverState;
+    public LocalConnectionState ClientState { get; private set; }
+    public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
 
     private void Awake()
@@ -16,13 +16,15 @@ public class NetworkMgr : MonoBehaviour
         Instance = this;
         tugboat = GetComponent<Tugboat>();
         networkManager = GetComponent<NetworkManager>();
+        networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
+        networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
     }
 
     public void CreateOrCloseRoom()
     {
         if (networkManager == null)
             return;
-        if (serverState != LocalConnectionState.Stopped)
+        if (ServerState != LocalConnectionState.Stopped)
             networkManager.ServerManager.StopConnection(true);
         else
             networkManager.ServerManager.StartConnection();
@@ -42,7 +44,7 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return;
-        if (clientState != LocalConnectionState.Stopped)
+        if (ClientState != LocalConnectionState.Stopped)
             networkManager.ClientManager.StopConnection();
         else
             networkManager.ClientManager.StartConnection();
@@ -56,5 +58,15 @@ public class NetworkMgr : MonoBehaviour
             networkManager.ClientManager.StartConnection();
         else
             networkManager.ClientManager.StopConnection();
+    }
+
+    private void OnServerConnection(ServerConnectionStateArgs obj)
+    {
+        ServerState = obj.ConnectionState;
+    }
+
+    private void OnClientConnection(ClientConnectionStateArgs obj)
+    {
+        ClientState = obj.ConnectionState;
     }
 }
