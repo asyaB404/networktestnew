@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class RoomPanel : BasePanel<RoomPanel>
 {
-    [SerializeField] private List<RoomPanel> rooms = new(4);
-    
     private int _playerCount;
 
     public override void Init()

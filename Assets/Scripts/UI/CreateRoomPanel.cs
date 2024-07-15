@@ -10,10 +10,10 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
     {
         base.Init();
         var tugboat = NetworkMgr.Instance.tugboat;
-        GetControl<TMP_InputField>("IP").onValueChanged.AddListener((s) =>
+        GetControl<TMP_InputField>("name").onValueChanged.AddListener((s) =>
         {
             if (string.IsNullOrEmpty(s)) return;
-            tugboat.SetServerBindAddress(s, IPAddressType.IPv4);
+            
         });
         GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) =>
         {
@@ -54,7 +54,6 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
 
     private void UpdateAddress()
     {
-        NetworkMgr.Instance.tugboat.SetServerBindAddress(GetControl<TMP_InputField>("IP").text, IPAddressType.IPv4);
         if (ushort.TryParse(GetControl<TMP_InputField>("port").text, out var res))
         {
             NetworkMgr.Instance.tugboat.SetPort(res);
