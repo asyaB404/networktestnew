@@ -5,17 +5,21 @@ using UnityEngine.UI;
 
 public class CreateRoomPanel : BasePanel<CreateRoomPanel>
 {
-    private readonly Tugboat _tugboat = NetworkMgr.Instance.tugboat;
-
     public override void Init()
     {
         base.Init();
+        var tugboat = NetworkMgr.Instance.tugboat;
         GetControl<TMP_InputField>("IP").onValueChanged.AddListener((s) =>
         {
-            _tugboat.SetServerBindAddress(s, IPAddressType.IPv4);
+            tugboat.SetServerBindAddress(s, IPAddressType.IPv4);
         });
-        GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) => { _tugboat.SetPort(ushort.Parse(s)); });
-        GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(); });
+        GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) => { tugboat.SetPort(ushort.Parse(s)); });
+        GetControl<Button>("create").onClick.AddListener(() =>
+        {
+            RoomPanel.Instance.ShowMe();
+            NetworkMgr.Instance.CreateOrCloseRoom(true);
+            NetworkMgr.Instance.JoinOrExitRoom(true);
+        });
         GetControl<Button>("exit").onClick.AddListener(HideMe);
     }
 }

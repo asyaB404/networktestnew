@@ -7,8 +7,8 @@ public class NetworkMgr : MonoBehaviour
 {
     public Tugboat tugboat;
     public NetworkManager networkManager;
-    private LocalConnectionState _clientState;
-    private LocalConnectionState _serverState;
+    public LocalConnectionState clientState;
+    public LocalConnectionState serverState;
     public static NetworkMgr Instance { get; private set; }
 
     private void Awake()
@@ -22,19 +22,39 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return;
-        if (_serverState != LocalConnectionState.Stopped)
+        if (serverState != LocalConnectionState.Stopped)
             networkManager.ServerManager.StopConnection(true);
         else
             networkManager.ServerManager.StartConnection();
+    }
+
+    public void CreateOrCloseRoom(bool open)
+    {
+        if (networkManager == null)
+            return;
+        if (open)
+            networkManager.ServerManager.StartConnection();
+        else
+            networkManager.ServerManager.StopConnection(true);
     }
 
     public void JoinOrExitRoom()
     {
         if (networkManager == null)
             return;
-        if (_clientState != LocalConnectionState.Stopped)
+        if (clientState != LocalConnectionState.Stopped)
             networkManager.ClientManager.StopConnection();
         else
             networkManager.ClientManager.StartConnection();
+    }
+
+    public void JoinOrExitRoom(bool open)
+    {
+        if (networkManager == null)
+            return;
+        if (open)
+            networkManager.ClientManager.StartConnection();
+        else
+            networkManager.ClientManager.StopConnection();
     }
 }
