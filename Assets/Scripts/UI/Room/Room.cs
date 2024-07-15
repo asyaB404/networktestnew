@@ -1,6 +1,13 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public class Room : MonoBehaviour
+public class Room : NetworkBehaviour
 {
-    public int id;
+    public readonly SyncVar<int> ID = new();
+
+    public void Close()
+    {
+        Despawn();
+    }
 }

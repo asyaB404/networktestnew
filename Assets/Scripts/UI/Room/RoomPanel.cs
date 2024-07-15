@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using FishNet.Managing.Server;
 using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class RoomPanel : BasePanel<RoomPanel>
 {
@@ -15,6 +17,12 @@ public class RoomPanel : BasePanel<RoomPanel>
     {
         base.Init();
         NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+        GetControl<Button>("exit").onClick.AddListener(() => {NetworkMgr.Instance.cl });
+    }
+
+    private void OnDestroy()
+    {
+        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
     }
 
     private void OnUpdateJoin(ClientConnectionStateArgs obj)
