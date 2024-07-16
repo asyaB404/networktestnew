@@ -16,6 +16,7 @@ namespace ChatUI
 
     public class ChatPanel : MonoBehaviour
     {
+        public static ChatPanel Instance;
         [SerializeField] private RectTransform content;
         private Button[] _buttons;
         [SerializeField] private TMP_InputField messageInput;
@@ -27,12 +28,14 @@ namespace ChatUI
 
         private void Awake()
         {
+            Instance = this;
             _buttons = GetComponentsInChildren<Button>(true);
         }
 
         private void OnEnable()
         {
             _buttons[0].onClick.AddListener(SendChatMessage);
+            messageInput.onSubmit.AddListener(SendChatMessage);
             InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
@@ -41,6 +44,7 @@ namespace ChatUI
         {
             Clear();
             _buttons[0].onClick.RemoveListener(SendChatMessage);
+            messageInput.onSubmit.RemoveListener(SendChatMessage);
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
@@ -77,12 +81,31 @@ namespace ChatUI
                 content.localPosition = new Vector3(0, size.y - 700);
         }
 
-        public void SendChatMessage()
+        private void SendChatMessage()
         {
             ChatMessage chatMessage = new ChatMessage
             {
                 Sender = "233:",
                 Message = messageInput.text
+            };
+            if (InstanceFinder.IsServerStarted)
+            {
+                InstanceFinder.ServerManager.Broadcast(chatMessage);
+                messageInput.text = null;
+            }
+            else if (InstanceFinder.IsClientStarted)
+            {
+                InstanceFinder.ClientManager.Broadcast(chatMessage);
+                messageInput.text = null;
+            }
+        }
+
+        private void SendChatMessage(string message)
+        {
+            ChatMessage chatMessage = new ChatMessage
+            {
+                Sender = "233:",
+                Message = message
             };
             if (InstanceFinder.IsServerStarted)
             {
