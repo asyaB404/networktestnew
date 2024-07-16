@@ -1,8 +1,6 @@
-using System;
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
-using FishNet.Object;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
@@ -41,6 +39,7 @@ namespace ChatUI
 
         private void OnDisable()
         {
+            Clear();
             _buttons[0].onClick.RemoveListener(SendChatMessage);
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
@@ -95,6 +94,16 @@ namespace ChatUI
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
                 messageInput.text = null;
             }
+        }
+
+        public void Clear()
+        {
+            (content as Transform).DestroyAllChildren();
+            Vector3 size = content.sizeDelta;
+            size.y = 700;
+            content.sizeDelta = size;
+            content.localPosition = new Vector3(0, 0);
+            totalLineCount = 0;
         }
     }
 }
