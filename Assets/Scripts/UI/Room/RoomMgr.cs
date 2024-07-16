@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoomMgr : NetworkBehaviour
 {
-    [SerializeField] private List<RoomPanel> rooms = new(4);
+    [SerializeField] private List<GamePanel> rooms = new(4);
     public RoomMgr Instance { get; private set; }
 
     private void Awake()

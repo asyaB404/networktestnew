@@ -39,7 +39,7 @@ public class CreateRoomPanel : BasePanel<CreateRoomPanel>
     {
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
-            RoomPanel.Instance.ShowMe();
+            GamePanel.Instance.ShowMe();
             NetworkMgr.Instance.JoinOrExitRoom(true);
             Debug.Log("开启成功");
         }

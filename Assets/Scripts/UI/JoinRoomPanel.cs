@@ -37,7 +37,7 @@ public class JoinRoomPanel : BasePanel<JoinRoomPanel>
     {
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
-            RoomPanel.Instance.ShowMe();
+            GamePanel.Instance.ShowMe();
         }
         else if (obj.ConnectionState == LocalConnectionState.Starting)
         {

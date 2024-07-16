@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using DG.Tweening;
-using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RoomPanel : BasePanel<RoomPanel>
+public class GamePanel : BasePanel<GamePanel>
 {
     private int _playerCount;
 
