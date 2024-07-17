@@ -14,8 +14,6 @@ public class NetworkMgr : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        tugboat = GetComponent<Tugboat>();
-        networkManager = GetComponent<NetworkManager>();
         networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
     }

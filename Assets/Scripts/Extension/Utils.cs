@@ -1,19 +1,26 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
 public static class Utils
 {
-    //得到枚举中的随机值
-    public static T GetRandomEnumValue<T>()
+    /// <summary>
+    /// 得到枚举中的随机值
+    /// </summary>
+    /// <typeparam name="T">枚举类型</typeparam>
+    /// <returns></returns>
+    public static T GetRandomEnumValue<T>() where T :  Enum
     {
         var values = Enum.GetValues(typeof(T));
         return (T)values.GetValue(MyRandom.NextInt(values.Length));
     }
 
+    /// <summary>
+    /// 销毁一个transform下的所有子物体
+    /// </summary>
+    /// <param name="transform"></param>
     public static void DestroyAllChildren(this Transform transform)
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
@@ -22,6 +29,11 @@ public static class Utils
         }
     }
 
+    /// <summary>
+    /// 洗牌算法，将一个数组或者列表以以O(N)的复杂度随机打乱
+    /// </summary>
+    /// <param name="array"></param>
+    /// <typeparam name="T"></typeparam>
     public static void ShuffleArray<T>(this IList<T> array)
     {
         Random rand = new();

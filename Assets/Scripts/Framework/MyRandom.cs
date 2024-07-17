@@ -1,6 +1,9 @@
 using UnityEngine;
 using Random = System.Random;
 
+/// <summary>
+/// 随机数静态实例，可以使用set指定种子。
+/// </summary>
 public class MyRandom
 {
     private static Random _random;
@@ -15,6 +18,7 @@ public class MyRandom
                 _instance = new MyRandom();
                 Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成");
             }
+
             return _instance;
         }
     }
@@ -28,15 +32,6 @@ public class MyRandom
         _instance = new MyRandom(seed);
     }
 
-    private MyRandom()
-    {
-        _random = new Random();
-    }
-
-    private MyRandom(int seed)
-    {
-        _random = new Random(seed);
-    }
 
     public static int NextInt()
     {
@@ -66,5 +61,15 @@ public class MyRandom
     public static bool NextBool()
     {
         return _random.Next(2) == 0;
+    }
+
+    private MyRandom()
+    {
+        _random = new Random();
+    }
+
+    private MyRandom(int seed)
+    {
+        _random = new Random(seed);
     }
 }

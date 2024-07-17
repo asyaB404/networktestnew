@@ -3,6 +3,9 @@ using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 游戏开始时将会打开的Panel
+/// </summary>
 public class GamePanel : BasePanel<GamePanel>
 {
     private int _playerCount;

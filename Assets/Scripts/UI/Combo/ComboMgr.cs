@@ -1,9 +1,11 @@
-using System;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+/// <summary>
+/// 连击管理器
+/// </summary>
 public class ComboMgr : MonoBehaviour
 {
     public static ComboMgr Instance { get; private set; }
@@ -47,6 +49,7 @@ public class ComboMgr : MonoBehaviour
         }
     }
 
+    
     private void Update()
     {
         if (_combingTime > 0)

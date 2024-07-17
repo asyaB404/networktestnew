@@ -1,9 +1,11 @@
-using System;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 用于创建房间的panel
+/// </summary>
 public class CreateRoomPanel : BasePanel<CreateRoomPanel>
 {
     public override void Init()
