@@ -36,8 +36,19 @@ namespace ChatUI
         {
             _buttons[0].onClick.AddListener(SendChatMessage);
             messageInput.onSubmit.AddListener(SendChatMessage);
+            messageInput.onValidateInput += ValidateInput;
             InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
+        }
+        
+        private char ValidateInput(string text, int charIndex, char addedChar)
+        {
+            // 忽略 Enter 键的输入
+            if (addedChar is '\n' or '\r')
+            {
+                return '\0'; // 返回空字符表示忽略该输入
+            }
+            return addedChar; // 返回输入的字符
         }
 
         private void OnDisable()
@@ -45,6 +56,7 @@ namespace ChatUI
             Clear();
             _buttons[0].onClick.RemoveListener(SendChatMessage);
             messageInput.onSubmit.RemoveListener(SendChatMessage);
+            messageInput.onValidateInput -= ValidateInput;
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
