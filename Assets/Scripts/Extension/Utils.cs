@@ -11,7 +11,7 @@ public static class Utils
     public static T GetRandomEnumValue<T>()
     {
         var values = Enum.GetValues(typeof(T));
-        return (T)values.GetValue(MyRandom.Instance.NextInt(values.Length));
+        return (T)values.GetValue(MyRandom.NextInt(values.Length));
     }
 
     public static void DestroyAllChildren(this Transform transform)

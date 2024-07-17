@@ -44,7 +44,7 @@ public class MusicMgr
         AudioClip audioClip;
         name = "Sounds/" + name;
         if (count >= 2)
-            name += MyRandom.Instance.NextInt(1, count + 1);
+            name += MyRandom.NextInt(1, count + 1);
         audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(name);
         source.clip = Object.Instantiate(audioClip);
         _soundList.Add(source);

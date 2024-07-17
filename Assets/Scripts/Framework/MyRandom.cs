@@ -1,19 +1,28 @@
-using System;
+using UnityEngine;
+using Random = System.Random;
 
 public class MyRandom
 {
-    private readonly Random _random;
+    private static Random _random;
     private static MyRandom _instance;
 
     public static MyRandom Instance
     {
         get
         {
-            _instance ??= new MyRandom();
+            if (_instance == null)
+            {
+                _instance = new MyRandom();
+                Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成");
+            }
             return _instance;
         }
     }
 
+    /// <summary>
+    /// 设置指定随机种子
+    /// </summary>
+    /// <param name="seed"></param>
     public static void Set(int seed)
     {
         _instance = new MyRandom(seed);
@@ -29,32 +38,32 @@ public class MyRandom
         _random = new Random(seed);
     }
 
-    public int NextInt()
+    public static int NextInt()
     {
         return _random.Next();
     }
 
-    public int NextInt(int max)
+    public static int NextInt(int max)
     {
         return _random.Next(max);
     }
 
-    public int NextInt(int min, int max)
+    public static int NextInt(int min, int max)
     {
         return _random.Next(min, max);
     }
 
-    public float NextFloat()
+    public static float NextFloat()
     {
         return (float)_random.NextDouble();
     }
 
-    public float NextFloat(float min, float max)
+    public static float NextFloat(float min, float max)
     {
         return (float)(min + (_random.NextDouble() * (max - min)));
     }
 
-    public bool NextBool()
+    public static bool NextBool()
     {
         return _random.Next(2) == 0;
     }
