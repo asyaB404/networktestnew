@@ -4,6 +4,7 @@ using FishNet.Connection;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ChatUI
@@ -35,27 +36,28 @@ namespace ChatUI
         private void OnEnable()
         {
             _buttons[0].onClick.AddListener(SendChatMessage);
-            messageInput.onSubmit.AddListener(SendChatMessage);
+            messageInput.onSubmit.AddListener(OnInputSubmit);
             messageInput.onValidateInput += ValidateInput;
             InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
         }
-        
+
         private char ValidateInput(string text, int charIndex, char addedChar)
         {
-            // 忽略 Enter 键的输入
-            if (addedChar is '\n' or '\r')
+            // 忽略首个Enter键的输入
+            if (charIndex == 0 && addedChar is '\n' or '\r')
             {
-                return '\0'; // 返回空字符表示忽略该输入
+                return '\0'; //返回空字符表示忽略该输入
             }
-            return addedChar; // 返回输入的字符
+
+            return addedChar; //返回输入的字符
         }
 
         private void OnDisable()
         {
             Clear();
             _buttons[0].onClick.RemoveListener(SendChatMessage);
-            messageInput.onSubmit.RemoveListener(SendChatMessage);
+            messageInput.onSubmit.RemoveListener(OnInputSubmit);
             messageInput.onValidateInput -= ValidateInput;
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
@@ -112,23 +114,11 @@ namespace ChatUI
             }
         }
 
-        private void SendChatMessage(string message)
+        private void OnInputSubmit(string message)
         {
-            ChatMessage chatMessage = new ChatMessage
-            {
-                Sender = "233:",
-                Message = message
-            };
-            if (InstanceFinder.IsServerStarted)
-            {
-                InstanceFinder.ServerManager.Broadcast(chatMessage);
-                messageInput.text = null;
-            }
-            else if (InstanceFinder.IsClientStarted)
-            {
-                InstanceFinder.ClientManager.Broadcast(chatMessage);
-                messageInput.text = null;
-            }
+            SendChatMessage();
+            EventSystem.current.SetSelectedGameObject(messageInput.gameObject, null);
+            messageInput.OnPointerClick(new PointerEventData(EventSystem.current));
         }
 
         public void Clear()
