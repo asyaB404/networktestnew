@@ -55,4 +55,19 @@ public static class Utils
             (array[j], array[i]) = (array[i], array[j]);
         }
     }
+
+    /// <summary>
+    /// bezier2D抛物线插值
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <returns></returns>
+    public static Vector2 Bezier(float t, Vector2 a, Vector2 b, Vector2 c)
+    {
+        var ab = Vector2.Lerp(a, b, t);
+        var bc = Vector2.Lerp(b, c, t);
+        return Vector2.Lerp(ab, bc, t);
+    }
 }

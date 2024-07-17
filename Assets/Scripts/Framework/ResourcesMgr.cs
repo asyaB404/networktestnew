@@ -9,6 +9,7 @@ public class ResourcesMgr
     public static ResourcesMgr Instance { get; } = new();
 
 
+    //同步加载资源，加载完成后将会
     public T LoadRes<T>(string path) where T : Object
     {
         if (_resDict.TryGetValue(path, out var res))
@@ -25,8 +26,7 @@ public class ResourcesMgr
     {
         ScenesMgr.Instance.StartCoroutine(ReallyLoadAsync(name, callback));
     }
-
-    //真正的协同程序函数  用于 开启异步加载对应的资源
+    
     private IEnumerator ReallyLoadAsync<T>(string name, UnityAction<T> callback) where T : Object
     {
         ResourceRequest r = Resources.LoadAsync<T>(name);
@@ -40,6 +40,7 @@ public class ResourcesMgr
 
     public void Clear()
     {
+        Resources.UnloadUnusedAssets();
         _resDict.Clear();
     }
 }

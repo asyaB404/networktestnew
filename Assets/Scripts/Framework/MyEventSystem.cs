@@ -1,7 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+public enum EventEnum
+{
+    UpdateProgress
+}
 
 public interface IEventInfos
 {
@@ -10,10 +14,6 @@ public interface IEventInfos
 public class EventInfos<T, T1> : IEventInfos
 {
     public UnityAction<T, T1> UnityActions;
-
-    public EventInfos()
-    {
-    }
 
     public EventInfos(UnityAction<T, T1> unityActions)
     {
@@ -25,10 +25,6 @@ public class EventInfos<T> : IEventInfos
 {
     public UnityAction<T> UnityActions;
 
-    public EventInfos()
-    {
-    }
-
     public EventInfos(UnityAction<T> unityActions)
     {
         this.UnityActions = unityActions;
@@ -38,10 +34,6 @@ public class EventInfos<T> : IEventInfos
 public class EventInfos : IEventInfos
 {
     public UnityAction UnityActions;
-
-    public EventInfos()
-    {
-    }
 
     public EventInfos(UnityAction unityActions)
     {
@@ -65,9 +57,9 @@ public class MyEventSystem
         }
     }
 
-    private readonly Dictionary<string, IEventInfos> _eventDict = new();
+    private readonly Dictionary<EventEnum, IEventInfos> _eventDict = new();
 
-    public void AddEventListener(string eventName, UnityAction action)
+    public void AddEventListener(EventEnum eventName, UnityAction action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -80,7 +72,7 @@ public class MyEventSystem
         }
     }
 
-    public void AddEventListener<T>(string eventName, UnityAction<T> action)
+    public void AddEventListener<T>(EventEnum eventName, UnityAction<T> action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -93,7 +85,7 @@ public class MyEventSystem
         }
     }
 
-    public void AddEventListener<T, T1>(string eventName, UnityAction<T, T1> action)
+    public void AddEventListener<T, T1>(EventEnum eventName, UnityAction<T, T1> action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -106,7 +98,7 @@ public class MyEventSystem
         }
     }
 
-    public void RemoveEventListener(string eventName, UnityAction action)
+    public void RemoveEventListener(EventEnum eventName, UnityAction action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -118,7 +110,7 @@ public class MyEventSystem
         }
     }
 
-    public void RemoveEventListener<T>(string eventName, UnityAction<T> action)
+    public void RemoveEventListener<T>(EventEnum eventName, UnityAction<T> action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -130,7 +122,7 @@ public class MyEventSystem
         }
     }
 
-    public void RemoveEventListener<T, T1>(string eventName, UnityAction<T, T1> action)
+    public void RemoveEventListener<T, T1>(EventEnum eventName, UnityAction<T, T1> action)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -142,7 +134,7 @@ public class MyEventSystem
         }
     }
 
-    public void EventTrigger(string eventName)
+    public void EventTrigger(EventEnum eventName)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -154,7 +146,7 @@ public class MyEventSystem
         }
     }
 
-    public void EventTrigger<T>(string eventName, T eventData)
+    public void EventTrigger<T>(EventEnum eventName, T eventData)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -166,7 +158,7 @@ public class MyEventSystem
         }
     }
 
-    public void EventTrigger<T, T1>(string eventName, T eventData, T1 eventData1)
+    public void EventTrigger<T, T1>(EventEnum eventName, T eventData, T1 eventData1)
     {
         if (_eventDict.TryGetValue(eventName, out IEventInfos existingAction))
         {
@@ -178,7 +170,7 @@ public class MyEventSystem
         }
     }
 
-    public void Clear(string eventName)
+    public void Clear(EventEnum eventName)
     {
         _eventDict.Remove(eventName);
     }

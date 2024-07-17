@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 场景管理器
+/// </summary>
 public class ScenesMgr : MonoBehaviour
 {
     public static ScenesMgr Instance
@@ -49,11 +52,11 @@ public class ScenesMgr : MonoBehaviour
         while (!asyncOperation.isDone)
         {
             yield return asyncOperation.progress;
-            MyEventSystem.Instance.EventTrigger<float>("update_progress", asyncOperation.progress);
+            //更新加载进度条事件
+            MyEventSystem.Instance.EventTrigger<float>(EventEnum.UpdateProgress, asyncOperation.progress);
         }
 
         yield return asyncOperation;
-        yield return new WaitForSeconds(0.5f);
         callback?.Invoke();
     }
 }
