@@ -76,6 +76,11 @@ public class GameObjectPoolMgr
     public struct ResLoadConfig : ILoadConfig
     {
         public string ResPath;
+
+        public ResLoadConfig(string resPath)
+        {
+            ResPath = resPath;
+        }
     }
 
     public struct PrefabsLoadConfig : ILoadConfig
