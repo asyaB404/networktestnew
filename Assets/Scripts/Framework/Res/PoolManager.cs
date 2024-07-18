@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
 /// 对象池
-///使用方法:拖进项目Assets内任意位置即可使用
 ///当你尝试访问Instance单例时将会自动创建唯一一个名为Pool的gameobject作为对象池的父物体
 /// 记得在过场景的时候手动clear一下
 /// </summary>

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MusicMgr
+public class MusicMgrForRes
 {
     private GameObject _soundObj = null;
     private readonly List<AudioSource> _soundList = new();
@@ -80,13 +80,13 @@ public class MusicMgr
         }
     }
 
-    private static MusicMgr _instance;
+    private static MusicMgrForRes _instance;
 
-    public static MusicMgr Instance
+    public static MusicMgrForRes Instance
     {
         get
         {
-            _instance ??= new MusicMgr();
+            _instance ??= new MusicMgrForRes();
             _instance.Check();
             return _instance;
         }
