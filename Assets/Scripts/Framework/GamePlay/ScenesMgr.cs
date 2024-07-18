@@ -28,7 +28,7 @@ public class ScenesMgr : MonoBehaviour
 
     private void Clear()
     {
-        PoolManager.Instance.Clear();
+        GameObjectPoolMgr.Instance.Clear();
         ResourcesMgr.Instance.Clear();
         MyABMgr.Instance.Clear();
     }

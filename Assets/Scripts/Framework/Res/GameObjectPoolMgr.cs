@@ -3,19 +3,19 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 对象池
+/// GameObject对象池
 ///当你尝试访问Instance单例时将会自动创建唯一一个名为Pool的gameobject作为对象池的父物体
 /// 记得在过场景的时候手动clear一下
 /// </summary>
-public class PoolManager
+public class GameObjectPoolMgr
 {
-    private static PoolManager _instance;
+    private static GameObjectPoolMgr _instance;
 
-    public static PoolManager Instance
+    public static GameObjectPoolMgr Instance
     {
         get
         {
-            _instance ??= new PoolManager();
+            _instance ??= new GameObjectPoolMgr();
             return _instance;
         }
     }
@@ -69,58 +69,51 @@ public class PoolManager
         Push(obj, obj.name);
     }
 
-    public GameObject GetFromAb(
-        string ab,
-        string name,
-        Transform parent = null,
-        UnityAction<GameObject> initAction = null
-    )
+    public interface ILoadConfig
     {
-        GameObject obj;
-        if (_poolDict.TryGetValue(name, out Stack<GameObject> list) && list.Count > 0)
-        {
-            obj = _poolDict[name].Pop();
-            obj.transform.SetParent(parent, false);
-            initAction?.Invoke(obj);
-            obj.SetActive(true);
-            return obj;
-        }
-
-        obj = MyABMgr.Instance.LoadRes<GameObject>(ab, name);
-        obj.name = name;
-        return obj;
     }
 
-    public GameObject GetFromPrefab(
-        GameObject gobjRes,
-        Transform parent = null,
-        UnityAction<GameObject> initAction = null
-    )
+    public struct ResLoadConfig : ILoadConfig
     {
-        GameObject obj;
-        if (_poolDict.TryGetValue(gobjRes.name, out Stack<GameObject> list) && list.Count > 0)
-        {
-            obj = _poolDict[gobjRes.name].Pop();
-            obj.transform.SetParent(parent, false);
-            initAction?.Invoke(obj);
-            obj.SetActive(true);
-            return obj;
-        }
-
-        obj = Object.Instantiate(gobjRes, parent);
-        obj.name = gobjRes.name;
-        return obj;
+        public string ResPath;
     }
 
-    public GameObject Get(string Id)
+    public struct PrefabsLoadConfig : ILoadConfig
     {
-        GameObject obj;
-        if (_poolDict.TryGetValue(Id, out Stack<GameObject> stack) && stack.Count > 0)
+        public GameObject Prefab;
+
+        public PrefabsLoadConfig(GameObject prefab)
         {
-            obj = _poolDict[Id].Pop();
+            Prefab = prefab;
+        }
+    }
+
+    public struct ABLoadConfig : ILoadConfig
+    {
+        public string AbName;
+        public string ResName;
+
+        public ABLoadConfig(string abName, string resName)
+        {
+            AbName = abName;
+            ResName = resName;
+        }
+    }
+
+    /// <summary>
+    /// 传入id和配置信息，根据配置信息的具体类型来决定通过那种方法生成对象
+    /// </summary>
+    /// <example>Get("123",new PrefabsLoadConfig(prefab)); Get("123",new ResLoadConfig("Prefabs/Bullet")).....</example>
+    public GameObject Get(string id, ILoadConfig config)
+    {
+        
+        GameObject obj;
+        if (_poolDict.TryGetValue(id, out Stack<GameObject> stack) && stack.Count > 0)
+        {
+            obj = _poolDict[id].Pop();
             while (obj == null && _poolDict.Count > 0)
             {
-                obj = _poolDict[Id].Pop();
+                obj = _poolDict[id].Pop();
             }
 
             if (obj != null)
@@ -130,9 +123,25 @@ public class PoolManager
             }
         }
 
-        obj = Object.Instantiate(Resources.Load<GameObject>(Id));
-        obj.name = Id;
+        if (config is ResLoadConfig resConfig)
+        {
+            obj = Object.Instantiate(Resources.Load<GameObject>(resConfig.ResPath));
+        }
+        else if (config is PrefabsLoadConfig prefabConfig)
+        {
+            obj = Object.Instantiate(prefabConfig.Prefab);
+        }
+        else if (config is ABLoadConfig abConfig)
+        {
+            obj = MyABMgr.Instance.LoadRes<GameObject>(abConfig.AbName, abConfig.ResName);
+        }
+        else
+        {
+            Debug.LogError("未知的加载配置信息，无法正确实例化，返回一个空物体");
+            obj = new GameObject();
+        }
 
+        obj.name = id;
         return obj;
     }
 
