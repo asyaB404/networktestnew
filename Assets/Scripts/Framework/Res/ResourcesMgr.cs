@@ -22,14 +22,14 @@ public class ResourcesMgr
     }
     
     //异步加载资源
-    public void LoadAsync<T>(string name, UnityAction<T> callback) where T:Object
+    public void LoadAsync<T>(string path, UnityAction<T> callback) where T:Object
     {
-        ScenesMgr.Instance.StartCoroutine(ReallyLoadAsync(name, callback));
+        ScenesMgr.Instance.StartCoroutine(ReallyLoadAsync(path, callback));
     }
     
-    private IEnumerator ReallyLoadAsync<T>(string name, UnityAction<T> callback) where T : Object
+    private IEnumerator ReallyLoadAsync<T>(string path, UnityAction<T> callback) where T : Object
     {
-        ResourceRequest r = Resources.LoadAsync<T>(name);
+        ResourceRequest r = Resources.LoadAsync<T>(path);
         yield return r;
 
         if (r.asset is GameObject)

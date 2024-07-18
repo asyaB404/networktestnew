@@ -28,10 +28,10 @@ public class MusicMgrForRes
     /// <summary>
     /// 播放音效
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="path"></param>
     /// <param name="isLoop"></param>
     /// <param name="count"></param>
-    public AudioSource PlaySound(string name, bool isLoop = false, int count = 1)
+    public AudioSource PlaySound(string path, bool isLoop = false, int count = 1)
     {
         if (_soundObj == null)
         {
@@ -41,10 +41,10 @@ public class MusicMgrForRes
 
         var source = _soundObj.AddComponent<AudioSource>();
         AudioClip audioClip;
-        name = "Sounds/" + name;
+        path = "Sounds/" + path;
         if (count >= 2)
-            name += MyRandom.NextInt(1, count + 1);
-        audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(name);
+            path += MyRandom.NextInt(1, count + 1);
+        audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(path);
         source.clip = Object.Instantiate(audioClip);
         _soundList.Add(source);
         source.volume = _soundValue;
@@ -96,8 +96,8 @@ public class MusicMgrForRes
     /// <summary>
     /// 播放背景音乐
     /// </summary>
-    /// <param name="name"></param>
-    public void PlayBkMusic(string name)
+    /// <param name="path"></param>
+    public void PlayBkMusic(string path)
     {
         if (_bkMusic == null)
         {
@@ -105,8 +105,8 @@ public class MusicMgrForRes
             if (Camera.main != null) _bkMusic.transform.position = Camera.main.transform.position;
         }
 
-        name = "Sounds/" + name;
-        var audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(name);
+        path = "Sounds/" + path;
+        var audioClip = ResourcesMgr.Instance.LoadRes<AudioClip>(path);
         _bkMusic.clip = Object.Instantiate(audioClip);
         _bkMusic.volume = _bkValue;
         _bkMusic.loop = true;
