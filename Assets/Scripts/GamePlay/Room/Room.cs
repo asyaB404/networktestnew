@@ -2,6 +2,13 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
+public enum RoomType
+{
+    T1V1,
+    T2V2,
+    T4VS
+}
+
 public class Room : NetworkBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
@@ -11,6 +18,6 @@ public class Room : NetworkBehaviour
     {
         Despawn();
     }
-    
+
     // public void 
 }

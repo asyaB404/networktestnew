@@ -8,8 +8,7 @@ public class ResourcesMgr
     private readonly Dictionary<string, Object> _resDict = new();
     public static ResourcesMgr Instance { get; } = new();
 
-
-    //同步加载资源，加载完成后将会
+    
     public T LoadRes<T>(string path) where T : Object
     {
         if (_resDict.TryGetValue(path, out var res))
