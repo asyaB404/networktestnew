@@ -1,5 +1,8 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+namespace GamePlay.Player
 {
+    public class PlayerController : MonoBehaviour
+    {
+    }
 }
