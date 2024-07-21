@@ -3,67 +3,70 @@ using FishNet.Transporting;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 游戏开始时将会打开的Panel
-/// </summary>
-public class GamePanel : BasePanel<GamePanel>
+namespace UI.Panel
 {
-    private int _playerCount;
-
-    public override void Init()
+    /// <summary>
+    /// 游戏开始时将会打开的Panel
+    /// </summary>
+    public class GamePanel : BasePanel<GamePanel>
     {
-        base.Init();
-        
-        GetControl<Button>("exit").onClick.AddListener(() =>
+        private int _playerCount;
+
+        public override void Init()
         {
-            HideMe();
-            NetworkMgr.Instance.CreateOrCloseRoom(false);
-            NetworkMgr.Instance.JoinOrExitRoom(false);
-        });
-    }
+            base.Init();
 
-    private void OnEnable()
-    {
-        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
-        // NetworkMgr.Instance.networkManager.ClientManager.OnConnectedClients
-    }
-
-    private void OnDisable()
-    {
-        NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
-    }
-
-    private void OnUpdateJoin(ClientConnectionStateArgs obj)
-    {
-        if (obj.ConnectionState == LocalConnectionState.Started)
-        {
-            Debug.Log("生成一个玩家");
+            GetControl<Button>("exit").onClick.AddListener(() =>
+            {
+                HideMe();
+                NetworkMgr.Instance.CreateOrCloseRoom(false);
+                NetworkMgr.Instance.JoinOrExitRoom(false);
+            });
         }
 
-        if (obj.ConnectionState == LocalConnectionState.Stopped)
+        private void OnEnable()
         {
-            HideMe();
+            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+            // NetworkMgr.Instance.networkManager.ClientManager.OnConnectedClients
         }
-    }
-    
-    private void SpawnPlayer()
-    {
-    }
 
-    public override void CallBack(bool flag)
-    {
-        transform.DOKill(true);
-        if (flag)
+        private void OnDisable()
         {
-            MyCanvasGroup.interactable = true;
-            gameObject.SetActive(true);
-            transform.localScale = Vector3.zero;
-            transform.DOScale(1, Const.UIDuration);
+            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
         }
-        else
+
+        private void OnUpdateJoin(ClientConnectionStateArgs obj)
         {
-            MyCanvasGroup.interactable = false;
-            transform.DOScale(0, Const.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
+            if (obj.ConnectionState == LocalConnectionState.Started)
+            {
+                Debug.Log("生成一个玩家");
+            }
+
+            if (obj.ConnectionState == LocalConnectionState.Stopped)
+            {
+                HideMe();
+            }
+        }
+
+        private void SpawnPlayer()
+        {
+        }
+
+        public override void CallBack(bool flag)
+        {
+            transform.DOKill(true);
+            if (flag)
+            {
+                MyCanvasGroup.interactable = true;
+                gameObject.SetActive(true);
+                transform.localScale = Vector3.zero;
+                transform.DOScale(1, UIConst.UIDuration);
+            }
+            else
+            {
+                MyCanvasGroup.interactable = false;
+                transform.DOScale(0, UIConst.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
+            }
         }
     }
 }

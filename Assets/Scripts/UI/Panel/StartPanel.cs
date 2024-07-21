@@ -1,19 +1,21 @@
 using DG.Tweening;
 using UnityEngine.UI;
 
-
-public class StartPanel : BasePanel<StartPanel>
+namespace UI.Panel
 {
-    public override void Init()
+    public class StartPanel : BasePanel<StartPanel>
     {
-        base.Init();
-        GetControl<Button>("mulplay")?.onClick.AddListener(() => { MulPlayPanel.Instance.ShowMe(); });
-        ShowMe();
-    }
-    
+        public override void Init()
+        {
+            base.Init();
+            GetControl<Button>("mulplay")?.onClick.AddListener(() => { MulPlayPanel.Instance.ShowMe(); });
+            ShowMe();
+        }
 
-    public override void HideMe()
-    {
-        //确定要退出游戏吗？
+
+        public override void HideMe()
+        {
+            //确定要退出游戏吗？
+        }
     }
 }

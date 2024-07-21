@@ -1,12 +1,15 @@
 using UnityEngine.UI;
 
-public class MulPlayPanel : BasePanel<MulPlayPanel>
+namespace UI.Panel
 {
-    public override void Init()
+    public class MulPlayPanel : BasePanel<MulPlayPanel>
     {
-        base.Init();
-        GetControl<Button>("create")?.onClick.AddListener(() => { CreateRoomPanel.Instance.ShowMe(); });
-        GetControl<Button>("join")?.onClick.AddListener(() => { JoinRoomPanel.Instance.ShowMe(); });
-        GetControl<Button>("exit")?.onClick.AddListener(HideMe);
+        public override void Init()
+        {
+            base.Init();
+            GetControl<Button>("create")?.onClick.AddListener(() => { CreateRoomPanel.Instance.ShowMe(); });
+            GetControl<Button>("join")?.onClick.AddListener(() => { JoinRoomPanel.Instance.ShowMe(); });
+            GetControl<Button>("exit")?.onClick.AddListener(HideMe);
+        }
     }
 }

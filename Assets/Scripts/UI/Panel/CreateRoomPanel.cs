@@ -3,73 +3,76 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 用于创建房间的panel
-/// </summary>
-public class CreateRoomPanel : BasePanel<CreateRoomPanel>
+
+namespace UI.Panel
 {
-    public override void Init()
+    /// <summary>
+    /// 用于创建房间的panel
+    /// </summary>
+    public class CreateRoomPanel : BasePanel<CreateRoomPanel>
     {
-        base.Init();
-        var tugboat = NetworkMgr.Instance.tugboat;
-        GetControl<TMP_InputField>("name").onValueChanged.AddListener((s) =>
+        public override void Init()
         {
-            if (string.IsNullOrEmpty(s)) return;
-            
-        });
-        GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) =>
-        {
-            if (string.IsNullOrEmpty(s)) return;
-            tugboat.SetPort(ushort.Parse(s));
-        });
-        GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(true); });
-        GetControl<Button>("exit").onClick.AddListener(HideMe);
-    }
-
-
-    private void OnEnable()
-    {
-        NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
-    }
-
-    private void OnDisable()
-    {
-        NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState -= OnServerConnection;
-    }
-
-    private void OnServerConnection(ServerConnectionStateArgs obj)
-    {
-        if (obj.ConnectionState == LocalConnectionState.Started)
-        {
-            GamePanel.Instance.ShowMe();
-            NetworkMgr.Instance.JoinOrExitRoom(true);
-            Debug.Log("开启成功");
+            base.Init();
+            var tugboat = NetworkMgr.Instance.tugboat;
+            GetControl<TMP_InputField>("name").onValueChanged.AddListener((s) =>
+            {
+                if (string.IsNullOrEmpty(s)) return;
+            });
+            GetControl<TMP_InputField>("port").onValueChanged.AddListener((s) =>
+            {
+                if (string.IsNullOrEmpty(s)) return;
+                tugboat.SetPort(ushort.Parse(s));
+            });
+            GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(true); });
+            GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
-        else if (obj.ConnectionState == LocalConnectionState.Starting)
-        {
-            Debug.Log("连接中。。。");
-        }
-        else if (obj.ConnectionState == LocalConnectionState.Stopped)
-        {
-            Debug.Log("开启失败，请检查端口是否被占用");
-        }
-    }
-
-    private void UpdateAddress()
-    {
-        if (ushort.TryParse(GetControl<TMP_InputField>("port").text, out var res))
-        {
-            NetworkMgr.Instance.tugboat.SetPort(res);
-        }
-    }
 
 
-    public override void CallBack(bool flag)
-    {
-        base.CallBack(flag);
-        if (flag)
+        private void OnEnable()
         {
-            UpdateAddress();
+            NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
+        }
+
+        private void OnDisable()
+        {
+            NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState -= OnServerConnection;
+        }
+
+        private void OnServerConnection(ServerConnectionStateArgs obj)
+        {
+            if (obj.ConnectionState == LocalConnectionState.Started)
+            {
+                GamePanel.Instance.ShowMe();
+                NetworkMgr.Instance.JoinOrExitRoom(true);
+                Debug.Log("开启成功");
+            }
+            else if (obj.ConnectionState == LocalConnectionState.Starting)
+            {
+                Debug.Log("连接中。。。");
+            }
+            else if (obj.ConnectionState == LocalConnectionState.Stopped)
+            {
+                Debug.Log("开启失败，请检查端口是否被占用");
+            }
+        }
+
+        private void UpdateAddress()
+        {
+            if (ushort.TryParse(GetControl<TMP_InputField>("port").text, out var res))
+            {
+                NetworkMgr.Instance.tugboat.SetPort(res);
+            }
+        }
+
+
+        public override void CallBack(bool flag)
+        {
+            base.CallBack(flag);
+            if (flag)
+            {
+                UpdateAddress();
+            }
         }
     }
 }
