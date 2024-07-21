@@ -9,15 +9,18 @@ public enum RoomType
     T4VS
 }
 
-public class Room : NetworkBehaviour
+namespace GamePlay.Room
 {
-    [SerializeField] private GameObject playerPrefab;
-    public readonly SyncVar<int> ID = new();
-
-    public void Close()
+    public class Room : NetworkBehaviour
     {
-        Despawn();
-    }
+        [SerializeField] private GameObject playerPrefab;
+        public readonly SyncVar<int> ID = new();
 
-    // public void 
+        public void Close()
+        {
+            Despawn();
+        }
+
+        // public void 
+    }
 }
