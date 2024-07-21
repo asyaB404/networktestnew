@@ -3,6 +3,7 @@ using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
 using UnityEngine;
 
+
 public class NetworkMgr : MonoBehaviour
 {
     public Tugboat tugboat;
@@ -22,28 +23,36 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
-        return ServerState != LocalConnectionState.Stopped ? networkManager.ServerManager.StopConnection(true) : networkManager.ServerManager.StartConnection();
+        return ServerState != LocalConnectionState.Stopped
+            ? networkManager.ServerManager.StopConnection(true)
+            : networkManager.ServerManager.StartConnection();
     }
 
     public bool CreateOrCloseRoom(bool open)
     {
         if (networkManager == null)
             return false;
-        return open ? networkManager.ServerManager.StartConnection() : networkManager.ServerManager.StopConnection(true);
+        return open
+            ? networkManager.ServerManager.StartConnection()
+            : networkManager.ServerManager.StopConnection(true);
     }
 
     public bool JoinOrExitRoom()
     {
         if (networkManager == null)
             return false;
-        return ClientState != LocalConnectionState.Stopped ? networkManager.ClientManager.StopConnection() : networkManager.ClientManager.StartConnection();
+        return ClientState != LocalConnectionState.Stopped
+            ? networkManager.ClientManager.StopConnection()
+            : networkManager.ClientManager.StartConnection();
     }
 
     public bool JoinOrExitRoom(bool open)
     {
         if (networkManager == null)
             return false;
-        return open ? networkManager.ClientManager.StartConnection() : networkManager.ClientManager.StopConnection();
+        return open
+            ? networkManager.ClientManager.StartConnection()
+            : networkManager.ClientManager.StopConnection();
     }
 
     private void OnServerConnection(ServerConnectionStateArgs obj)
