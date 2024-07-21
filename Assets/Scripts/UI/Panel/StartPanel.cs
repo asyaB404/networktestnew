@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine.UI;
 
 namespace UI.Panel
@@ -9,6 +8,7 @@ namespace UI.Panel
         {
             base.Init();
             GetControl<Button>("mulplay")?.onClick.AddListener(() => { MulPlayPanel.Instance.ShowMe(); });
+            GetControl<Button>("setting")?.onClick.AddListener(() => { SettingPanel.Instance.ShowMe(); });
             ShowMe();
         }
 

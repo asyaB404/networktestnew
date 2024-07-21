@@ -2213,7 +2213,7 @@ GameObject:
   - component: {fileID: 587862260}
   - component: {fileID: 587862259}
   m_Layer: 5
-  m_Name: Button3
+  m_Name: setting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5056,7 +5056,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1389267932
 RectTransform:
   m_ObjectHideFlags: 0
