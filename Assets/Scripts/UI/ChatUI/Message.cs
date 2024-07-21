@@ -2,19 +2,20 @@
 using UnityEngine;
 using TMPro;
 using Extension;
+using UnityEngine.Serialization;
 
 namespace ChatUI
 {
     public class Message : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI myname;
-        [SerializeField] private TextMeshProUGUI text;
+        [FormerlySerializedAs("text")] [SerializeField] private TextMeshProUGUI message;
 
-        public int Init(string myname, string text)
+        public int Init(string name, string text)
         {
-            this.myname.text = myname;
-            this.text.text = text;
-            return this.text.ReSetHeightFromText() + 1;
+            this.myname.text = name;
+            this.message.text = text;
+            return this.message.ReSetHeightFromText() + 1;
         }
     }
 }

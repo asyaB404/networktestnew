@@ -99,7 +99,7 @@ namespace ChatUI
         {
             ChatMessage chatMessage = new ChatMessage
             {
-                Sender = "233:",
+                Sender = PlayerPrefsMgr.PlayerName,
                 Message = messageInput.text
             };
             if (InstanceFinder.IsServerStarted)
