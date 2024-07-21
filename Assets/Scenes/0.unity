@@ -378,6 +378,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 90404585}
   m_CullTransparentMesh: 1
+--- !u!1 &93552911
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 93552912}
+  m_Layer: 0
+  m_Name: coins
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &93552912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93552911}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.5, y: 7.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2023300872}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &131950245
 GameObject:
   m_ObjectHideFlags: 0
@@ -4628,7 +4659,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -5330,6 +5361,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 916298625255623457, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_Size.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 916298625255623457, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_Size.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 916298625255623457, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1a94aec8c9d90314b99c9fca69f4a492, type: 3}
+    - target: {fileID: 916298625255623457, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_DrawMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4245889403139580734, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
       propertyPath: m_Name
       value: RoomMgr
@@ -5374,6 +5421,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5828167250218206530, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5828167250218206530, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6399866031406006536, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_Name
+      value: coinsPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8642582513059265756, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
       propertyPath: _isGlobal
       value: 1
@@ -5386,9 +5465,25 @@ PrefabInstance:
       propertyPath: _enablePrediction
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8642582513059265756, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: _networkBehaviours.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8673281786322946558, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_Name
+      value: coinsPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 8875622821564016996, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8673281786322946558, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 93552912}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
 --- !u!1 &1557556361
@@ -7957,6 +8052,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020298179}
   m_CullTransparentMesh: 1
+--- !u!4 &2023300872 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8622061545777119214, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
+  m_PrefabInstance: {fileID: 1550933370}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2025045853
 GameObject:
   m_ObjectHideFlags: 0

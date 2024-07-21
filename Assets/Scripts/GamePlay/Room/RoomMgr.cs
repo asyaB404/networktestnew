@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using FishNet.Object;
 using UI.Panel;
 using UnityEngine;
 
-public class RoomMgr : NetworkBehaviour
+public class RoomMgr : MonoBehaviour
 {
     public RoomType CurType { get; private set; }
     [SerializeField] private List<GamePanel> rooms = new(4);
