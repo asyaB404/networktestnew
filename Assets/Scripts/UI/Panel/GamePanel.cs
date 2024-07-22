@@ -19,7 +19,7 @@ namespace UI.Panel
             GetControl<Button>("exit").onClick.AddListener(() =>
             {
                 HideMe();
-                NetworkMgr.Instance.CreateOrCloseRoom(false);
+                NetworkMgr.Instance.CloseRoom(false);
                 NetworkMgr.Instance.JoinOrExitRoom(false);
             });
         }

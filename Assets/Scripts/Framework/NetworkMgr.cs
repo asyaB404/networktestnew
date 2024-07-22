@@ -29,6 +29,13 @@ public class NetworkMgr : MonoBehaviour
             : networkManager.ServerManager.StartConnection();
     }
 
+    public bool CloseRoom()
+    {
+        if (networkManager == null)
+            return false;
+        return networkManager.ServerManager.StopConnection(true);
+    }
+
     public bool CreateRoom(RoomType roomType)
     {
         if (networkManager == null)
