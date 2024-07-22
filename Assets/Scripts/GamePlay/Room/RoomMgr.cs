@@ -17,7 +17,7 @@ namespace GamePlay.Room
     {
         public GameObject roomPrefab;
         public static RoomMgr Instance { get; private set; }
-        public int PlayerCount { get; private set; }
+        public int PlayerCount { get; private set; } = 1;
 
         public int MaxPlayerCount
         {

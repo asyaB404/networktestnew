@@ -1,5 +1,6 @@
 using DG.Tweening;
 using FishNet.Transporting;
+using GamePlay.Room;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,7 @@ namespace UI.Panel
             if (obj.ConnectionState == LocalConnectionState.Stopped)
             {
                 HideMe();
+                RoomMgr.Instance.Exit();
             }
         }
 

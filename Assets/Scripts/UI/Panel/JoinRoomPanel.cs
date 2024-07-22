@@ -1,5 +1,6 @@
 using System;
 using FishNet.Transporting;
+using GamePlay.Room;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,7 @@ namespace UI.Panel
             if (obj.ConnectionState == LocalConnectionState.Started)
             {
                 GamePanel.Instance.ShowMe();
+                RoomMgr.Instance.Join();
             }
             else if (obj.ConnectionState == LocalConnectionState.Starting)
             {
