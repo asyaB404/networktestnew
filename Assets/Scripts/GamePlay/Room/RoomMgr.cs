@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UI.Panel;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GamePlay.Room
 {
@@ -8,6 +9,7 @@ namespace GamePlay.Room
     {
         public RoomType CurType { get; private set; }
         [SerializeField] private List<GamePanel> rooms = new(4);
+        public GameObject roomPrefab;
         public RoomMgr Instance { get; private set; }
 
         private void Awake()

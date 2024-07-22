@@ -28,16 +28,19 @@ public class NetworkMgr : MonoBehaviour
             : networkManager.ServerManager.StartConnection();
     }
 
-    public bool CreateOrCloseRoom(bool open)
+    public bool CreateRoom()
     {
         if (networkManager == null)
             return false;
-        return open
-            ? networkManager.ServerManager.StartConnection()
-            : networkManager.ServerManager.StopConnection(true);
+        bool flag = networkManager.ServerManager.StartConnection();
+        if (flag)
+        {
+            
+        }
+        return flag;
     }
 
-    public bool JoinOrExitRoom()
+    public bool JoinRoom()
     {
         if (networkManager == null)
             return false;

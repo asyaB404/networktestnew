@@ -27,7 +27,6 @@ namespace UI.Panel
         private void OnEnable()
         {
             NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
-            // NetworkMgr.Instance.networkManager.ClientManager.OnConnectedClients
         }
 
         private void OnDisable()

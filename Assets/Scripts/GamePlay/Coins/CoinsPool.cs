@@ -6,5 +6,11 @@ namespace GamePlay.Coins
     {
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
+
+
+        public void GameStart()
+        {
+            
+        }
     }
 }
