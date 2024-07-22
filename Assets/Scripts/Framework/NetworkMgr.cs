@@ -1,4 +1,3 @@
-using System;
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
@@ -14,16 +13,13 @@ public class NetworkMgr : MonoBehaviour
     public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
 
+    [SerializeField] private GameObject roomMgrPrefab;
+
     private void Awake()
     {
         Instance = this;
         networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
-    }
-
-    private void Start()
-    {
-        RoomMgr.Instance.gameObject.SetActive(true);
     }
 
     public bool CreateOrCloseRoom()
@@ -86,5 +82,14 @@ public class NetworkMgr : MonoBehaviour
     private void OnClientConnection(ClientConnectionStateArgs obj)
     {
         ClientState = obj.ConnectionState;
+        // if (obj.ConnectionState == LocalConnectionState.Started)
+        // {
+        //     GameObject gobj = Instantiate(roomMgrPrefab);
+        //     networkManager.ServerManager.Spawn(gobj);
+        // }
+        // else if (obj.ConnectionState == LocalConnectionState.Stopped)
+        // {
+        //     networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
+        // }
     }
 }
