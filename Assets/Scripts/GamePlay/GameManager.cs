@@ -1,19 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
+using GamePlay.Coins;
 using UnityEngine;
+
 
 namespace GamePlay
 {
     public class GameManager : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        }
+        public static GameManager Instance { get; private set; }
+        public List<CoinsPool> coinsPools;
 
-        // Update is called once per frame
-        void Update()
+        private void Awake()
         {
+            Instance = this;
         }
     }
 }

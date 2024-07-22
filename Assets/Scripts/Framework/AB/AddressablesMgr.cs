@@ -23,10 +23,6 @@ public class AddressablesMgr
     //有一个容器 帮助我们存储 异步加载的返回值
     private readonly Dictionary<string, AddressablesInfo> _resDic = new();
 
-    private AddressablesMgr()
-    {
-    }
-
     //异步加载资源的方法
     public void LoadAssetAsync<T>(string name, Action<AsyncOperationHandle<T>> callBack)
     {
