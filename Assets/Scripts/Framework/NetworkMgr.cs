@@ -53,16 +53,21 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
-        return ClientState != LocalConnectionState.Stopped
-            ? networkManager.ClientManager.StopConnection()
-            : networkManager.ClientManager.StartConnection();
+        return networkManager.ClientManager.StartConnection();
     }
 
-    public bool JoinOrExitRoom(bool open)
+    public bool ExitRoom()
     {
         if (networkManager == null)
             return false;
-        return open
+        return networkManager.ClientManager.StopConnection();
+    }
+
+    public bool JoinOrExitRoom()
+    {
+        if (networkManager == null)
+            return false;
+        return ClientState != LocalConnectionState.Stopped
             ? networkManager.ClientManager.StartConnection()
             : networkManager.ClientManager.StopConnection();
     }
@@ -75,5 +80,13 @@ public class NetworkMgr : MonoBehaviour
     private void OnClientConnection(ClientConnectionStateArgs obj)
     {
         ClientState = obj.ConnectionState;
+        if (obj.ConnectionState == LocalConnectionState.Started)
+        {
+            RoomMgr.Instance.gameObject.SetActive(true);
+        }
+        else if (obj.ConnectionState == LocalConnectionState.Stopped)
+        {
+            RoomMgr.Instance.gameObject.SetActive(false);
+        }
     }
 }

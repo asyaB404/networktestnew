@@ -50,7 +50,7 @@ namespace UI.Panel
             if (obj.ConnectionState == LocalConnectionState.Started)
             {
                 GamePanel.Instance.ShowMe();
-                NetworkMgr.Instance.JoinOrExitRoom(true);
+                NetworkMgr.Instance.JoinRoom();
                 Debug.Log("开启成功");
             }
             else if (obj.ConnectionState == LocalConnectionState.Starting)

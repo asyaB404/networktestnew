@@ -20,7 +20,14 @@ namespace GamePlay.Room
         public static RoomMgr Instance { get; private set; }
         public int PlayerCount { get; private set; } = 1;
 
+        [ContextMenu("test")]
+        private void Print()
+        {
+            Debug.Log(PlayerCount);
+        }
+
         public RoomType CurType { get; private set; }
+
         public int MaxPlayerCount
         {
             get
@@ -35,6 +42,7 @@ namespace GamePlay.Room
                 }
             }
         }
+
         public string RoomName { get; private set; }
 
 
@@ -59,21 +67,6 @@ namespace GamePlay.Room
         private void Awake()
         {
             Instance = this;
-        }
-
-        private void Start()
-        {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += (obj) =>
-            {
-                if (obj.ConnectionState == LocalConnectionState.Started)
-                {
-                    gameObject.SetActive(true);
-                }
-                else if (obj.ConnectionState == LocalConnectionState.Stopped)
-                {
-                    gameObject.SetActive(false);
-                }
-            };
         }
     }
 }

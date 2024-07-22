@@ -22,7 +22,7 @@ namespace UI.Panel
                 if (string.IsNullOrEmpty(s)) return;
                 NetworkMgr.Instance.tugboat.SetPort(ushort.Parse(s));
             });
-            GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinOrExitRoom(true); });
+            GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinRoom(); });
             GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
 

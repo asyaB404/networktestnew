@@ -21,7 +21,7 @@ namespace UI.Panel
             {
                 HideMe();
                 NetworkMgr.Instance.CloseRoom();
-                NetworkMgr.Instance.JoinOrExitRoom(false);
+                NetworkMgr.Instance.ExitRoom();
             });
         }
 
