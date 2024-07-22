@@ -26,9 +26,9 @@ namespace UI.Panel
                 if (string.IsNullOrEmpty(s)) return;
                 tugboat.SetPort(ushort.Parse(s));
             });
-            var i = GetControl<ToggleGroup>("selectMode").ActiveToggles().FirstOrDefault()!.transform.GetSiblingIndex();
             GetControl<Button>("create").onClick.AddListener(() =>
             {
+                var i = GetControl<ToggleGroup>("selectMode").ActiveToggles().FirstOrDefault()!.transform.GetSiblingIndex();
                 NetworkMgr.Instance.CreateRoom(RoomType.T1V1 + i, GetControl<TMP_InputField>("name").text);
             });
             GetControl<Button>("exit").onClick.AddListener(HideMe);

@@ -5502,7 +5502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8642582513059265756, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
       propertyPath: _networkBehaviours.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8673281786322946558, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
       propertyPath: m_Name
@@ -5510,7 +5510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8875622821564016996, guid: f9ee4aefd6c274e4f80590967becd3c9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

@@ -1,3 +1,4 @@
+using System;
 using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace GamePlay.Room
         public static RoomMgr Instance { get; private set; }
         public int PlayerCount { get; private set; } = 1;
 
+        public RoomType CurType { get; private set; }
         public int MaxPlayerCount
         {
             get
@@ -31,12 +33,8 @@ namespace GamePlay.Room
                 {
                     return 4;
                 }
-
-                return 2;
             }
         }
-
-        public RoomType CurType { get; private set; }
         public string RoomName { get; private set; }
 
 
@@ -61,6 +59,10 @@ namespace GamePlay.Room
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
             NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += (obj) =>
             {
                 if (obj.ConnectionState == LocalConnectionState.Started)
