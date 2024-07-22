@@ -51,7 +51,6 @@ namespace UI.Panel
             {
                 GamePanel.Instance.ShowMe();
                 NetworkMgr.Instance.JoinRoom();
-                Debug.Log("开启成功");
             }
             else if (obj.ConnectionState == LocalConnectionState.Starting)
             {

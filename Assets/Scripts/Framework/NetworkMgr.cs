@@ -1,3 +1,4 @@
+using System;
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
@@ -18,6 +19,11 @@ public class NetworkMgr : MonoBehaviour
         Instance = this;
         networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+    }
+
+    private void Start()
+    {
+        RoomMgr.Instance.gameObject.SetActive(true);
     }
 
     public bool CreateOrCloseRoom()
@@ -80,13 +86,5 @@ public class NetworkMgr : MonoBehaviour
     private void OnClientConnection(ClientConnectionStateArgs obj)
     {
         ClientState = obj.ConnectionState;
-        if (obj.ConnectionState == LocalConnectionState.Started)
-        {
-            RoomMgr.Instance.gameObject.SetActive(true);
-        }
-        else if (obj.ConnectionState == LocalConnectionState.Stopped)
-        {
-            RoomMgr.Instance.gameObject.SetActive(false);
-        }
     }
 }

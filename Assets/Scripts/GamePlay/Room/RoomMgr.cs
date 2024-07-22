@@ -24,6 +24,7 @@ namespace GamePlay.Room
         private void Print()
         {
             Debug.Log(PlayerCount);
+            Debug.Log(IsSpawned);
         }
 
         public RoomType CurType { get; private set; }
@@ -55,11 +56,23 @@ namespace GamePlay.Room
         [ServerRpc]
         public void Join()
         {
+            JoinRPC();
+        }
+
+        [ObserversRpc]
+        private void JoinRPC()
+        {
             PlayerCount += 1;
         }
 
         [ServerRpc]
         public void Exit()
+        {
+            ExitRPC();
+        }
+
+        [ObserversRpc]
+        private void ExitRPC()
         {
             PlayerCount -= 1;
         }
