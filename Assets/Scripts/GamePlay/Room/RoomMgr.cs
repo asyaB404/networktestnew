@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using UI.Panel;
+using FishNet.Object;
+using FishNet.Transporting;
 using UnityEngine;
 
 
@@ -12,30 +12,66 @@ namespace GamePlay.Room
         T4VS
     }
 
-    public class RoomMgr : MonoBehaviour
+
+    public class RoomMgr : NetworkBehaviour
     {
         public GameObject roomPrefab;
-        [SerializeField] private List<GamePanel> rooms = new(4);
-        public RoomType CurType { get; private set; }
         public static RoomMgr Instance { get; private set; }
         public int PlayerCount { get; private set; }
 
-
-        public void Create(RoomType roomType)
+        public int MaxPlayerCount
         {
-            if (roomType == RoomType.T1V1)
+            get
             {
-                NetworkMgr.Instance.tugboat.SetMaximumClients(2);
+                if (CurType == RoomType.T1V1)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 4;
+                }
+
+                return 2;
             }
-            else
-            {
-                NetworkMgr.Instance.tugboat.SetMaximumClients(4);
-            }
+        }
+
+        public RoomType CurType { get; private set; }
+        public string RoomName { get; private set; }
+
+
+        public void Create(RoomType roomType, string roomName)
+        {
+            CurType = roomType;
+            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
+        }
+
+        [ServerRpc]
+        public void Join()
+        {
+            PlayerCount += 1;
+        }
+
+        [ServerRpc]
+        public void Exit()
+        {
+            PlayerCount -= 1;
         }
 
         private void Awake()
         {
             Instance = this;
+            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += (obj) =>
+            {
+                if (obj.ConnectionState == LocalConnectionState.Started)
+                {
+                    gameObject.SetActive(true);
+                }
+                else if (obj.ConnectionState == LocalConnectionState.Stopped)
+                {
+                    gameObject.SetActive(false);
+                }
+            };
         }
     }
 }

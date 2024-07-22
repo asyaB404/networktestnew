@@ -36,14 +36,14 @@ public class NetworkMgr : MonoBehaviour
         return networkManager.ServerManager.StopConnection(true);
     }
 
-    public bool CreateRoom(RoomType roomType)
+    public bool CreateRoom(RoomType roomType, string roomName)
     {
         if (networkManager == null)
             return false;
         bool flag = networkManager.ServerManager.StartConnection();
         if (flag)
         {
-            RoomMgr.Instance.Create(roomType);
+            RoomMgr.Instance.Create(roomType, roomName);
         }
 
         return flag;

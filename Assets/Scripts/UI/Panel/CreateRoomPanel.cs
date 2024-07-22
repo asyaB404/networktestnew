@@ -29,7 +29,7 @@ namespace UI.Panel
             var i = GetControl<ToggleGroup>("selectMode").ActiveToggles().FirstOrDefault()!.transform.GetSiblingIndex();
             GetControl<Button>("create").onClick.AddListener(() =>
             {
-                NetworkMgr.Instance.CreateRoom(RoomType.T1V1 + i);
+                NetworkMgr.Instance.CreateRoom(RoomType.T1V1 + i, GetControl<TMP_InputField>("name").text);
             });
             GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
