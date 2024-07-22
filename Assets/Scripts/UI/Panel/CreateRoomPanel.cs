@@ -1,3 +1,4 @@
+using System.Linq;
 using FishNet.Transporting;
 using TMPro;
 using UnityEngine;
@@ -24,7 +25,11 @@ namespace UI.Panel
                 if (string.IsNullOrEmpty(s)) return;
                 tugboat.SetPort(ushort.Parse(s));
             });
-            GetControl<Button>("create").onClick.AddListener(() => { NetworkMgr.Instance.CreateOrCloseRoom(true); });
+            var i = GetControl<ToggleGroup>("selectMode").ActiveToggles().FirstOrDefault()!.transform.GetSiblingIndex();
+            GetControl<Button>("create").onClick.AddListener(() =>
+            {
+                NetworkMgr.Instance.CreateRoom(RoomType.T1V1 + i);
+            });
             GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
 

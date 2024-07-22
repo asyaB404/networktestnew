@@ -1,6 +1,7 @@
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
+using GamePlay.Room;
 using UnityEngine;
 
 
@@ -28,15 +29,16 @@ public class NetworkMgr : MonoBehaviour
             : networkManager.ServerManager.StartConnection();
     }
 
-    public bool CreateRoom()
+    public bool CreateRoom(RoomType roomType)
     {
         if (networkManager == null)
             return false;
         bool flag = networkManager.ServerManager.StartConnection();
         if (flag)
         {
-            
+            RoomMgr.Instance.Create(roomType);
         }
+
         return flag;
     }
 

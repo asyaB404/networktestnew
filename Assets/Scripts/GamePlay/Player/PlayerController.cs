@@ -13,6 +13,8 @@ namespace GamePlay.Player
         private float X => transform.localPosition.x;
         private float Y => transform.localPosition.y;
 
+        private Tween _moveTween;
+
         private void Awake()
         {
             player = GetComponent<Player>();
@@ -24,19 +26,17 @@ namespace GamePlay.Player
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    transform.DOLocalMoveX(X - 1,MoveDuration);
+                    _moveTween.Kill(true);
+                    _moveTween = transform.DOLocalMoveX(X - 1, MoveDuration).SetEase(Ease.Linear);
                     _moveTimer = MoveDuration;
                 }
                 else if (Input.GetKeyDown(KeyCode.D))
                 {
-                    transform.DOLocalMoveX(X + 1,MoveDuration);
+                    _moveTween.Kill(true);
+                    _moveTween = transform.DOLocalMoveX(X + 1, MoveDuration).SetEase(Ease.Linear);
                     _moveTimer = MoveDuration;
                 }
             }
-        }
-
-        private void FixedUpdate()
-        {
         }
     }
 }

@@ -13,14 +13,14 @@ namespace GamePlay.Room
 {
     public class Room : NetworkBehaviour
     {
-        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject prefab;
+        public RoomType RoomType { get; private set; }
         public readonly SyncVar<int> ID = new();
+
 
         public void Close()
         {
             Despawn();
         }
-
-        // public void 
     }
 }
