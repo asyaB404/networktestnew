@@ -1,6 +1,5 @@
 using System;
-using FishNet.Object;
-using FishNet.Transporting;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 
@@ -14,17 +13,24 @@ namespace GamePlay.Room
     }
 
 
-    public class RoomMgr : NetworkBehaviour
+    public class RoomMgr : MonoBehaviour
     {
         public GameObject roomPrefab;
         public static RoomMgr Instance { get; private set; }
-        public int PlayerCount { get; private set; } = 1;
+
+        private readonly SyncVar<int> _playerCount = new SyncVar<int>(1);
+
+        public int PlayerCount
+        {
+            get => _playerCount.Value;
+            private set => _playerCount.Value = value;
+        }
+
 
         [ContextMenu("test")]
         private void Print()
         {
             Debug.Log(PlayerCount);
-            Debug.Log(IsSpawned);
         }
 
         public RoomType CurType { get; private set; }
@@ -53,33 +59,25 @@ namespace GamePlay.Room
             NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
         }
 
-        [ServerRpc]
-        public void Join()
-        {
-            JoinRPC();
-        }
 
-        [ObserversRpc]
-        private void JoinRPC()
+        public void Join()
         {
             PlayerCount += 1;
         }
 
-        [ServerRpc]
         public void Exit()
-        {
-            ExitRPC();
-        }
-
-        [ObserversRpc]
-        private void ExitRPC()
         {
             PlayerCount -= 1;
         }
 
+
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
         }
     }
 }
