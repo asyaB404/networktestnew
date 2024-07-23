@@ -1,4 +1,5 @@
 using System;
+using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
@@ -13,17 +14,17 @@ namespace GamePlay.Room
     }
 
 
-    public class RoomMgr : MonoBehaviour
+    public class RoomMgr : NetworkBehaviour
     {
         public GameObject roomPrefab;
         public static RoomMgr Instance { get; private set; }
 
-        private readonly SyncVar<int> _playerCount = new SyncVar<int>(1);
-
+        private int _playerCount = 1;
+        
         public int PlayerCount
         {
-            get => _playerCount.Value;
-            private set => _playerCount.Value = value;
+            get => _playerCount;
+            private set => _playerCount = value;
         }
 
 
@@ -31,6 +32,14 @@ namespace GamePlay.Room
         private void Print()
         {
             Debug.Log(PlayerCount);
+            Debug.Log(GetComponent<NetworkObject>().IsSceneObject);
+            Debug.Log(IsSpawned);
+        }
+        
+        [ContextMenu("test1")]
+        private void test1()
+        {
+            NetworkMgr.Instance.networkManager.ServerManager.Spawn(gameObject);
         }
 
         public RoomType CurType { get; private set; }

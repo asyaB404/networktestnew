@@ -12,7 +12,6 @@ public class NetworkMgr : MonoBehaviour
     public LocalConnectionState ClientState { get; private set; }
     public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
-
     [SerializeField] private GameObject roomMgrPrefab;
 
     private void Awake()
