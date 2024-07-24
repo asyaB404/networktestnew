@@ -45,6 +45,11 @@ public class NetworkMgr : MonoBehaviour
         if (networkManager == null)
             return false;
         var flag = networkManager.ClientManager.StartConnection();
+        if (flag)
+        {
+            networkManager.ServerManager.Spawn(RoomMgr.Instance.gameObject);
+        }
+
         return flag;
     }
 
@@ -68,7 +73,6 @@ public class NetworkMgr : MonoBehaviour
         ClientState = obj.ConnectionState;
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
-            networkManager.ServerManager.Spawn(RoomMgr.Instance.gameObject);
             RoomMgr.Instance.Join();
         }
         else if (obj.ConnectionState == LocalConnectionState.Stopped)

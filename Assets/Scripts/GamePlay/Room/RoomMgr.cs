@@ -29,7 +29,7 @@ namespace GamePlay.Room
         }
 
 
-        [ContextMenu("test")]
+        [ContextMenu("test"),ServerRpc(RequireOwnership = false)]
         private void Print()
         {
             Debug.Log(PlayerCount);
@@ -72,6 +72,7 @@ namespace GamePlay.Room
         [ServerRpc(RequireOwnership = false)]
         public void Join()
         {
+            Debug.Log("++1");
             PlayerCount += 1;
             JoinRpc();
         }
@@ -85,6 +86,7 @@ namespace GamePlay.Room
         [ServerRpc(RequireOwnership = false)]
         public void Exit()
         {
+            Debug.Log("--1");
             PlayerCount -= 1;
             ExitRpc();
         }
