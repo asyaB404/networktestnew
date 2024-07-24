@@ -12,29 +12,12 @@ public class NetworkMgr : MonoBehaviour
     public LocalConnectionState ClientState { get; private set; }
     public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
-    [SerializeField] private GameObject roomMgrPrefab;
 
     private void Awake()
     {
         Instance = this;
         networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
-    }
-
-    public bool CreateOrCloseRoom()
-    {
-        if (networkManager == null)
-            return false;
-        return ServerState != LocalConnectionState.Stopped
-            ? networkManager.ServerManager.StopConnection(true)
-            : networkManager.ServerManager.StartConnection();
-    }
-
-    public bool CloseRoom()
-    {
-        if (networkManager == null)
-            return false;
-        return networkManager.ServerManager.StopConnection(true);
     }
 
     public bool CreateRoom(RoomType roomType, string roomName)
@@ -50,27 +33,29 @@ public class NetworkMgr : MonoBehaviour
         return flag;
     }
 
+    public bool CloseRoom()
+    {
+        if (networkManager == null)
+            return false;
+        return networkManager.ServerManager.StopConnection(true);
+    }
+
     public bool JoinRoom()
     {
         if (networkManager == null)
             return false;
-        return networkManager.ClientManager.StartConnection();
+        var flag = networkManager.ClientManager.StartConnection();
+        return flag;
     }
 
     public bool ExitRoom()
     {
         if (networkManager == null)
             return false;
-        return networkManager.ClientManager.StopConnection();
-    }
 
-    public bool JoinOrExitRoom()
-    {
-        if (networkManager == null)
-            return false;
-        return ClientState != LocalConnectionState.Stopped
-            ? networkManager.ClientManager.StartConnection()
-            : networkManager.ClientManager.StopConnection();
+        RoomMgr.Instance.Exit();
+        var flag = networkManager.ClientManager.StopConnection();
+        return flag;
     }
 
     private void OnServerConnection(ServerConnectionStateArgs obj)
@@ -81,14 +66,14 @@ public class NetworkMgr : MonoBehaviour
     private void OnClientConnection(ClientConnectionStateArgs obj)
     {
         ClientState = obj.ConnectionState;
-        // if (obj.ConnectionState == LocalConnectionState.Started)
-        // {
-        //     GameObject gobj = Instantiate(roomMgrPrefab);
-        //     networkManager.ServerManager.Spawn(gobj);
-        // }
-        // else if (obj.ConnectionState == LocalConnectionState.Stopped)
-        // {
-        //     networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
-        // }
+        if (obj.ConnectionState == LocalConnectionState.Started)
+        {
+            networkManager.ServerManager.Spawn(RoomMgr.Instance.gameObject);
+            RoomMgr.Instance.Join();
+        }
+        else if (obj.ConnectionState == LocalConnectionState.Stopped)
+        {
+            // networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
+        }
     }
 }

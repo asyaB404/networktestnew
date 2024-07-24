@@ -2,6 +2,7 @@ using System;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 namespace GamePlay.Room
@@ -19,12 +20,12 @@ namespace GamePlay.Room
         public GameObject roomPrefab;
         public static RoomMgr Instance { get; private set; }
 
-        private int _playerCount = 1;
-        
+        [SerializeField]private int playerCount;
+
         public int PlayerCount
         {
-            get => _playerCount;
-            private set => _playerCount = value;
+            get => playerCount;
+            private set => playerCount = value;
         }
 
 
@@ -32,10 +33,9 @@ namespace GamePlay.Room
         private void Print()
         {
             Debug.Log(PlayerCount);
-            Debug.Log(GetComponent<NetworkObject>().IsSceneObject);
             Debug.Log(IsSpawned);
         }
-        
+
         [ContextMenu("test1")]
         private void test1()
         {
@@ -69,14 +69,30 @@ namespace GamePlay.Room
         }
 
 
+        [ServerRpc(RequireOwnership = false)]
         public void Join()
         {
             PlayerCount += 1;
+            JoinRpc();
         }
 
+        [ObserversRpc]
+        private void JoinRpc()
+        {
+            
+        }
+
+        [ServerRpc(RequireOwnership = false)]
         public void Exit()
         {
             PlayerCount -= 1;
+            ExitRpc();
+        }
+
+        [ObserversRpc]
+        private void ExitRpc()
+        {
+            
         }
 
 

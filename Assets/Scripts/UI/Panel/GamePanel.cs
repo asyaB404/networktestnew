@@ -45,7 +45,6 @@ namespace UI.Panel
             if (obj.ConnectionState == LocalConnectionState.Stopped)
             {
                 HideMe();
-                RoomMgr.Instance.Exit();
             }
         }
 
