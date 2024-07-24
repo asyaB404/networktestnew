@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using FishNet;
 using FishNet.Broadcast;
 using FishNet.Connection;
@@ -15,14 +17,14 @@ namespace ChatUI
         public string Message;
     }
 
-    public class ChatPanel : MonoBehaviour
+    public class ChatPanel : MonoBehaviour, IPointerEnterHandler
     {
         public static ChatPanel Instance;
-        [SerializeField] private RectTransform content;
+        private int _totalLineCount = 0;
         private Button[] _buttons;
+        [SerializeField] private RectTransform content;
         [SerializeField] private TMP_InputField messageInput;
-        public int totalLineCount = 0;
-
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private GameObject messagePrefab;
         [SerializeField] private int lineHeight = 40;
 
@@ -83,13 +85,16 @@ namespace ChatUI
                 return;
             }
 
+            ShowChatPanelCoroutine();
             GameObject newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
-            pos.y = -totalLineCount * lineHeight;
+            pos.y = -_totalLineCount * lineHeight;
             newMessage.transform.localPosition = pos;
-            totalLineCount += newMessage.GetComponent<Message>().Init(chatMessage.Sender, chatMessage.Message) + 1;
+            newMessage.transform.localScale = Vector3.zero;
+            newMessage.transform.DOScale(1, 0.2f);
+            _totalLineCount += newMessage.GetComponent<Message>().Init(chatMessage.Sender, chatMessage.Message) + 1;
             Vector2 size = content.sizeDelta;
-            size.y = lineHeight * (totalLineCount + 2);
+            size.y = lineHeight * (_totalLineCount + 2);
             content.sizeDelta = size;
             if (size.y >= 700)
                 content.localPosition = new Vector3(0, size.y - 700);
@@ -128,7 +133,20 @@ namespace ChatUI
             size.y = 700;
             content.sizeDelta = size;
             content.localPosition = new Vector3(0, 0);
-            totalLineCount = 0;
+            _totalLineCount = 0;
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            Debug.Log(eventData);
+            ShowChatPanelCoroutine();
+        }
+
+        private void ShowChatPanelCoroutine()
+        {
+            canvasGroup.DOKill(true);
+            canvasGroup.DOFade(1f, 0.15f)
+                .OnComplete(() => { DOVirtual.DelayedCall(5, () => { canvasGroup.DOFade(0.2f, 0.25f); }); });
         }
     }
 }
