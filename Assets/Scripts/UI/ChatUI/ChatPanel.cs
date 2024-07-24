@@ -37,6 +37,7 @@ namespace ChatUI
 
         private void OnEnable()
         {
+            ShowChatPanelCoroutine();
             _buttons[0].onClick.AddListener(SendChatMessage);
             messageInput.onSubmit.AddListener(OnInputSubmit);
             messageInput.onValidateInput += ValidateInput;
@@ -128,7 +129,7 @@ namespace ChatUI
 
         public void Clear()
         {
-            (content as Transform).DestroyAllChildren();
+            content.DestroyAllChildren();
             Vector3 size = content.sizeDelta;
             size.y = 700;
             content.sizeDelta = size;
@@ -138,15 +139,14 @@ namespace ChatUI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log(eventData);
             ShowChatPanelCoroutine();
         }
 
         private void ShowChatPanelCoroutine()
         {
             canvasGroup.DOKill(true);
-            canvasGroup.DOFade(1f, 0.15f)
-                .OnComplete(() => { DOVirtual.DelayedCall(5, () => { canvasGroup.DOFade(0.2f, 0.25f); }); });
+            canvasGroup.DOFade(1f, 0.35f)
+                .OnComplete(() => { DOVirtual.DelayedCall(5f, () => { canvasGroup.DOFade(0f, 0.35f); }); });
         }
     }
 }
