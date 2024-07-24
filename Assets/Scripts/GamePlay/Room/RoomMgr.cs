@@ -96,6 +96,20 @@ namespace GamePlay.Room
         {
             
         }
+        
+        [ServerRpc(RequireOwnership = false)]
+        public void Close()
+        {
+            Debug.Log("0");
+            PlayerCount = 0;
+            CloseRpc();
+        }
+
+        [ObserversRpc]
+        private void CloseRpc()
+        {
+            
+        }
 
 
         private void Awake()

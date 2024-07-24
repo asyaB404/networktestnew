@@ -37,6 +37,7 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
+        RoomMgr.Instance.Close();
         return networkManager.ServerManager.StopConnection(true);
     }
 
