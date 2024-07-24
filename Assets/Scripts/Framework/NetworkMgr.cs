@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using FishNet.Connection;
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
@@ -37,7 +39,6 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
-        RoomMgr.Instance.Close();
         return networkManager.ServerManager.StopConnection(true);
     }
 
@@ -59,7 +60,6 @@ public class NetworkMgr : MonoBehaviour
         if (networkManager == null)
             return false;
 
-        RoomMgr.Instance.Exit();
         var flag = networkManager.ClientManager.StopConnection();
         return flag;
     }
@@ -74,7 +74,6 @@ public class NetworkMgr : MonoBehaviour
         ClientState = obj.ConnectionState;
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
-            RoomMgr.Instance.Join();
         }
         else if (obj.ConnectionState == LocalConnectionState.Stopped)
         {

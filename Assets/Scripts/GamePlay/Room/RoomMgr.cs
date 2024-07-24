@@ -1,8 +1,10 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using FishNet.Connection;
+using FishNet.Managing;
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
+using FishNet.Transporting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 
 namespace GamePlay.Room
@@ -17,23 +19,15 @@ namespace GamePlay.Room
 
     public class RoomMgr : NetworkBehaviour
     {
-        public GameObject roomPrefab;
         public static RoomMgr Instance { get; private set; }
-
-        [SerializeField]private int playerCount;
-
-        public int PlayerCount
-        {
-            get => playerCount;
-            private set => playerCount = value;
-        }
+        public int PlayerCount => NetworkMgr.Instance.networkManager.ServerManager.Clients.Count;
+        private readonly List<NetworkConnection> _players = Enumerable.Repeat<NetworkConnection>(null,4).ToList();
 
 
-        [ContextMenu("test"),ServerRpc(RequireOwnership = false)]
+        [ContextMenu("test"), ServerRpc(RequireOwnership = false)]
         private void Print()
         {
-            Debug.Log(PlayerCount);
-            Debug.Log(IsSpawned);
+            Debug.Log(_players.ToString());
         }
 
         [ContextMenu("test1")]
@@ -73,52 +67,56 @@ namespace GamePlay.Room
         public void Join()
         {
             Debug.Log("++1");
-            PlayerCount += 1;
             JoinRpc();
         }
 
         [ObserversRpc]
         private void JoinRpc()
         {
-            
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void Exit()
         {
             Debug.Log("--1");
-            PlayerCount -= 1;
             ExitRpc();
         }
 
         [ObserversRpc]
         private void ExitRpc()
         {
-            
         }
-        
+
         [ServerRpc(RequireOwnership = false)]
         public void Close()
         {
             Debug.Log("0");
-            PlayerCount = 0;
             CloseRpc();
         }
 
         [ObserversRpc]
         private void CloseRpc()
         {
-            
         }
 
 
         private void Awake()
         {
             Instance = this;
-        }
-
-        private void Start()
-        {
+            NetworkManager networkManager = NetworkMgr.Instance.networkManager;
+            networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
+            {
+                if (obj.ConnectionState == RemoteConnectionState.Started)
+                {
+                    Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
+                    _players[PlayerCount - 1] = connection;
+                }
+                else if (obj.ConnectionState == RemoteConnectionState.Stopped)
+                {
+                    Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                    _players[PlayerCount - 1] = null;
+                }
+            };
         }
     }
 }
