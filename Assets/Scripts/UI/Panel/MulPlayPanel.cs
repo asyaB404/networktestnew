@@ -9,7 +9,7 @@ namespace UI.Panel
             base.Init();
             GetControl<Button>("create")?.onClick.AddListener(() => { CreateRoomPanel.Instance.ShowMe(); });
             GetControl<Button>("join")?.onClick.AddListener(() => { JoinRoomPanel.Instance.ShowMe(); });
-            GetControl<Button>("exit")?.onClick.AddListener(HideMe);
+            GetControl<Button>("exit")?.onClick.AddListener(() => { HideMe();});
         }
     }
 }

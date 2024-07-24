@@ -12,17 +12,22 @@ namespace UI.Panel
     public class GamePanel : BasePanel<GamePanel>
     {
         private int _playerCount;
+        [SerializeField] private GameObject menuPanel;
 
         public override void Init()
         {
             base.Init();
-
-            GetControl<Button>("exit").onClick.AddListener(() =>
+            GetControl<Button>("menu").onClick.AddListener(() =>
             {
-                HideMe();
-                NetworkMgr.Instance.CloseRoom();
-                NetworkMgr.Instance.ExitRoom();
+                HideMe(false);
+                // NetworkMgr.Instance.CloseRoom();
+                // NetworkMgr.Instance.ExitRoom();
             });
+        }
+
+        public override void HideMe(bool isPressedEsc = false)
+        {
+            base.HideMe(isPressedEsc);
         }
 
         private void OnEnable()
@@ -47,11 +52,6 @@ namespace UI.Panel
                 HideMe();
             }
         }
-
-        private void SpawnPlayer()
-        {
-        }
-
         public override void CallBack(bool flag)
         {
             transform.DOKill(true);

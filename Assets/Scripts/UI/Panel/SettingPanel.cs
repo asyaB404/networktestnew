@@ -19,7 +19,7 @@ namespace UI.Panel
 
                 PlayerPrefsMgr.PlayerName = s;
             });
-            GetControl<Button>("exit").onClick.AddListener(HideMe);
+            GetControl<Button>("exit").onClick.AddListener(() => { HideMe(); });
         }
     }
 }

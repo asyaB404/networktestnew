@@ -13,9 +13,9 @@ namespace UI.Panel
         }
 
 
-        public override void HideMe()
+        public override void HideMe(bool isPressedEsc = false)
         {
-            //确定要退出游戏吗？
+            
         }
     }
 }

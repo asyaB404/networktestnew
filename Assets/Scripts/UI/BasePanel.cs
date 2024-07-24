@@ -27,7 +27,7 @@ namespace UI
         /// <summary>
         /// hideme的同时会尝试将其弹出，注意不能调用栈顶以外面板的hideme
         /// </summary>
-        void HideMe();
+        void HideMe(bool isPressedEsc);
 
         /// <summary>
         /// 根据isactive来决定激活showme还是hideme
@@ -82,7 +82,7 @@ namespace UI
             IsActive = true;
         }
 
-        public virtual void HideMe()
+        public virtual void HideMe(bool isPressedEsc = false)
         {
             if (!IsActive) return;
             if (
@@ -101,7 +101,7 @@ namespace UI
         public virtual void ChangeMe()
         {
             if (IsActive)
-                HideMe();
+                HideMe(false);
             else
                 ShowMe();
         }

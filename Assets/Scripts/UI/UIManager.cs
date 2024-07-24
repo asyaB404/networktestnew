@@ -14,7 +14,7 @@ namespace UI
             {
                 if (Peek() != null)
                 {
-                    Peek().HideMe();
+                    Peek().HideMe(true);
                 }
             }
         }
