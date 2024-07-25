@@ -40,6 +40,12 @@ namespace UI
             _panels.Clear();
         }
 
+        
+        /// <summary>
+        /// 存入栈中
+        /// </summary>
+        /// <param name="basePanel"></param>
+        /// <param name="callback">是否先执行栈顶的渐渐隐藏</param>
         public void PushPanel(IBasePanel basePanel, bool callback = true)
         {
             if (basePanel.IsInStack)
@@ -48,18 +54,19 @@ namespace UI
                 return;
             }
 
-            if (Peek() != null)
+            if (callback && Peek() != null)
             {
                 Peek().CallBack(false);
             }
 
             _panels.Push(basePanel);
-            if (callback)
-            {
-                basePanel.CallBack(true);
-            }
+            basePanel.CallBack(true);
         }
 
+        /// <summary>
+        /// 弹出栈顶元素
+        /// </summary>
+        /// <param name="callback">弹出后，是否执行新的栈顶的渐渐显示</param>
         public IBasePanel PopPanel(bool callback = true)
         {
             if (_panels.Count <= 0)

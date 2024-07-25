@@ -1,10 +1,9 @@
-using UI.Panel;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.GamingUI
 {
-    public class MenuPanel : MonoBehaviour
+    public class MenuPanel : GameUI
     {
         private Button[] _buttons;
 

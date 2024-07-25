@@ -25,11 +25,11 @@ namespace UI.Panel
             });
         }
 
+
         public override void HideMe(bool isPressedEsc = false)
         {
             if (isPressedEsc)
             {
-                
             }
             else
             {
@@ -59,6 +59,7 @@ namespace UI.Panel
                 HideMe();
             }
         }
+
         public override void CallBack(bool flag)
         {
             transform.DOKill(true);
