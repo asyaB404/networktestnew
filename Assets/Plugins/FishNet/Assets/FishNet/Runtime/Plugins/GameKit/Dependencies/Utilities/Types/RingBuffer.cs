@@ -812,7 +812,9 @@ namespace GameKit.Dependencies.Utilities.Types
             //Full reset if value is at or more than written.
             if (length >= _written)
             {
+#pragma warning disable CS0618 // 类型或成员已过时
                 Reset();
+#pragma warning restore CS0618 // 类型或成员已过时
                 return;
             }
 

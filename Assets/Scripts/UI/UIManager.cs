@@ -42,7 +42,7 @@ namespace UI
 
         public void PushPanel(IBasePanel basePanel, bool callback = true)
         {
-            if (basePanel.IsActive)
+            if (basePanel.IsInStack)
             {
                 Debug.LogWarning("已经存在于栈内，无法再将其存入栈内");
                 return;
@@ -84,12 +84,7 @@ namespace UI
 
         public IBasePanel Peek()
         {
-            if (_panels.Count <= 0)
-            {
-                return null;
-            }
-
-            return _panels.Peek();
+            return _panels.Count <= 0 ? null : _panels.Peek();
         }
     }
 }

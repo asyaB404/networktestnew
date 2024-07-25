@@ -27,7 +27,14 @@ namespace UI.Panel
 
         public override void HideMe(bool isPressedEsc = false)
         {
-            base.HideMe(isPressedEsc);
+            if (isPressedEsc)
+            {
+                
+            }
+            else
+            {
+                base.HideMe(false);
+            }
         }
 
         private void OnEnable()
@@ -57,14 +64,14 @@ namespace UI.Panel
             transform.DOKill(true);
             if (flag)
             {
-                MyCanvasGroup.interactable = true;
+                CanvasGroupInstance.interactable = true;
                 gameObject.SetActive(true);
                 transform.localScale = Vector3.zero;
                 transform.DOScale(1, UIConst.UIDuration);
             }
             else
             {
-                MyCanvasGroup.interactable = false;
+                CanvasGroupInstance.interactable = false;
                 transform.DOScale(0, UIConst.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
             }
         }
