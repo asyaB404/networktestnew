@@ -1,4 +1,3 @@
-using System.Collections;
 using DG.Tweening;
 using FishNet;
 using FishNet.Broadcast;
@@ -15,6 +14,12 @@ namespace ChatUI
     {
         public string Sender;
         public string Message;
+
+        public ChatMessage(string sender, string message)
+        {
+            Sender = sender;
+            Message = message;
+        }
     }
 
     public class ChatPanel : MonoBehaviour, IPointerEnterHandler
@@ -35,14 +40,16 @@ namespace ChatUI
             _buttons = GetComponentsInChildren<Button>(true);
         }
 
+
         private void OnEnable()
         {
             ShowChatPanelCoroutine();
-            _buttons[0].onClick.AddListener(SendChatMessage);
+            _buttons[0].onClick.AddListener(SendInputField);
             messageInput.onSubmit.AddListener(OnInputSubmit);
             messageInput.onValidateInput += ValidateInput;
             InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
+            InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnection;
         }
 
         private char ValidateInput(string text, int charIndex, char addedChar)
@@ -59,11 +66,24 @@ namespace ChatUI
         private void OnDisable()
         {
             Clear();
-            _buttons[0].onClick.RemoveListener(SendChatMessage);
+            _buttons[0].onClick.RemoveListener(SendInputField);
             messageInput.onSubmit.RemoveListener(OnInputSubmit);
             messageInput.onValidateInput -= ValidateInput;
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
+            InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnection;
+        }
+
+        private void OnRemoteConnection(NetworkConnection connection, RemoteConnectionStateArgs obj)
+        {
+            if (obj.ConnectionState == RemoteConnectionState.Started)
+            {
+                InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
+            }
+            else if (obj.ConnectionState == RemoteConnectionState.Stopped)
+            {
+                InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
+            }
         }
 
         private void OnClientChatMessageReceived(ChatMessage chatMessage, Channel channel)
@@ -101,28 +121,28 @@ namespace ChatUI
                 content.localPosition = new Vector3(0, size.y - 700);
         }
 
-        private void SendChatMessage()
+        private void SendInputField()
+        {
+            SendChatMessage(PlayerPrefsMgr.PlayerName, messageInput.text);
+            messageInput.text = null;
+        }
+
+        public void SendChatMessage(string sender, string text)
         {
             ChatMessage chatMessage = new ChatMessage
             {
-                Sender = PlayerPrefsMgr.PlayerName,
-                Message = messageInput.text
+                Sender = sender,
+                Message = text
             };
             if (InstanceFinder.IsServerStarted)
-            {
                 InstanceFinder.ServerManager.Broadcast(chatMessage);
-                messageInput.text = null;
-            }
             else if (InstanceFinder.IsClientStarted)
-            {
                 InstanceFinder.ClientManager.Broadcast(chatMessage);
-                messageInput.text = null;
-            }
         }
 
         private void OnInputSubmit(string message)
         {
-            SendChatMessage();
+            SendInputField();
             EventSystem.current.SetSelectedGameObject(messageInput.gameObject, null);
             messageInput.OnPointerClick(new PointerEventData(EventSystem.current));
         }

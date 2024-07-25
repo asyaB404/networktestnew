@@ -1,6 +1,7 @@
 using DG.Tweening;
 using FishNet.Transporting;
 using GamePlay.Room;
+using UI.GamingUI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +13,15 @@ namespace UI.Panel
     public class GamePanel : BasePanel<GamePanel>
     {
         private int _playerCount;
-        [SerializeField] private GameObject menuPanel;
+        [SerializeField] private MenuPanel menuPanel;
 
         public override void Init()
         {
             base.Init();
+            menuPanel = GetComponentInChildren<MenuPanel>(true);
             GetControl<Button>("menu").onClick.AddListener(() =>
             {
-                HideMe(false);
-                // NetworkMgr.Instance.CloseRoom();
-                // NetworkMgr.Instance.ExitRoom();
+                menuPanel.ShowMe();
             });
         }
 
@@ -30,6 +30,7 @@ namespace UI.Panel
         {
             if (isPressedEsc)
             {
+                menuPanel.ChangeMe();
             }
             else
             {
