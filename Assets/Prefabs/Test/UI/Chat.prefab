@@ -517,6 +517,7 @@ GameObject:
   - component: {fileID: 4525357533384009723}
   - component: {fileID: 2737170808597737908}
   - component: {fileID: 8968083932375083672}
+  - component: {fileID: 243880875014644882}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -680,6 +681,18 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
+--- !u!114 &243880875014644882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301493799283292385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c382daa2cb42d9a3078412f69f1d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3275074546097160643
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,7 +909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content: {fileID: 7361297459246726723}
   messageInput: {fileID: 8968083932375083672}
-  totalLineCount: 0
+  canvasGroup: {fileID: 8394987398649184863}
   messagePrefab: {fileID: 932797467922521988, guid: 6c4e435b4c7336d46b983d695898f648, type: 3}
   lineHeight: 40
 --- !u!225 &8394987398649184863
@@ -907,7 +920,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5161435991544639982}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.2
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

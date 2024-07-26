@@ -22,13 +22,14 @@ namespace ChatUI
         }
     }
 
-    public class ChatPanel : MonoBehaviour, IPointerEnterHandler
+    public class ChatPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public static ChatPanel Instance;
         private int _totalLineCount = 0;
         private Button[] _buttons;
         [SerializeField] private RectTransform content;
         [SerializeField] private TMP_InputField messageInput;
+        [SerializeField] private ChatInput chatInput;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private GameObject messagePrefab;
         [SerializeField] private int lineHeight = 40;
@@ -37,13 +38,13 @@ namespace ChatUI
         private void Awake()
         {
             Instance = this;
+            chatInput = messageInput.GetComponent<ChatInput>();
             _buttons = GetComponentsInChildren<Button>(true);
         }
 
-
         private void OnEnable()
         {
-            ShowChatPanelCoroutine();
+            HideChatPanelCoroutine(5f);
             _buttons[0].onClick.AddListener(SendInputField);
             messageInput.onSubmit.AddListener(OnInputSubmit);
             messageInput.onValidateInput += ValidateInput;
@@ -106,7 +107,7 @@ namespace ChatUI
                 return;
             }
 
-            ShowChatPanelCoroutine();
+            ShowChatPanelCoroutine(3);
             GameObject newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
             pos.y = -_totalLineCount * lineHeight;
@@ -157,16 +158,48 @@ namespace ChatUI
             _totalLineCount = 0;
         }
 
+
+        private Tween _tween;
+
+        public void ShowChatPanelCoroutine(float duration = 0)
+        {
+            if (_tween.IsActive())
+                return;
+            if (duration <= 0)
+            {
+                canvasGroup.DOFade(1f, 0.35f);
+            }
+            else
+            {
+                canvasGroup.DOFade(1f, 0.35f).OnComplete(() =>
+                {
+                    DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
+                });
+            }
+        }
+
+        public void HideChatPanelCoroutine(float duration = 0f)
+        {
+            if (_tween.IsActive())
+                return;
+            DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
+        }
+
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (_tween.IsActive())
+                return;
             ShowChatPanelCoroutine();
         }
 
-        private void ShowChatPanelCoroutine()
+        public void OnPointerExit(PointerEventData eventData)
         {
-            canvasGroup.DOKill(true);
-            canvasGroup.DOFade(1f, 0.35f)
-                .OnComplete(() => { DOVirtual.DelayedCall(5f, () => { canvasGroup.DOFade(0f, 0.35f); }); });
+            if (chatInput.IsSelected)
+            {
+                return;
+            }
+
+            HideChatPanelCoroutine();
         }
     }
 }
