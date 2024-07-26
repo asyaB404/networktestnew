@@ -113,7 +113,7 @@ namespace ChatUI
             pos.y = -_totalLineCount * lineHeight;
             newMessage.transform.localPosition = pos;
             newMessage.transform.localScale = Vector3.zero;
-            newMessage.transform.DOScale(1, 0.2f);
+            newMessage.transform.DOScale(1, 0.5f);
             _totalLineCount += newMessage.GetComponent<Message>().Init(chatMessage.Sender, chatMessage.Message) + 1;
             Vector2 size = content.sizeDelta;
             size.y = lineHeight * (_totalLineCount + 2);
@@ -161,7 +161,7 @@ namespace ChatUI
 
         private Tween _tween;
 
-        public void ShowChatPanelCoroutine(float duration = 0)
+        public void ShowChatPanelCoroutine(float duration = -1)
         {
             if (_tween.IsActive())
                 return;
@@ -173,7 +173,7 @@ namespace ChatUI
             {
                 canvasGroup.DOFade(1f, 0.35f).OnComplete(() =>
                 {
-                    DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
+                    HideChatPanelCoroutine(duration);
                 });
             }
         }

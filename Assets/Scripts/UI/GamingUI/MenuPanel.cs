@@ -1,3 +1,4 @@
+using UI.Panel;
 using UnityEngine.UI;
 
 namespace UI.GamingUI
@@ -14,7 +15,8 @@ namespace UI.GamingUI
             _buttons[2].onClick.AddListener(() =>
             {
                 HideMe();
-                // GamePanel.Instance.HideMe(false);
+                GamePanel.Instance.HideMe(false);
+                NetworkMgr.Instance.CloseRoom();
                 NetworkMgr.Instance.ExitRoom();
             });
         }
