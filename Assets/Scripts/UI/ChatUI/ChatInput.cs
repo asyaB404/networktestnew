@@ -17,14 +17,14 @@ namespace ChatUI
 
         public void OnSelect(BaseEventData eventData)
         {
-            _chatPanel.ShowChatPanelCoroutine();
             IsSelected = true;
+            _chatPanel.ShowChatPanelCoroutine();
         }
 
         public void OnDeselect(BaseEventData eventData)
         {
-            _chatPanel.HideChatPanelCoroutine();
             IsSelected = false;
+            _chatPanel.HideChatPanelCoroutine();
         }
     }
 }

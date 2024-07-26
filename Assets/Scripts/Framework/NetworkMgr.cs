@@ -20,6 +20,15 @@ public class NetworkMgr : MonoBehaviour
         Instance = this;
         networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+        networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
+        {
+            if (obj.ConnectionState == RemoteConnectionState.Started)
+            {
+            }
+            else if (obj.ConnectionState == RemoteConnectionState.Stopped)
+            {
+            }
+        };
     }
 
     public bool CreateRoom(RoomType roomType, string roomName)
@@ -69,13 +78,11 @@ public class NetworkMgr : MonoBehaviour
         ClientState = obj.ConnectionState;
         if (obj.ConnectionState == LocalConnectionState.Started)
         {
-            if (networkManager.IsServerStarted)
-            {
-                networkManager.ServerManager.Spawn(RoomMgr.Instance.gameObject);
-            }
+            RoomMgr.Instance.gameObject.SetActive(true);
         }
         else if (obj.ConnectionState == LocalConnectionState.Stopped)
         {
+            RoomMgr.Instance.gameObject.SetActive(false);
             // networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
         }
     }

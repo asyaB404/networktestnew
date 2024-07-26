@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using FishNet;
 using FishNet.Connection;
 using FishNet.Managing;
-using FishNet.Object;
 using FishNet.Transporting;
 using UnityEngine;
 
@@ -17,27 +18,12 @@ namespace GamePlay.Room
     }
 
 
-    public class RoomMgr : NetworkBehaviour
+    public class RoomMgr : MonoBehaviour
     {
         public static RoomMgr Instance { get; private set; }
         public int PlayerCount => NetworkMgr.Instance.networkManager.ServerManager.Clients.Count;
-        private readonly List<NetworkConnection> _players = Enumerable.Repeat<NetworkConnection>(null,4).ToList();
-
-
-        [ContextMenu("test"), ServerRpc(RequireOwnership = false)]
-        private void Print()
-        {
-            Debug.Log(_players.ToString());
-        }
-
-        [ContextMenu("test1")]
-        private void test1()
-        {
-            NetworkMgr.Instance.networkManager.ServerManager.Spawn(gameObject);
-        }
-
+        private readonly List<NetworkConnection> _players = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
         public RoomType CurType { get; private set; }
-
         public int MaxPlayerCount
         {
             get
@@ -52,9 +38,7 @@ namespace GamePlay.Room
                 }
             }
         }
-
         public string RoomName { get; private set; }
-
 
         public void Create(RoomType roomType, string roomName)
         {
@@ -62,48 +46,11 @@ namespace GamePlay.Room
             NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
         }
 
-
-        [ServerRpc(RequireOwnership = false)]
-        public void Join()
-        {
-            Debug.Log("++1");
-            JoinRpc();
-        }
-
-        [ObserversRpc]
-        private void JoinRpc()
-        {
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void Exit()
-        {
-            Debug.Log("--1");
-            ExitRpc();
-        }
-
-        [ObserversRpc]
-        private void ExitRpc()
-        {
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void Close()
-        {
-            Debug.Log("0");
-            CloseRpc();
-        }
-
-        [ObserversRpc]
-        private void CloseRpc()
-        {
-        }
-
-
         private void Awake()
         {
             Instance = this;
-            NetworkManager networkManager = NetworkMgr.Instance.networkManager;
+            Debug.Log("RoomManager正确初始化");
+            NetworkManager networkManager = InstanceFinder.NetworkManager;
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
                 if (obj.ConnectionState == RemoteConnectionState.Started)
@@ -117,6 +64,11 @@ namespace GamePlay.Room
                     _players[PlayerCount - 1] = null;
                 }
             };
+        }
+
+        private void Start()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

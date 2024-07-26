@@ -171,23 +171,20 @@ namespace ChatUI
             }
             else
             {
-                canvasGroup.DOFade(1f, 0.35f).OnComplete(() =>
-                {
-                    HideChatPanelCoroutine(duration);
-                });
+                canvasGroup.DOFade(1f, 0.35f).OnComplete(() => { HideChatPanelCoroutine(duration); });
             }
         }
 
         public void HideChatPanelCoroutine(float duration = 0f)
         {
-            if (_tween.IsActive())
+            if (_tween.IsActive() || chatInput.IsSelected)
                 return;
             DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (_tween.IsActive())
+            if (_tween.IsActive() || chatInput.IsSelected)
                 return;
             ShowChatPanelCoroutine();
         }
