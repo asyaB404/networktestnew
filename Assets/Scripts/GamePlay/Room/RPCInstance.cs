@@ -11,7 +11,7 @@ namespace GamePlay.Room
         {
             if (Instance !=null)
             {
-                Despawn(DespawnType.Destroy);
+                Destroy(gameObject);
             }
             Instance = this;
         }
