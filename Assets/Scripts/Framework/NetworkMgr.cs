@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using FishNet.Connection;
+
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
@@ -14,6 +13,13 @@ public class NetworkMgr : MonoBehaviour
     public LocalConnectionState ClientState { get; private set; }
     public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
+
+
+    [ContextMenu("test")]
+    private void Test()
+    {
+        Debug.Log(RPCInstance.Instance != null);
+    }
 
     private void Awake()
     {

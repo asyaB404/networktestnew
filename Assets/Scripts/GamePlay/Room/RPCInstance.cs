@@ -1,5 +1,5 @@
-using System;
 using FishNet.Object;
+using UnityEngine;
 
 namespace GamePlay.Room
 {
@@ -9,11 +9,15 @@ namespace GamePlay.Room
 
         private void Awake()
         {
-            if (Instance !=null)
+            if (Instance != null)
             {
+                Debug.Log("多余的RPC已经被移除");
                 Destroy(gameObject);
             }
-            Instance = this;
+            else
+            {
+                Instance = this;
+            }
         }
     }
 }

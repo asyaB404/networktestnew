@@ -9863,7 +9863,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 211a9f6ec51ddc14f908f5acc0cd0423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 2092788479563343343, guid: ef43f87001acc1d42ac61cf378ef1f25, type: 3}
+  _playerPrefab: {fileID: 9202957228046486347, guid: 7c5ab1f05c9cad24d8225f5d8a1c8f8b, type: 3}
   _addToDefaultScene: 1
   Spawns: []
 --- !u!1 &8127827615015220637
