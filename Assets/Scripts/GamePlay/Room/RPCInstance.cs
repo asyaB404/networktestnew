@@ -5,18 +5,32 @@ namespace GamePlay.Room
 {
     public class RPCInstance : NetworkBehaviour
     {
+        [ContextMenu("test")]
+        private void Test()
+        {
+            Debug.Log(Instance != null);
+        }
+
         public static RPCInstance Instance { get; private set; }
 
-        private void Awake()
+        public override void OnStartClient()
         {
-            if (Instance != null)
+            base.OnStartClient();
+            if (base.IsOwner)
             {
-                Debug.Log("多余的RPC已经被移除");
-                Destroy(gameObject);
+                if (Instance != null)
+                {
+                    Debug.Log("多余的RPC已经被移除");
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    Instance = this;
+                }
             }
             else
             {
-                Instance = this;
+                gameObject.SetActive(false);
             }
         }
     }

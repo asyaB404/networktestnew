@@ -14,13 +14,6 @@ public class NetworkMgr : MonoBehaviour
     public LocalConnectionState ServerState { get; private set; }
     public static NetworkMgr Instance { get; private set; }
 
-
-    [ContextMenu("test")]
-    private void Test()
-    {
-        Debug.Log(RPCInstance.Instance != null);
-    }
-
     private void Awake()
     {
         Instance = this;
