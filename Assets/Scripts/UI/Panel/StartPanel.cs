@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Panel
@@ -13,9 +14,9 @@ namespace UI.Panel
         }
 
 
-        public override void HideMe(bool isPressedEsc = false)
+        public override void OnPressedEsc()
         {
-            
+            //确定要关闭游戏？
         }
     }
 }

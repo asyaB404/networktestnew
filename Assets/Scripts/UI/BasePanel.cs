@@ -27,7 +27,9 @@ namespace UI
         /// <summary>
         /// hideme的同时会尝试将其弹出，注意不能调用栈顶以外面板的hideme
         /// </summary>
-        void HideMe(bool isPressedEsc = false);
+        void HideMe();
+
+        void OnPressedEsc();
 
         /// <summary>
         /// 根据isactive来决定激活showme还是hideme
@@ -72,7 +74,7 @@ namespace UI
         }
 
 
-        public virtual void ShowMe()
+        public void ShowMe()
         {
             if (IsInStack) return;
             UIManager.Instance.PushPanel(this);
@@ -84,8 +86,7 @@ namespace UI
         /// <summary>
         /// 一般只对栈顶的元素执行,若不是栈顶元素执行,将会弹出该元素之上的所有元素
         /// </summary>
-        /// <param name="isPressedEsc">是否按下Esc按键来触发</param>
-        public virtual void HideMe(bool isPressedEsc = false)
+        public void HideMe()
         {
             if (!IsInStack) return;
             if (
@@ -105,10 +106,15 @@ namespace UI
             }
         }
 
+        public virtual void OnPressedEsc()
+        {
+            HideMe();
+        }
+
         public virtual void ChangeMe()
         {
             if (IsInStack)
-                HideMe(false);
+                HideMe();
             else
                 ShowMe();
         }

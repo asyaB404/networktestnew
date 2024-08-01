@@ -21,21 +21,14 @@ namespace UI.Panel
             menuPanel = GetComponentInChildren<MenuPanel>(true);
             GetControl<Button>("menu").onClick.AddListener(() =>
             {
-                menuPanel.ShowMe();
+                menuPanel.ChangeMe();
             });
         }
 
 
-        public override void HideMe(bool isPressedEsc = false)
+        public override void OnPressedEsc()
         {
-            if (isPressedEsc)
-            {
-                menuPanel.ChangeMe();
-            }
-            else
-            {
-                base.HideMe(false);
-            }
+            menuPanel.ChangeMe();
         }
 
         private void OnEnable()
