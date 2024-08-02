@@ -1,7 +1,6 @@
-using System;
+
 using System.Collections.Generic;
 using Extension;
-using FishNet;
 using GamePlay.Room;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,20 +41,23 @@ namespace UI.InfoPanel
             ((RectTransform)content.transform).ResetSizeFromChilds();
         }
 
-        private void Awake()
+        public void Init()
         {
             Instance = this;
         }
 
-        private void OnEnable()
-        {
-            RPCInstance.Instance.UpdatePlayerInfos();
-        }
-
-        private void OnDisable()
-        {
-            Clear();
-        }
+        // private void OnEnable()
+        // {
+        //     if (RPCInstance.Instance)
+        //     {
+        //         RPCInstance.Instance.UpdatePlayerInfos();
+        //     }
+        // }
+        //
+        // private void OnDisable()
+        // {
+        //     Clear();
+        // }
 
         public void Clear()
         {

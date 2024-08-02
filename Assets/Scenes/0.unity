@@ -501,7 +501,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &137793493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9430,6 +9430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59dc390f979d4542b448efcce2b8c4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  watchersCount: 0
 --- !u!4 &368851745352149205
 Transform:
   m_ObjectHideFlags: 0
@@ -9827,6 +9828,10 @@ PrefabInstance:
     - target: {fileID: 4002831333183944763, guid: 23b8004a2eeaf8043932e3630e37d87f, type: 3}
       propertyPath: m_Name
       value: InfoPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002831333183944763, guid: 23b8004a2eeaf8043932e3630e37d87f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6627900989461494108, guid: 23b8004a2eeaf8043932e3630e37d87f, type: 3}
       propertyPath: m_AnchorMax.x

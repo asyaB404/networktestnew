@@ -20,6 +20,7 @@ namespace GamePlay.Room
     {
         public static RoomMgr Instance { get; private set; }
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
+
         /// <summary>
         /// 对外公开是方便为其CustomData赋值，原则上不允许从外部修改其元素
         /// </summary>
@@ -33,23 +34,27 @@ namespace GamePlay.Room
             {
                 if (con != null && con.CustomData is PlayerInfo info)
                     return info;
-                return new PlayerInfo(-1,"NULL",null);
+                return new PlayerInfo(-1, "NULL", null);
             }).ToList();
 
         public RoomType CurType { get; private set; }
+        public int watchersCount;
 
         public int MaxPlayerCount
         {
             get
             {
+                int count = 0;
                 if (CurType == RoomType.T1V1)
                 {
-                    return 2;
+                    count = 2;
                 }
                 else
                 {
-                    return 4;
+                    count = 4;
                 }
+
+                return count + watchersCount;
             }
         }
 

@@ -23,7 +23,7 @@ namespace UI.InfoPanel
             }
             else
             {
-                gameObject.SetActive(false);
+                kickBtn.gameObject.SetActive(false);
             }
         }
 

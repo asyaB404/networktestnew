@@ -2,6 +2,7 @@ using DG.Tweening;
 using FishNet.Transporting;
 using GamePlay.Room;
 using UI.GamingUI;
+using UI.InfoPanel;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +19,8 @@ namespace UI.Panel
         public override void Init()
         {
             base.Init();
-            GetControl<Button>("menu").onClick.AddListener(() =>
-            {
-                menuPanel.ChangeMe();
-            });
+            GetComponentInChildren<PlayerInfoPanel>(true).Init();
+            GetControl<Button>("menu").onClick.AddListener(() => { menuPanel.ChangeMe(); });
         }
 
 
