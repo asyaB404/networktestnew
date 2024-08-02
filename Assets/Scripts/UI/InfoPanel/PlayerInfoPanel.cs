@@ -38,7 +38,7 @@ namespace UI.InfoPanel
                 }
             }
 
-            rectTransform.ResetSizeFromChilds();
+            ((RectTransform)content.transform).ResetSizeFromChilds();
         }
 
         private void Awake()

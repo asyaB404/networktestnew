@@ -43,7 +43,7 @@ namespace GamePlay.Room
         public void SendPlayerInfo(PlayerInfo info)
         {
             info.id = RoomMgr.PlayerCount - 1;
-            RoomMgr.Instance.PlayerInfos[info.id] = info;
+            RoomMgr.Instance.playersCon[info.id].CustomData = info;
         }
 
         [ServerRpc]

@@ -20,10 +20,16 @@ namespace GamePlay.Room
     {
         public static RoomMgr Instance { get; private set; }
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
-        private readonly List<NetworkConnection> _playersCon = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
+        /// <summary>
+        /// 对外公开是方便为其CustomData赋值，原则上不允许从外部修改其元素
+        /// </summary>
+        public readonly List<NetworkConnection> playersCon = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
 
+        /// <summary>
+        /// 仅仅用来得到，PlayerInfo是结构体.对该容器内的元素的修改不起效果
+        /// </summary>
         public List<PlayerInfo> PlayerInfos =>
-            _playersCon.Select(con =>
+            playersCon.Select(con =>
             {
                 if (con != null && con.CustomData is PlayerInfo info)
                     return info;
@@ -52,7 +58,7 @@ namespace GamePlay.Room
         [ContextMenu("debuglist")]
         public void Test()
         {
-            foreach (var player in _playersCon)
+            foreach (var player in playersCon)
             {
                 Debug.Log(player);
                 if (player != null)
@@ -78,9 +84,9 @@ namespace GamePlay.Room
                 LocalConnectionState state = obj.ConnectionState;
                 if (state == LocalConnectionState.Stopped)
                 {
-                    for (int i = 0; i < _playersCon.Count; i++)
+                    for (int i = 0; i < playersCon.Count; i++)
                     {
-                        _playersCon[i] = null;
+                        playersCon[i] = null;
                     }
                 }
             };
@@ -89,12 +95,12 @@ namespace GamePlay.Room
                 if (obj.ConnectionState == RemoteConnectionState.Started)
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                    _playersCon[PlayerCount - 1] = connection;
+                    playersCon[PlayerCount - 1] = connection;
                 }
                 else if (obj.ConnectionState == RemoteConnectionState.Stopped)
                 {
                     Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                    _playersCon[PlayerCount - 1] = null;
+                    playersCon[PlayerCount - 1] = null;
                 }
             };
         }
