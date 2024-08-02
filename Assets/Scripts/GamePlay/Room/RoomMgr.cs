@@ -16,32 +16,19 @@ namespace GamePlay.Room
         T4VS
     }
 
-    public struct PlayerInfo
-    {
-        public int id;
-        public string playerName;
-        public NetworkConnection connection;
-
-        public PlayerInfo(int id, string playerName, NetworkConnection connection)
-        {
-            this.id = id;
-            this.playerName = playerName;
-            this.connection = connection;
-        }
-
-        public override string ToString()
-        {
-            return id + "_" + playerName;
-        }
-    }
-
     public class RoomMgr : MonoBehaviour
     {
         public static RoomMgr Instance { get; private set; }
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
         private readonly List<NetworkConnection> _playersCon = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
+
         public List<PlayerInfo> PlayerInfos =>
-            _playersCon.Select(con => (PlayerInfo)con.CustomData).ToList();
+            _playersCon.Select(con =>
+            {
+                if (con != null)
+                    return (PlayerInfo)con.CustomData;
+                return new PlayerInfo(-1,"NULL",null);
+            }).ToList();
 
         public RoomType CurType { get; private set; }
 

@@ -14,7 +14,7 @@ namespace UI.InfoPanel
         [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private RectTransform content;
-        
+
         private float InfoDuration
         {
             get => verticalLayoutGroup.spacing;
@@ -31,9 +31,13 @@ namespace UI.InfoPanel
             // rectTransform.sizeDelta = size;
             foreach (var info in list)
             {
-                GameObject gobj = Instantiate(infoPrefab, content, false);
-                gobj.GetComponent<PlayerInfoUI>().Init(info);
+                if (info.id != -1)
+                {
+                    GameObject gobj = Instantiate(infoPrefab, content, false);
+                    gobj.GetComponent<PlayerInfoUI>().Init(info);
+                }
             }
+
             rectTransform.ResetSizeFromChilds();
         }
 

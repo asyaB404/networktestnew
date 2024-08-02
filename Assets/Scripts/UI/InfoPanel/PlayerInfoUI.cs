@@ -16,7 +16,7 @@ namespace UI.InfoPanel
         public void Init(PlayerInfo info)
         {
             line1.text = info.id + 1 + " : " + info.playerName;
-            line2.text = info.connection.GetAddress();
+            line2.text = "IP : "+info.connection.GetAddress();
             kickBtn.onClick.AddListener(() => { InstanceFinder.ServerManager.Kick(info.id, KickReason.Unset); });
         }
 
