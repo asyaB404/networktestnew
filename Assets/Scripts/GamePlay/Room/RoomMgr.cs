@@ -25,8 +25,8 @@ namespace GamePlay.Room
         public List<PlayerInfo> PlayerInfos =>
             _playersCon.Select(con =>
             {
-                if (con != null)
-                    return (PlayerInfo)con.CustomData;
+                if (con != null && con.CustomData is PlayerInfo info)
+                    return info;
                 return new PlayerInfo(-1,"NULL",null);
             }).ToList();
 
