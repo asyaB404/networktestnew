@@ -27,11 +27,20 @@ namespace GamePlay.Room
                 {
                     Instance = this;
                 }
+
+                SendPlayerInfo(new PlayerInfo(-1, PlayerPrefsMgr.PlayerName));
             }
             else
             {
                 gameObject.SetActive(false);
             }
+        }
+
+        [ServerRpc]
+        public void SendPlayerInfo(PlayerInfo info)
+        {
+            info.id = RoomMgr.PlayerCount - 1;
+            RoomMgr.Instance.Players[info.id].CustomData = info;
         }
     }
 }

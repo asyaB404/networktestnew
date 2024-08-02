@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet;
@@ -17,13 +16,31 @@ namespace GamePlay.Room
         T4VS
     }
 
+    public struct PlayerInfo
+    {
+        public int id;
+        public string playerName;
+
+        public PlayerInfo(int id, string playerName)
+        {
+            this.id = id;
+            this.playerName = playerName;
+        }
+
+        public override string ToString()
+        {
+            return id+"_"+playerName;
+        }
+    }
 
     public class RoomMgr : MonoBehaviour
     {
         public static RoomMgr Instance { get; private set; }
-        public int PlayerCount => NetworkMgr.Instance.networkManager.ServerManager.Clients.Count;
+        public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
         private readonly List<NetworkConnection> _players = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
+        public IReadOnlyList<NetworkConnection> Players => _players;
         public RoomType CurType { get; private set; }
+
         public int MaxPlayerCount
         {
             get
@@ -38,7 +55,21 @@ namespace GamePlay.Room
                 }
             }
         }
+
         public string RoomName { get; private set; }
+
+        [ContextMenu("debuglist")]
+        public void Test()
+        {
+            foreach (var player in _players)
+            {
+                Debug.Log(player);
+                if (player != null)
+                {
+                    Debug.Log(player.CustomData);
+                }
+            }
+        }
 
         public void Create(RoomType roomType, string roomName)
         {

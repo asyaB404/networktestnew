@@ -34,12 +34,8 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
+        RoomMgr.Instance.Create(roomType, roomName);
         bool flag = networkManager.ServerManager.StartConnection();
-        if (flag)
-        {
-            RoomMgr.Instance.Create(roomType, roomName);
-        }
-
         return flag;
     }
 
@@ -54,7 +50,9 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
+        networkManager.ClientManager.Connection.CustomData = "123";
         var flag = networkManager.ClientManager.StartConnection();
+        networkManager.ClientManager.Connection.CustomData = "123";
         return flag;
     }
 
