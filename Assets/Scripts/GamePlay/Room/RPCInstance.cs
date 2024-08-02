@@ -42,13 +42,16 @@ namespace GamePlay.Room
         [ServerRpc]
         public void SendPlayerInfo(PlayerInfo info)
         {
+            int i = 0;
             foreach (var con in RoomMgr.Instance.playersCon)
             {
                 if (con.CustomData is string s && s == "init")
                 {
+                    info.id = i;
                     con.CustomData = info;
                     break;
                 }
+                i++;
             }
         }
 
