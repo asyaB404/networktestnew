@@ -4,6 +4,7 @@ using FishNet;
 using FishNet.Connection;
 using FishNet.Managing;
 using FishNet.Transporting;
+using UI.InfoPanel;
 using UnityEngine;
 
 
@@ -20,6 +21,22 @@ namespace GamePlay.Room
     {
         public static RoomMgr Instance { get; private set; }
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
+
+        public int LastIndex
+        {
+            get
+            {
+                for (int i = 0; i < playersCon.Count; i++)
+                {
+                    if (playersCon[i] == null)
+                    {
+                        return i;
+                    }
+                }
+
+                return -1;
+            }
+        }
 
         /// <summary>
         /// 对外公开是方便为其CustomData赋值，原则上不允许从外部修改其元素
@@ -73,6 +90,15 @@ namespace GamePlay.Room
             }
         }
 
+        [ContextMenu("debuglist1")]
+        public void Test1()
+        {
+            foreach (var item in InstanceFinder.ServerManager.Clients)
+            {
+                Debug.Log(item.Key + "___" + item.Value);
+            }
+        }
+
         public void Create(RoomType roomType, string roomName)
         {
             CurType = roomType;
@@ -100,12 +126,15 @@ namespace GamePlay.Room
                 if (obj.ConnectionState == RemoteConnectionState.Started)
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                    playersCon[PlayerCount - 1] = connection;
+                    playersCon[LastIndex] = connection;
+                    // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
                 }
                 else if (obj.ConnectionState == RemoteConnectionState.Stopped)
                 {
                     Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                    playersCon[PlayerCount - 1] = null;
+                    int i = ((PlayerInfo)connection.CustomData).id;
+                    playersCon[i] = null;
+                    PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                 }
             };
         }

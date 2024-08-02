@@ -25,6 +25,7 @@ namespace UI.InfoPanel
         public void UpdateInfoPanel(IList<PlayerInfo> list)
         {
             if (list.Count <= 0) return;
+            content.DestroyAllChildren();
             // Vector2 size = rectTransform.sizeDelta;
             // float y = ((RectTransform)infoPrefab.transform).sizeDelta.y;
             // size.y = (list.Count - 1) * (InfoDuration + y) + y;

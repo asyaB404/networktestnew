@@ -19,7 +19,10 @@ namespace UI.InfoPanel
             line2.text = "IP : " + info.connection.GetAddress();
             if (info.id != 0)
             {
-                kickBtn.onClick.AddListener(() => { InstanceFinder.ServerManager.Kick(info.id, KickReason.Unset); });
+                kickBtn.onClick.AddListener(() =>
+                {
+                    InstanceFinder.ServerManager.Kick(info.connection, KickReason.Unset);
+                });
             }
             else
             {
