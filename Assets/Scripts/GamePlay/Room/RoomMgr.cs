@@ -20,16 +20,18 @@ namespace GamePlay.Room
     {
         public int id;
         public string playerName;
+        public NetworkConnection connection;
 
-        public PlayerInfo(int id, string playerName)
+        public PlayerInfo(int id, string playerName, NetworkConnection connection)
         {
             this.id = id;
             this.playerName = playerName;
+            this.connection = connection;
         }
 
         public override string ToString()
         {
-            return id+"_"+playerName;
+            return id + "_" + playerName;
         }
     }
 
@@ -37,8 +39,10 @@ namespace GamePlay.Room
     {
         public static RoomMgr Instance { get; private set; }
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
-        private readonly List<NetworkConnection> _players = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
-        public IReadOnlyList<NetworkConnection> Players => _players;
+        private readonly List<NetworkConnection> _playersCon = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
+        public List<PlayerInfo> PlayerInfos =>
+            _playersCon.Select(con => (PlayerInfo)con.CustomData).ToList();
+
         public RoomType CurType { get; private set; }
 
         public int MaxPlayerCount
@@ -61,7 +65,7 @@ namespace GamePlay.Room
         [ContextMenu("debuglist")]
         public void Test()
         {
-            foreach (var player in _players)
+            foreach (var player in _playersCon)
             {
                 Debug.Log(player);
                 if (player != null)
@@ -82,17 +86,28 @@ namespace GamePlay.Room
             Instance = this;
             Debug.Log("RoomManager正确初始化");
             NetworkManager networkManager = InstanceFinder.NetworkManager;
+            networkManager.ServerManager.OnServerConnectionState += obj =>
+            {
+                LocalConnectionState state = obj.ConnectionState;
+                if (state == LocalConnectionState.Stopped)
+                {
+                    for (int i = 0; i < _playersCon.Count; i++)
+                    {
+                        _playersCon[i] = null;
+                    }
+                }
+            };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
                 if (obj.ConnectionState == RemoteConnectionState.Started)
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                    _players[PlayerCount - 1] = connection;
+                    _playersCon[PlayerCount - 1] = connection;
                 }
                 else if (obj.ConnectionState == RemoteConnectionState.Stopped)
                 {
                     Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                    _players[PlayerCount - 1] = null;
+                    _playersCon[PlayerCount - 1] = null;
                 }
             };
         }

@@ -1,4 +1,6 @@
+using FishNet;
 using FishNet.Object;
+using UI.InfoPanel;
 using UnityEngine;
 
 namespace GamePlay.Room
@@ -28,7 +30,8 @@ namespace GamePlay.Room
                     Instance = this;
                 }
 
-                SendPlayerInfo(new PlayerInfo(-1, PlayerPrefsMgr.PlayerName));
+                SendPlayerInfo(new PlayerInfo(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection));
+                UpdatePlayerInfos();
             }
             else
             {
@@ -40,7 +43,13 @@ namespace GamePlay.Room
         public void SendPlayerInfo(PlayerInfo info)
         {
             info.id = RoomMgr.PlayerCount - 1;
-            RoomMgr.Instance.Players[info.id].CustomData = info;
+            RoomMgr.Instance.PlayerInfos[info.id] = info;
+        }
+
+        [ServerRpc]
+        public void UpdatePlayerInfos()
+        {
+            PlayerInfoPanel.Instance.UpdateInfoPanel(RoomMgr.Instance.PlayerInfos);
         }
     }
 }

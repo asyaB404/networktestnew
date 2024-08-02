@@ -1,4 +1,8 @@
+
+using FishNet;
+using UI.InfoPanel;
 using UI.Panel;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.GamingUI
@@ -6,6 +10,7 @@ namespace UI.GamingUI
     public class MenuPanel : GameUI
     {
         private Button[] _buttons;
+        [SerializeField] private PlayerInfoPanel playerInfoPanel;
 
         private void Awake()
         {
@@ -24,11 +29,13 @@ namespace UI.GamingUI
         public override void ShowMe()
         {
             gameObject.SetActive(true);
+            playerInfoPanel.gameObject.SetActive(InstanceFinder.NetworkManager.IsServerStarted);
         }
 
         public override void HideMe()
         {
             gameObject.SetActive(false);
+            playerInfoPanel.gameObject.SetActive(false);
         }
     }
 }

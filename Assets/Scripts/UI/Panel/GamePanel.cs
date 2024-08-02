@@ -18,7 +18,6 @@ namespace UI.Panel
         public override void Init()
         {
             base.Init();
-            menuPanel = GetComponentInChildren<MenuPanel>(true);
             GetControl<Button>("menu").onClick.AddListener(() =>
             {
                 menuPanel.ChangeMe();
@@ -39,6 +38,7 @@ namespace UI.Panel
         private void OnDisable()
         {
             NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
+            menuPanel.gameObject.SetActive(false);
         }
 
         private void OnUpdateJoin(ClientConnectionStateArgs obj)
