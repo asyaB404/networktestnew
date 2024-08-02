@@ -38,7 +38,6 @@ namespace ChatUI
         private void Awake()
         {
             Instance = this;
-            chatInput = messageInput.GetComponent<ChatInput>();
             _buttons = GetComponentsInChildren<Button>(true);
         }
 

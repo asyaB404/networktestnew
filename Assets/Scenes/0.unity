@@ -3000,6 +3000,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 648888545}
   m_CullTransparentMesh: 1
+--- !u!114 &708756350 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 243880875014644882, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
+  m_PrefabInstance: {fileID: 3283108197245614317}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53c382daa2cb42d9a3078412f69f1d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &714606958
 GameObject:
   m_ObjectHideFlags: 0
@@ -9648,6 +9659,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Chat
       objectReference: {fileID: 0}
+    - target: {fileID: 5762671317970466648, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
+      propertyPath: chatInput
+      value: 
+      objectReference: {fileID: 708756350}
     - target: {fileID: 8394987398649184863, guid: c632dc00a19bf9642b97d563d9c226e0, type: 3}
       propertyPath: m_Alpha
       value: 1
@@ -9805,6 +9820,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: -17
       objectReference: {fileID: 0}
+    - target: {fileID: 1913756479364539394, guid: 23b8004a2eeaf8043932e3630e37d87f, type: 3}
+      propertyPath: infoPrefab
+      value: 
+      objectReference: {fileID: 4035347760566416991, guid: 96de4cbc0de54534c90d97512663a82f, type: 3}
     - target: {fileID: 4002831333183944763, guid: 23b8004a2eeaf8043932e3630e37d87f, type: 3}
       propertyPath: m_Name
       value: InfoPanel
