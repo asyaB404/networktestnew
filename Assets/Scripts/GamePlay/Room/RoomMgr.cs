@@ -127,6 +127,7 @@ namespace GamePlay.Room
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                     playersCon[LastIndex] = connection;
+                    connection.CustomData = "init";
                     // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
                 }
                 else if (obj.ConnectionState == RemoteConnectionState.Stopped)

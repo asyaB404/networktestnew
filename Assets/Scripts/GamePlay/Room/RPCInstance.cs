@@ -42,8 +42,14 @@ namespace GamePlay.Room
         [ServerRpc]
         public void SendPlayerInfo(PlayerInfo info)
         {
-            info.id = RoomMgr.Instance.LastIndex;
-            RoomMgr.Instance.playersCon[info.id].CustomData = info;
+            foreach (var con in RoomMgr.Instance.playersCon)
+            {
+                if (con.CustomData is string s && s == "init")
+                {
+                    con.CustomData = info;
+                    break;
+                }
+            }
         }
 
         [ServerRpc]
