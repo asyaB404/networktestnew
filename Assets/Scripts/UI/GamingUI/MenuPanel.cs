@@ -1,4 +1,4 @@
-
+using System;
 using FishNet;
 using UI.InfoPanel;
 using UI.Panel;
@@ -29,12 +29,20 @@ namespace UI.GamingUI
         public override void ShowMe()
         {
             gameObject.SetActive(true);
-            playerInfoPanel.gameObject.SetActive(InstanceFinder.NetworkManager.IsServerStarted);
         }
 
         public override void HideMe()
         {
             gameObject.SetActive(false);
+        }
+
+        private void OnEnable()
+        {
+            playerInfoPanel.gameObject.SetActive(InstanceFinder.NetworkManager.IsServerStarted);
+        }
+
+        private void OnDisable()
+        {
             playerInfoPanel.gameObject.SetActive(false);
         }
     }

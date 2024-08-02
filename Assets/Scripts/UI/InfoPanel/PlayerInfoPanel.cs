@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Extension;
 using FishNet;
@@ -44,6 +45,11 @@ namespace UI.InfoPanel
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void OnEnable()
+        {
+            RPCInstance.Instance.UpdatePlayerInfos();
         }
 
         private void OnDisable()
