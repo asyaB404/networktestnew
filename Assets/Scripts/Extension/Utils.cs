@@ -17,6 +17,17 @@ public static class Utils
         return (T)values.GetValue(MyRandom.NextInt(values.Length));
     }
 
+    public static Transform[] GetAllChildTransforms(this Transform transform)
+    {
+        var res = new Transform[transform.childCount];
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            res[i] = transform.GetChild(i);
+        }
+
+        return res;
+    }
+    
     /// <summary>
     /// 销毁一个transform下的所有子物体
     /// </summary>

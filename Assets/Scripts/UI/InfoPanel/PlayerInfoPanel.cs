@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Extension;
 using FishNet;
 using GamePlay.Room;
 using UnityEngine;
@@ -13,8 +14,7 @@ namespace UI.InfoPanel
         [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private RectTransform content;
-
-
+        
         private float InfoDuration
         {
             get => verticalLayoutGroup.spacing;
@@ -25,15 +25,16 @@ namespace UI.InfoPanel
         public void UpdateInfoPanel(IList<PlayerInfo> list)
         {
             if (list.Count <= 0) return;
-            Vector2 size = rectTransform.sizeDelta;
-            float y = ((RectTransform)infoPrefab.transform).sizeDelta.y;
-            size.y = (list.Count - 1) * (InfoDuration + y) + y;
-            rectTransform.sizeDelta = size;
+            // Vector2 size = rectTransform.sizeDelta;
+            // float y = ((RectTransform)infoPrefab.transform).sizeDelta.y;
+            // size.y = (list.Count - 1) * (InfoDuration + y) + y;
+            // rectTransform.sizeDelta = size;
             foreach (var info in list)
             {
                 GameObject gobj = Instantiate(infoPrefab, content, false);
                 gobj.GetComponent<PlayerInfoUI>().Init(info);
             }
+            rectTransform.ResetSizeFromChilds();
         }
 
         private void Awake()

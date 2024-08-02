@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -33,6 +34,33 @@ namespace Extension
             sizeDelta.y = line * height;
             textMeshProUGUI.rectTransform.sizeDelta = sizeDelta;
             return line;
+        }
+
+        public static RectTransform[] GetAllChildRectTransforms(this RectTransform rectTransform)
+        {
+            RectTransform[] res = new RectTransform[rectTransform.childCount];
+            for (int i = 0; i < rectTransform.childCount; i++)
+            {
+                res[i] = (RectTransform)rectTransform.GetChild(i);
+            }
+
+            return res;
+        }
+
+        public static void ResetSizeFromChilds(this RectTransform content, float duration = 0)
+        {
+            Vector2 size = content.sizeDelta;
+            float y = 0;
+            var childs = content.GetAllChildRectTransforms();
+            foreach (var item in childs)
+            {
+                y += item.sizeDelta.y;
+                y += duration;
+            }
+
+            y -= duration;
+            size.y = y;
+            content.sizeDelta = size;
         }
     }
 }
