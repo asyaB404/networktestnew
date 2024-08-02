@@ -163,7 +163,7 @@ namespace ChatUI
         public void ShowChatPanelCoroutine(float duration = -1)
         {
             if (_tween.IsActive())
-                return;
+                _tween.Kill(true);
             if (duration <= 0)
             {
                 canvasGroup.DOFade(1f, 0.35f);
@@ -177,14 +177,14 @@ namespace ChatUI
         public void HideChatPanelCoroutine(float duration = 0f)
         {
             if (_tween.IsActive() || chatInput.IsSelected)
-                return;
+                _tween.Kill(true);
             DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (_tween.IsActive() || chatInput.IsSelected)
-                return;
+                _tween.Kill(true);
             ShowChatPanelCoroutine();
         }
 
