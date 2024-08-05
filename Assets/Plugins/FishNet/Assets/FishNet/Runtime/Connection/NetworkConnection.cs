@@ -150,6 +150,7 @@ namespace FishNet.Connection
         /// The value of this field are not synchronized over the network.
         /// </summary>
         public object CustomData = null;
+        
         /// <summary>
         /// Tick of the last packet received from this connection which was not out of order.
         /// This value is only available on the server.

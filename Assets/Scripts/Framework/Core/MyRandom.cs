@@ -2,7 +2,7 @@ using UnityEngine;
 using Random = System.Random;
 
 /// <summary>
-/// 随机数静态实例，可以使用set指定种子。
+///     随机数静态实例，可以使用set指定种子。
 /// </summary>
 public static class MyRandom
 {
@@ -23,7 +23,7 @@ public static class MyRandom
     }
 
     /// <summary>
-    /// 设置指定随机种子
+    ///     设置指定随机种子
     /// </summary>
     /// <param name="seed"></param>
     public static void Set(int seed)
@@ -54,7 +54,7 @@ public static class MyRandom
 
     public static float NextFloat(float min, float max)
     {
-        return (float)(min + (RandomInstance.NextDouble() * (max - min)));
+        return (float)(min + RandomInstance.NextDouble() * (max - min));
     }
 
     public static bool NextBool()

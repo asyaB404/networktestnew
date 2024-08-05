@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 
 namespace ChatUI
 {
@@ -15,16 +13,16 @@ namespace ChatUI
             _chatPanel = GetComponentInParent<ChatPanel>();
         }
 
-        public void OnSelect(BaseEventData eventData)
-        {
-            IsSelected = true;
-            _chatPanel.ShowChatPanelCoroutine();
-        }
-
         public void OnDeselect(BaseEventData eventData)
         {
             IsSelected = false;
             _chatPanel.HideChatPanelCoroutine();
+        }
+
+        public void OnSelect(BaseEventData eventData)
+        {
+            IsSelected = true;
+            _chatPanel.ShowChatPanelCoroutine();
         }
     }
 }

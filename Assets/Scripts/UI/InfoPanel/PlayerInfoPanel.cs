@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Extension;
 using GamePlay.Room;
@@ -9,11 +8,11 @@ namespace UI.InfoPanel
 {
     public class PlayerInfoPanel : MonoBehaviour
     {
-        public static PlayerInfoPanel Instance { get; private set; }
         [SerializeField] private GameObject infoPrefab;
         [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private RectTransform content;
+        public static PlayerInfoPanel Instance { get; private set; }
 
         private float InfoDuration
         {
@@ -31,13 +30,11 @@ namespace UI.InfoPanel
             // size.y = (list.Count - 1) * (InfoDuration + y) + y;
             // rectTransform.sizeDelta = size;
             foreach (var info in list)
-            {
                 if (info.id != -1)
                 {
-                    GameObject gobj = Instantiate(infoPrefab, content, false);
+                    var gobj = Instantiate(infoPrefab, content, false);
                     gobj.GetComponent<PlayerInfoUI>().Init(info);
                 }
-            }
 
             ((RectTransform)content.transform).ResetSizeFromChilds();
         }

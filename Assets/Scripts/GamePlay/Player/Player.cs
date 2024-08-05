@@ -6,12 +6,12 @@ namespace GamePlay.Player
     public class Player : MonoBehaviour
     {
         [SerializeField] private CoinsPool coinsPool;
-        public CoinsPool CoinsPool => coinsPool;
 
         [SerializeField] private PlayerController playerController;
+        public CoinsPool CoinsPool => coinsPool;
 
-        public float Health { get; private set; }
-        public float Speed { get; private set; }
+        public float Health { get; }
+        public float Speed { get; }
 
         private void Awake()
         {

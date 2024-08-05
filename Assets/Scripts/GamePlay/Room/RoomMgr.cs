@@ -2,11 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using FishNet;
 using FishNet.Connection;
-using FishNet.Managing;
 using FishNet.Transporting;
 using UI.InfoPanel;
 using UnityEngine;
-
 
 namespace GamePlay.Room
 {
@@ -17,59 +15,80 @@ namespace GamePlay.Room
         T4VS
     }
 
+    /// <summary>
+    /// 作为服务端时生效，管理玩家连接的顺序以及主机房间的基本配置
+    /// </summary>
     public class RoomMgr : MonoBehaviour
     {
+        /// <summary>
+        /// 最大连接数
+        /// </summary>
+        public const int MaxCons = 16;
+
+        /// <summary>
+        /// 旁观玩家数
+        /// </summary>
+        public int watchersCount;
+
+        /// <summary>
+        /// 连接列表，用来管理玩家的连接顺序
+        /// </summary>
+        private readonly List<NetworkConnection> _playersCon =
+            Enumerable.Repeat<NetworkConnection>(null, MaxCons).ToList();
+
+        /// <summary>
+        ///     玩家连接管理，玩家连接时优先占用下标比较小的位置
+        /// </summary>
+        /// <example>例如[c0,null,c2,null,...]时有玩家连接则会变成[c0,c1,c2,null,...]</example>
+        public IReadOnlyList<NetworkConnection> PlayersCon => _playersCon;
+
         public static RoomMgr Instance { get; private set; }
+
         public static int PlayerCount => InstanceFinder.ServerManager.Clients.Count;
 
-        public int LastIndex
+        /// <summary>
+        /// 遍历连接列表得到第一个空位置的下标
+        /// </summary>
+        public int FirstIndex
         {
             get
             {
-                for (int i = 0; i < playersCon.Count; i++)
-                {
-                    if (playersCon[i] == null)
-                    {
+                for (var i = 0; i < PlayersCon.Count; i++)
+                    if (PlayersCon[i] == null)
                         return i;
-                    }
-                }
 
                 return -1;
             }
         }
 
         /// <summary>
-        /// 对外公开是方便为其CustomData赋值，原则上不允许从外部修改其元素
-        /// </summary>
-        public readonly List<NetworkConnection> playersCon = Enumerable.Repeat<NetworkConnection>(null, 4).ToList();
-
-        /// <summary>
-        /// 仅仅用来得到，PlayerInfo是结构体.对该容器内的元素的修改不起效果
+        ///     仅仅用来得到连接的附带信息,但返回的是Linq表达式,对其修改不会影响_playersCon
         /// </summary>
         public List<PlayerInfo> PlayerInfos =>
-            playersCon.Select(con =>
+            PlayersCon.Select(con =>
             {
                 if (con != null && con.CustomData is PlayerInfo info)
                     return info;
                 return new PlayerInfo(-1, "NULL", null);
             }).ToList();
 
+        /// <summary>
+        /// 当前房间类型
+        /// </summary>
         public RoomType CurType { get; private set; }
-        public int watchersCount;
 
+        /// <summary>
+        /// 最大玩家数
+        /// </summary>
         public int MaxPlayerCount
         {
             get
             {
-                int count = 0;
+                var count = 0;
                 if (CurType == RoomType.T1V1)
-                {
                     count = 2;
-                }
                 else
-                {
                     count = 4;
-                }
 
                 return count + watchersCount;
             }
@@ -77,64 +96,33 @@ namespace GamePlay.Room
 
         public string RoomName { get; private set; }
 
-        [ContextMenu("debuglist")]
-        public void Test()
-        {
-            foreach (var player in playersCon)
-            {
-                Debug.Log(player);
-                if (player != null)
-                {
-                    Debug.Log(player.CustomData);
-                }
-            }
-        }
-
-        [ContextMenu("debuglist1")]
-        public void Test1()
-        {
-            foreach (var item in InstanceFinder.ServerManager.Clients)
-            {
-                Debug.Log(item.Key + "___" + item.Value);
-            }
-        }
-
-        public void Create(RoomType roomType, string roomName)
-        {
-            CurType = roomType;
-            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
-        }
-
         private void Awake()
         {
             Instance = this;
             Debug.Log("RoomManager正确初始化");
-            NetworkManager networkManager = InstanceFinder.NetworkManager;
+            var networkManager = InstanceFinder.NetworkManager;
             networkManager.ServerManager.OnServerConnectionState += obj =>
             {
-                LocalConnectionState state = obj.ConnectionState;
+                var state = obj.ConnectionState;
                 if (state == LocalConnectionState.Stopped)
-                {
-                    for (int i = 0; i < playersCon.Count; i++)
-                    {
-                        playersCon[i] = null;
-                    }
-                }
+                    for (var i = 0; i < PlayersCon.Count; i++)
+                        _playersCon[i] = null;
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
                 if (obj.ConnectionState == RemoteConnectionState.Started)
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                    playersCon[LastIndex] = connection;
+                    _playersCon[FirstIndex] = connection;
                     connection.CustomData = "init";
                     // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
                 }
                 else if (obj.ConnectionState == RemoteConnectionState.Stopped)
                 {
                     Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                    int i = ((PlayerInfo)connection.CustomData).id;
-                    playersCon[i] = null;
+                    var i = ((PlayerInfo)connection.CustomData).id;
+                    connection.CustomData = null;
+                    _playersCon[i] = null;
                     PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                 }
             };
@@ -143,6 +131,30 @@ namespace GamePlay.Room
         private void Start()
         {
             gameObject.SetActive(false);
+        }
+
+
+        public void SetRoomConfig(RoomType roomType, string roomName)
+        {
+            CurType = roomType;
+            RoomName = roomName;
+            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
+        }
+
+        [ContextMenu("debuglist")]
+        public void Test()
+        {
+            foreach (var player in PlayersCon)
+            {
+                Debug.Log(player);
+                if (player != null) Debug.Log(player.CustomData);
+            }
+        }
+
+        [ContextMenu("debuglist1")]
+        public void Test1()
+        {
+            foreach (var item in InstanceFinder.ServerManager.Clients) Debug.Log(item.Key + "___" + item.Value);
         }
     }
 }

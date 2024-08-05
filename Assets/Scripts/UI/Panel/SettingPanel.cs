@@ -9,7 +9,7 @@ namespace UI.Panel
         {
             base.Init();
             GetControl<TMP_InputField>("name").text = PlayerPrefsMgr.PlayerName;
-            GetControl<TMP_InputField>("name").onValueChanged.AddListener((s) =>
+            GetControl<TMP_InputField>("name").onValueChanged.AddListener(s =>
             {
                 if (string.IsNullOrEmpty(s))
                 {

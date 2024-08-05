@@ -6,27 +6,29 @@ namespace Test
     public class Bullet : NetworkBehaviour
     {
         [SerializeField] private Vector2 velocity;
-        private float _flyTime = 0;
+        private float _flyTime;
 
         private Rigidbody2D rb;
-
-
-        private void Update()
-        {
-            if (!base.IsServerStarted) return;
-            if (_flyTime <= 5)
-            {
-                _flyTime += Time.deltaTime;
-            }
-            else
-            {
-                Despawn();
-            }
-        }
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+        }
+
+
+        private void Update()
+        {
+            if (!IsServerStarted) return;
+            if (_flyTime <= 5)
+                _flyTime += Time.deltaTime;
+            else
+                Despawn();
+        }
+
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (IsServerStarted) Despawn();
         }
 
         public override void OnStartClient()
@@ -39,15 +41,6 @@ namespace Test
         {
             velocity = initialVelocity;
             rb.velocity = velocity;
-        }
-
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (IsServerStarted)
-            {
-                Despawn();
-            }
         }
 
         [ServerRpc]

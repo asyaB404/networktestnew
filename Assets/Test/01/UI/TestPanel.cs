@@ -10,12 +10,12 @@ namespace Test.UI
     public class TestPanel : BasePanel<TestPanel>
     {
         [SerializeField] private NetworkManager networkManager;
-        private TextMeshProUGUI _ipPortText;
-        private TMP_InputField _ipInput;
-        private TMP_InputField _portInput;
-        private Button _joinRoom;
-        private Button _createRoom;
         private LocalConnectionState _clientState;
+        private Button _createRoom;
+        private TMP_InputField _ipInput;
+        private TextMeshProUGUI _ipPortText;
+        private Button _joinRoom;
+        private TMP_InputField _portInput;
         private LocalConnectionState _serverState;
 
         protected void Awake()
@@ -27,7 +27,9 @@ namespace Test.UI
                     return;
 
                 if (_serverState != LocalConnectionState.Stopped)
+                {
                     networkManager.ServerManager.StopConnection(true);
+                }
                 else
                 {
                     if (string.IsNullOrEmpty(_portInput.text))
@@ -42,11 +44,15 @@ namespace Test.UI
                     return;
 
                 if (_clientState != LocalConnectionState.Stopped)
+                {
                     networkManager.ClientManager.StopConnection();
+                }
                 else
                 {
                     if (string.IsNullOrEmpty(_ipInput.text))
+                    {
                         networkManager.ClientManager.StartConnection();
+                    }
                     else
                     {
                         if (string.IsNullOrEmpty(_portInput.text))
@@ -56,16 +62,6 @@ namespace Test.UI
                     }
                 }
             });
-        }
-
-        public override void Init()
-        {
-            base.Init();
-            _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
-            _ipInput = GetControl<TMP_InputField>("ipInput");
-            _portInput = GetControl<TMP_InputField>("portInput");
-            _joinRoom = GetControl<Button>("join");
-            _createRoom = GetControl<Button>("create");
         }
 
         private void Start()
@@ -85,6 +81,16 @@ namespace Test.UI
         {
             networkManager.ServerManager.OnServerConnectionState -= ServerManager_OnServerConnectionState;
             networkManager.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            _ipPortText = GetControl<TextMeshProUGUI>("ipPort");
+            _ipInput = GetControl<TMP_InputField>("ipInput");
+            _portInput = GetControl<TMP_InputField>("portInput");
+            _joinRoom = GetControl<Button>("join");
+            _createRoom = GetControl<Button>("create");
         }
 
         private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs obj)

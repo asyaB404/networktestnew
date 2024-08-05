@@ -10,7 +10,6 @@ namespace GamePlay.Coins
 
         public void GameStart()
         {
-            
         }
     }
 }

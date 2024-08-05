@@ -1,6 +1,5 @@
 using DG.Tweening;
 using FishNet.Transporting;
-using GamePlay.Room;
 using UI.GamingUI;
 using UI.InfoPanel;
 using UnityEngine;
@@ -9,12 +8,23 @@ using UnityEngine.UI;
 namespace UI.Panel
 {
     /// <summary>
-    /// 游戏开始时将会打开的Panel
+    ///     游戏开始时将会打开的Panel
     /// </summary>
     public class GamePanel : BasePanel<GamePanel>
     {
-        private int _playerCount;
         [SerializeField] private MenuPanel menuPanel;
+        private int _playerCount;
+
+        private void OnEnable()
+        {
+            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+        }
+
+        private void OnDisable()
+        {
+            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
+            menuPanel.gameObject.SetActive(false);
+        }
 
         public override void Init()
         {
@@ -29,28 +39,11 @@ namespace UI.Panel
             menuPanel.ChangeMe();
         }
 
-        private void OnEnable()
-        {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
-        }
-
-        private void OnDisable()
-        {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
-            menuPanel.gameObject.SetActive(false);
-        }
-
         private void OnUpdateJoin(ClientConnectionStateArgs obj)
         {
-            if (obj.ConnectionState == LocalConnectionState.Started)
-            {
-                Debug.Log("生成一个玩家");
-            }
+            if (obj.ConnectionState == LocalConnectionState.Started) Debug.Log("生成一个玩家");
 
-            if (obj.ConnectionState == LocalConnectionState.Stopped)
-            {
-                HideMe();
-            }
+            if (obj.ConnectionState == LocalConnectionState.Stopped) HideMe();
         }
 
         public override void CallBack(bool flag)

@@ -25,14 +25,17 @@ namespace ChatUI
     public class ChatPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public static ChatPanel Instance;
-        private int _totalLineCount = 0;
-        private Button[] _buttons;
         [SerializeField] private RectTransform content;
         [SerializeField] private TMP_InputField messageInput;
         [SerializeField] private ChatInput chatInput;
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private GameObject messagePrefab;
         [SerializeField] private int lineHeight = 40;
+        private Button[] _buttons;
+        private int _totalLineCount;
+
+
+        private Tween _tween;
 
 
         private void Awake()
@@ -52,17 +55,6 @@ namespace ChatUI
             InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnection;
         }
 
-        private char ValidateInput(string text, int charIndex, char addedChar)
-        {
-            // 忽略首个Enter键的输入
-            if (charIndex == 0 && addedChar is '\n' or '\r')
-            {
-                return '\0'; //返回空字符表示忽略该输入
-            }
-
-            return addedChar; //返回输入的字符
-        }
-
         private void OnDisable()
         {
             Clear();
@@ -74,16 +66,34 @@ namespace ChatUI
             InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnection;
         }
 
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (_tween.IsActive() || chatInput.IsSelected)
+                _tween.Kill(true);
+            ShowChatPanelCoroutine();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (chatInput.IsSelected) return;
+
+            HideChatPanelCoroutine();
+        }
+
+        private char ValidateInput(string text, int charIndex, char addedChar)
+        {
+            // 忽略首个Enter键的输入
+            if (charIndex == 0 && addedChar is '\n' or '\r') return '\0'; //返回空字符表示忽略该输入
+
+            return addedChar; //返回输入的字符
+        }
+
         private void OnRemoteConnection(NetworkConnection connection, RemoteConnectionStateArgs obj)
         {
             if (obj.ConnectionState == RemoteConnectionState.Started)
-            {
                 InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
-            }
             else if (obj.ConnectionState == RemoteConnectionState.Stopped)
-            {
                 InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
-            }
         }
 
         private void OnClientChatMessageReceived(ChatMessage chatMessage, Channel channel)
@@ -101,20 +111,17 @@ namespace ChatUI
 
         private void SpawnMsg(ChatMessage chatMessage)
         {
-            if (string.IsNullOrEmpty(chatMessage.Message))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(chatMessage.Message)) return;
 
             ShowChatPanelCoroutine(3);
-            GameObject newMessage = Instantiate(messagePrefab, content, false);
+            var newMessage = Instantiate(messagePrefab, content, false);
             Vector2 pos = newMessage.transform.localPosition;
             pos.y = -_totalLineCount * lineHeight;
             newMessage.transform.localPosition = pos;
             newMessage.transform.localScale = Vector3.zero;
             newMessage.transform.DOScale(1, 0.5f);
             _totalLineCount += newMessage.GetComponent<Message>().Init(chatMessage.Sender, chatMessage.Message) + 1;
-            Vector2 size = content.sizeDelta;
+            var size = content.sizeDelta;
             size.y = lineHeight * (_totalLineCount + 2);
             content.sizeDelta = size;
             if (size.y >= 700)
@@ -129,7 +136,7 @@ namespace ChatUI
 
         public void SendChatMessage(string sender, string text)
         {
-            ChatMessage chatMessage = new ChatMessage
+            var chatMessage = new ChatMessage
             {
                 Sender = sender,
                 Message = text
@@ -157,21 +164,14 @@ namespace ChatUI
             _totalLineCount = 0;
         }
 
-
-        private Tween _tween;
-
         public void ShowChatPanelCoroutine(float duration = -1)
         {
             if (_tween.IsActive())
                 _tween.Kill(true);
             if (duration <= 0)
-            {
                 canvasGroup.DOFade(1f, 0.35f);
-            }
             else
-            {
                 canvasGroup.DOFade(1f, 0.35f).OnComplete(() => { HideChatPanelCoroutine(duration); });
-            }
         }
 
         public void HideChatPanelCoroutine(float duration = 0f)
@@ -179,23 +179,6 @@ namespace ChatUI
             if (_tween.IsActive() || chatInput.IsSelected)
                 _tween.Kill(true);
             DOVirtual.DelayedCall(duration, () => { canvasGroup.DOFade(0f, 0.35f); });
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (_tween.IsActive() || chatInput.IsSelected)
-                _tween.Kill(true);
-            ShowChatPanelCoroutine();
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (chatInput.IsSelected)
-            {
-                return;
-            }
-
-            HideChatPanelCoroutine();
         }
     }
 }

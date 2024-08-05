@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Object = UnityEngine.Object;
 
 public class MyABMgr : MonoBehaviour
 {
     private static MyABMgr _instance;
+    private readonly Dictionary<string, AssetBundle> _abDic = new();
+
+    private AssetBundle _mainAb;
+    private AssetBundleManifest _manifest;
 
     public static MyABMgr Instance
     {
@@ -18,10 +24,6 @@ public class MyABMgr : MonoBehaviour
             return _instance;
         }
     }
-
-    private AssetBundle _mainAb;
-    private AssetBundleManifest _manifest;
-    private readonly Dictionary<string, AssetBundle> _abDic = new();
 
     private string PathUrl => Application.streamingAssetsPath + "/";
 
@@ -47,7 +49,7 @@ public class MyABMgr : MonoBehaviour
             _manifest = _mainAb.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
         }
 
-        string[] strs = _manifest.GetAllDependencies(ab);
+        var strs = _manifest.GetAllDependencies(ab);
         //临时变量 
         AssetBundle assetBundle;
         foreach (var str in strs)
@@ -71,7 +73,7 @@ public class MyABMgr : MonoBehaviour
         return obj is GameObject ? Instantiate(obj) : obj;
     }
 
-    public Object LoadRes(string ab, string resName, System.Type type)
+    public Object LoadRes(string ab, string resName, Type type)
     {
         LoadAB(ab);
         var obj = _abDic[ab].LoadAsset(resName, type);
@@ -81,7 +83,7 @@ public class MyABMgr : MonoBehaviour
     public T LoadRes<T>(string ab, string resName) where T : Object
     {
         LoadAB(ab);
-        T obj = _abDic[ab].LoadAsset<T>(resName);
+        var obj = _abDic[ab].LoadAsset<T>(resName);
         if (obj is GameObject)
             return Instantiate(obj);
         return obj;
@@ -95,22 +97,22 @@ public class MyABMgr : MonoBehaviour
     private IEnumerator Enumerator(string ab, string resName, UnityAction<Object> callback)
     {
         LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync(resName);
+        var assetBundleRequest = _abDic[ab].LoadAssetAsync(resName);
         yield return assetBundleRequest;
         callback(assetBundleRequest.asset is GameObject
             ? Instantiate(assetBundleRequest.asset)
             : assetBundleRequest.asset);
     }
 
-    public void LoadResAsync(string ab, string resName, System.Type type, UnityAction<Object> callback)
+    public void LoadResAsync(string ab, string resName, Type type, UnityAction<Object> callback)
     {
         StartCoroutine(Enumerator(ab, resName, type, callback));
     }
 
-    private IEnumerator Enumerator(string ab, string resName, System.Type type, UnityAction<Object> callback)
+    private IEnumerator Enumerator(string ab, string resName, Type type, UnityAction<Object> callback)
     {
         LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync(resName, type);
+        var assetBundleRequest = _abDic[ab].LoadAssetAsync(resName, type);
         yield return assetBundleRequest;
         callback(assetBundleRequest.asset is GameObject
             ? Instantiate(assetBundleRequest.asset)
@@ -125,7 +127,7 @@ public class MyABMgr : MonoBehaviour
     private IEnumerator Enumerator<T>(string ab, string resName, UnityAction<T> callback) where T : Object
     {
         LoadAB(ab);
-        AssetBundleRequest assetBundleRequest = _abDic[ab].LoadAssetAsync<T>(resName);
+        var assetBundleRequest = _abDic[ab].LoadAssetAsync<T>(resName);
         yield return assetBundleRequest;
         if (assetBundleRequest.asset is GameObject)
             callback(Instantiate(assetBundleRequest.asset as T));
@@ -136,7 +138,7 @@ public class MyABMgr : MonoBehaviour
 
     public void UnLoad(string ab, bool flag = false)
     {
-        if (_abDic.TryGetValue(ab, out AssetBundle assetBundle))
+        if (_abDic.TryGetValue(ab, out var assetBundle))
         {
             assetBundle.Unload(flag);
             _abDic.Remove(ab);

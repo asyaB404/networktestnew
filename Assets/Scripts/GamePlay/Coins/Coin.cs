@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace GamePlay.Coins
 {
-    public class Coin :MonoBehaviour
+    public class Coin : MonoBehaviour
     {
-        
     }
 }

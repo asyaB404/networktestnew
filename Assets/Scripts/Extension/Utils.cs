@@ -7,11 +7,11 @@ using Random = System.Random;
 public static class Utils
 {
     /// <summary>
-    /// 得到枚举中的随机值
+    ///     得到枚举中的随机值
     /// </summary>
     /// <typeparam name="T">枚举类型</typeparam>
     /// <returns></returns>
-    public static T GetRandomEnumValue<T>() where T :  Enum
+    public static T GetRandomEnumValue<T>() where T : Enum
     {
         var values = Enum.GetValues(typeof(T));
         return (T)values.GetValue(MyRandom.NextInt(values.Length));
@@ -20,28 +20,22 @@ public static class Utils
     public static Transform[] GetAllChildTransforms(this Transform transform)
     {
         var res = new Transform[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            res[i] = transform.GetChild(i);
-        }
+        for (var i = 0; i < transform.childCount; i++) res[i] = transform.GetChild(i);
 
         return res;
     }
-    
+
     /// <summary>
-    /// 销毁一个transform下的所有子物体
+    ///     销毁一个transform下的所有子物体
     /// </summary>
     /// <param name="transform"></param>
     public static void DestroyAllChildren(this Transform transform)
     {
-        for (int i = transform.childCount - 1; i >= 0; i--)
-        {
-            Object.DestroyImmediate(transform.GetChild(i).gameObject);
-        }
+        for (var i = transform.childCount - 1; i >= 0; i--) Object.DestroyImmediate(transform.GetChild(i).gameObject);
     }
 
     /// <summary>
-    /// 洗牌算法，将一个数组或者列表以以O(N)的复杂度随机打乱
+    ///     洗牌算法，将一个数组或者列表以以O(N)的复杂度随机打乱
     /// </summary>
     /// <param name="array"></param>
     /// <typeparam name="T"></typeparam>
@@ -49,9 +43,9 @@ public static class Utils
     {
         Random rand = new();
 
-        for (int i = array.Count - 1; i > 0; i--)
+        for (var i = array.Count - 1; i > 0; i--)
         {
-            int j = rand.Next(0, i + 1);
+            var j = rand.Next(0, i + 1);
             (array[j], array[i]) = (array[i], array[j]);
         }
     }
@@ -60,15 +54,15 @@ public static class Utils
     {
         Random rand = new(seed);
 
-        for (int i = array.Count - 1; i > 0; i--)
+        for (var i = array.Count - 1; i > 0; i--)
         {
-            int j = rand.Next(0, i + 1);
+            var j = rand.Next(0, i + 1);
             (array[j], array[i]) = (array[i], array[j]);
         }
     }
 
     /// <summary>
-    /// bezier2D抛物线插值
+    ///     bezier2D抛物线插值
     /// </summary>
     /// <param name="t"></param>
     /// <param name="a"></param>

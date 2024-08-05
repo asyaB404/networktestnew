@@ -1,10 +1,8 @@
-
 using FishNet.Managing;
 using FishNet.Transporting;
 using FishNet.Transporting.Tugboat;
 using GamePlay.Room;
 using UnityEngine;
-
 
 public class NetworkMgr : MonoBehaviour
 {
@@ -34,8 +32,8 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
-        RoomMgr.Instance.Create(roomType, roomName);
-        bool flag = networkManager.ServerManager.StartConnection();
+        RoomMgr.Instance.SetRoomConfig(roomType, roomName);
+        var flag = networkManager.ServerManager.StartConnection();
         return flag;
     }
 
@@ -50,9 +48,7 @@ public class NetworkMgr : MonoBehaviour
     {
         if (networkManager == null)
             return false;
-        networkManager.ClientManager.Connection.CustomData = "123";
         var flag = networkManager.ClientManager.StartConnection();
-        networkManager.ClientManager.Connection.CustomData = "123";
         return flag;
     }
 
@@ -74,13 +70,8 @@ public class NetworkMgr : MonoBehaviour
     {
         ClientState = obj.ConnectionState;
         if (obj.ConnectionState == LocalConnectionState.Started)
-        {
             RoomMgr.Instance.gameObject.SetActive(true);
-        }
-        else if (obj.ConnectionState == LocalConnectionState.Stopped)
-        {
-            RoomMgr.Instance.gameObject.SetActive(false);
-            // networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
-        }
+        else if (obj.ConnectionState == LocalConnectionState.Stopped) RoomMgr.Instance.gameObject.SetActive(false);
+        // networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
     }
 }

@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Panel

@@ -7,13 +7,13 @@ namespace GamePlay.Player
     {
         [SerializeField] private Player player;
         private float _moveTimer;
+
+        private Tween _moveTween;
         private float MoveDuration => 1 / player.Speed;
 
         private Vector3 Pos => transform.localPosition;
         private float X => transform.localPosition.x;
         private float Y => transform.localPosition.y;
-
-        private Tween _moveTween;
 
         private void Awake()
         {
@@ -22,7 +22,7 @@ namespace GamePlay.Player
 
         private void Update()
         {
-            if (_moveTimer <= 0 && X > 0 & X < player.CoinsPool.Weight - 1)
+            if (_moveTimer <= 0 && (X > 0) & (X < player.CoinsPool.Weight - 1))
             {
                 if (Input.GetKeyDown(KeyCode.A))
                 {

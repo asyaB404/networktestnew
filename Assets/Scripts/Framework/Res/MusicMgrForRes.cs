@@ -3,12 +3,16 @@ using UnityEngine;
 
 public class MusicMgrForRes
 {
-    private GameObject _soundObj = null;
+    private static MusicMgrForRes _instance;
     private readonly List<AudioSource> _soundList = new();
+
+    private AudioSource _bkMusic;
+    private float _bkValue = 1;
+    private GameObject _soundObj;
     private float _soundValue = 1;
 
     /// <summary>
-    /// 音效大小(0-1)
+    ///     音效大小(0-1)
     /// </summary>
     public float SoundValue
     {
@@ -16,17 +20,32 @@ public class MusicMgrForRes
         {
             _soundValue = value;
             foreach (var source in _soundList)
-            {
                 if (source)
-                {
                     source.volume = value;
-                }
-            }
+        }
+    }
+
+    public float BkValue
+    {
+        set
+        {
+            _bkValue = value;
+            if (_bkMusic) _bkMusic.volume = _bkValue;
+        }
+    }
+
+    public static MusicMgrForRes Instance
+    {
+        get
+        {
+            _instance ??= new MusicMgrForRes();
+            _instance.Check();
+            return _instance;
         }
     }
 
     /// <summary>
-    /// 播放音效
+    ///     播放音效
     /// </summary>
     /// <param name="path"></param>
     /// <param name="isLoop"></param>
@@ -54,7 +73,7 @@ public class MusicMgrForRes
     }
 
     /// <summary>
-    /// 停止音效
+    ///     停止音效
     /// </summary>
     /// <param name="source"></param>
     public void StopSound(AudioSource source)
@@ -65,36 +84,9 @@ public class MusicMgrForRes
         Object.Destroy(source);
     }
 
-    private AudioSource _bkMusic = null;
-    private float _bkValue = 1;
-
-    public float BkValue
-    {
-        set
-        {
-            _bkValue = value;
-            if (_bkMusic)
-            {
-                _bkMusic.volume = _bkValue;
-            }
-        }
-    }
-
-    private static MusicMgrForRes _instance;
-
-    public static MusicMgrForRes Instance
-    {
-        get
-        {
-            _instance ??= new MusicMgrForRes();
-            _instance.Check();
-            return _instance;
-        }
-    }
-
 
     /// <summary>
-    /// 播放背景音乐
+    ///     播放背景音乐
     /// </summary>
     /// <param name="path"></param>
     public void PlayBkMusic(string path)
@@ -114,7 +106,7 @@ public class MusicMgrForRes
     }
 
     /// <summary>
-    /// 停止背景音乐
+    ///     停止背景音乐
     /// </summary>
     public void StopMusic()
     {
@@ -124,7 +116,7 @@ public class MusicMgrForRes
     }
 
     /// <summary>
-    /// 暂停音乐
+    ///     暂停音乐
     /// </summary>
     public void PauseBkMusic()
     {
@@ -135,7 +127,7 @@ public class MusicMgrForRes
 
     private void Check()
     {
-        for (int i = _soundList.Count - 1; i >= 0; i--)
+        for (var i = _soundList.Count - 1; i >= 0; i--)
         {
             if (!_soundList[i] || _soundList[i].isPlaying) continue;
             Object.Destroy(_soundList[i]);

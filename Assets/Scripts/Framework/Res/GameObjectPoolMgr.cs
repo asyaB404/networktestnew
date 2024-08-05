@@ -3,13 +3,17 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// GameObject对象池
-///当你尝试访问Instance单例时将会自动创建唯一一个名为Pool的gameobject作为对象池的父物体
-/// 记得在过场景的时候手动clear一下
+///     GameObject对象池
+///     当你尝试访问Instance单例时将会自动创建唯一一个名为Pool的gameobject作为对象池的父物体
+///     记得在过场景的时候手动clear一下
 /// </summary>
 public class GameObjectPoolMgr
 {
     private static GameObjectPoolMgr _instance;
+    private readonly Dictionary<string, Transform> _parentsSet = new();
+
+    private readonly Dictionary<string, Stack<GameObject>> _poolDict = new();
+    private GameObject _pool;
 
     public static GameObjectPoolMgr Instance
     {
@@ -20,18 +24,11 @@ public class GameObjectPoolMgr
         }
     }
 
-    private readonly Dictionary<string, Stack<GameObject>> _poolDict = new();
-    private readonly Dictionary<string, Transform> _parentsSet = new();
-    private GameObject _pool;
-
     public GameObject Pool
     {
         get
         {
-            if (!_pool)
-            {
-                _pool = new GameObject("Pool");
-            }
+            if (!_pool) _pool = new GameObject("Pool");
 
             return _pool;
         }
@@ -39,7 +36,7 @@ public class GameObjectPoolMgr
 
     public void Push(GameObject obj, string pushId)
     {
-        if (_parentsSet.TryGetValue(pushId, out Transform parent))
+        if (_parentsSet.TryGetValue(pushId, out var parent))
         {
             obj.transform.SetParent(parent, false);
         }
@@ -52,7 +49,7 @@ public class GameObjectPoolMgr
         }
 
         obj.SetActive(false);
-        if (_poolDict.TryGetValue(pushId, out Stack<GameObject> stack))
+        if (_poolDict.TryGetValue(pushId, out var stack))
         {
             stack.Push(obj);
         }
@@ -69,57 +66,17 @@ public class GameObjectPoolMgr
         Push(obj, obj.name);
     }
 
-    public interface ILoadConfig
-    {
-    }
-
-    public struct ResLoadConfig : ILoadConfig
-    {
-        public string ResPath;
-
-        public ResLoadConfig(string resPath)
-        {
-            ResPath = resPath;
-        }
-    }
-
-    public struct PrefabsLoadConfig : ILoadConfig
-    {
-        public GameObject Prefab;
-
-        public PrefabsLoadConfig(GameObject prefab)
-        {
-            Prefab = prefab;
-        }
-    }
-
-    public struct ABLoadConfig : ILoadConfig
-    {
-        public string AbName;
-        public string ResName;
-
-        public ABLoadConfig(string abName, string resName)
-        {
-            AbName = abName;
-            ResName = resName;
-        }
-    }
-
     /// <summary>
-    /// 传入id和配置信息，根据配置信息的具体类型来决定通过那种方法生成对象
+    ///     传入id和配置信息，根据配置信息的具体类型来决定通过那种方法生成对象
     /// </summary>
     /// <example>Get("123",new PrefabsLoadConfig(prefab)); Get("123",new ResLoadConfig("Prefabs/Bullet")).....</example>
     public GameObject Get(string id, ILoadConfig config)
     {
-        
         GameObject obj;
-        if (_poolDict.TryGetValue(id, out Stack<GameObject> stack) && stack.Count > 0)
+        if (_poolDict.TryGetValue(id, out var stack) && stack.Count > 0)
         {
             obj = _poolDict[id].Pop();
-            while (obj == null && _poolDict.Count > 0)
-            {
-                obj = _poolDict[id].Pop();
-            }
+            while (obj == null && _poolDict.Count > 0) obj = _poolDict[id].Pop();
 
             if (obj != null)
             {
@@ -157,7 +114,7 @@ public class GameObjectPoolMgr
     )
     {
         GameObject obj;
-        if (_poolDict.TryGetValue(id, out Stack<GameObject> list) && list.Count > 0)
+        if (_poolDict.TryGetValue(id, out var list) && list.Count > 0)
         {
             obj = _poolDict[id].Pop();
             initAction?.Invoke(obj);
@@ -173,14 +130,46 @@ public class GameObjectPoolMgr
     public void Clear()
     {
         foreach (var stack in _poolDict)
-        {
-            foreach (var gobj in stack.Value)
-            {
-                Object.Destroy(gobj);
-            }
-        }
+        foreach (var gobj in stack.Value)
+            Object.Destroy(gobj);
 
         _poolDict.Clear();
         _instance = null;
+    }
+
+    public interface ILoadConfig
+    {
+    }
+
+    public struct ResLoadConfig : ILoadConfig
+    {
+        public string ResPath;
+
+        public ResLoadConfig(string resPath)
+        {
+            ResPath = resPath;
+        }
+    }
+
+    public struct PrefabsLoadConfig : ILoadConfig
+    {
+        public GameObject Prefab;
+
+        public PrefabsLoadConfig(GameObject prefab)
+        {
+            Prefab = prefab;
+        }
+    }
+
+    public struct ABLoadConfig : ILoadConfig
+    {
+        public string AbName;
+        public string ResName;
+
+        public ABLoadConfig(string abName, string resName)
+        {
+            AbName = abName;
+            ResName = resName;
+        }
     }
 }

@@ -1,14 +1,15 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 场景管理器
+///     场景管理器
 /// </summary>
 public class ScenesMgr : MonoBehaviour
 {
+    private static ScenesMgr _instance;
+
     public static ScenesMgr Instance
     {
         get
@@ -23,8 +24,6 @@ public class ScenesMgr : MonoBehaviour
             return _instance;
         }
     }
-
-    private static ScenesMgr _instance;
 
     private void Clear()
     {
@@ -48,12 +47,12 @@ public class ScenesMgr : MonoBehaviour
     private IEnumerator LoadSceneCoroutine(string sceneName, UnityAction callback)
     {
         Clear();
-        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
+        var asyncOperation = SceneManager.LoadSceneAsync(sceneName);
         while (!asyncOperation.isDone)
         {
             yield return asyncOperation.progress;
             //更新加载进度条事件
-            MyEventSystem.Instance.EventTrigger<float>(EventEnum.UpdateProgress, asyncOperation.progress);
+            MyEventSystem.Instance.EventTrigger(EventEnum.UpdateProgress, asyncOperation.progress);
         }
 
         yield return asyncOperation;

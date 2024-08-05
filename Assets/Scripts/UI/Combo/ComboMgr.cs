@@ -2,24 +2,18 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 /// <summary>
-/// 连击管理器
+///     连击管理器
 /// </summary>
 public class ComboMgr : MonoBehaviour
 {
-    public static ComboMgr Instance { get; private set; }
     [SerializeField] private Sprite[] nums;
     [SerializeField] private GameObject comboNumsPrefabs;
     [SerializeField] private Transform comboParent;
-    public int Combo { get; private set; }
     [SerializeField] private bool combing;
     private float _combingTime;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
+    public static ComboMgr Instance { get; private set; }
+    public int Combo { get; private set; }
 
     public bool Combing
     {
@@ -49,7 +43,12 @@ public class ComboMgr : MonoBehaviour
         }
     }
 
-    
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+
     private void Update()
     {
         if (_combingTime > 0)
@@ -58,10 +57,7 @@ public class ComboMgr : MonoBehaviour
         }
         else
         {
-            if (Combing)
-            {
-                Combing = false;
-            }
+            if (Combing) Combing = false;
         }
     }
 

@@ -9,9 +9,9 @@ namespace Test
     {
         public Vector2 vector;
         public GameObject bullet;
-        public SyncVar<float> Health { get; } = new(10f);
         [SerializeField] private int score;
         [SerializeField] private Text healthGui;
+        public SyncVar<float> Health { get; } = new(10f);
 
         private void Update()
         {
@@ -22,11 +22,9 @@ namespace Test
                 vector = new Vector2(x, y);
                 transform.Translate(vector * (Time.deltaTime * 4f));
                 if (Input.GetMouseButtonDown(0))
-                {
                     // AddScore();
                     Fire();
-                    // DoScale();
-                }
+                // DoScale();
             }
         }
 
@@ -34,14 +32,14 @@ namespace Test
         private void Fire()
         {
             Vector2 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 direction = (mouseWorldPosition - (Vector2)transform.position).normalized;
+            var direction = (mouseWorldPosition - (Vector2)transform.position).normalized;
             FireServerRpc(transform.position, direction);
         }
 
         [ServerRpc]
         private void FireServerRpc(Vector2 position, Vector2 direction)
         {
-            GameObject sbullet = Instantiate(bullet, position + direction * 1.5f, Quaternion.identity);
+            var sbullet = Instantiate(bullet, position + direction * 1.5f, Quaternion.identity);
             sbullet.GetComponent<Bullet>().Initialize(direction * 10);
             ServerManager.Spawn(sbullet);
         }

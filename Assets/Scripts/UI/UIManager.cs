@@ -5,28 +5,21 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
-        public static UIManager Instance { get; private set; }
         private readonly Stack<IBasePanel> _panels = new();
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (Peek() != null)
-                {
-                    Peek().OnPressedEsc();
-                }
-            }
-        }
+        public static UIManager Instance { get; private set; }
 
         private void Awake()
         {
             Instance = this;
-            IBasePanel[] basePanels = GetComponentsInChildren<IBasePanel>(true);
-            foreach (var panel in basePanels)
-            {
-                panel.Init();
-            }
+            var basePanels = GetComponentsInChildren<IBasePanel>(true);
+            foreach (var panel in basePanels) panel.Init();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                if (Peek() != null)
+                    Peek().OnPressedEsc();
         }
 
         public void ClearPanels()
@@ -40,9 +33,9 @@ namespace UI
             _panels.Clear();
         }
 
-        
+
         /// <summary>
-        /// 存入栈中
+        ///     存入栈中
         /// </summary>
         /// <param name="basePanel"></param>
         /// <param name="callback">是否先执行栈顶的渐渐隐藏</param>
@@ -54,17 +47,14 @@ namespace UI
                 return;
             }
 
-            if (callback && Peek() != null)
-            {
-                Peek().CallBack(false);
-            }
+            if (callback && Peek() != null) Peek().CallBack(false);
 
             _panels.Push(basePanel);
             basePanel.CallBack(true);
         }
 
         /// <summary>
-        /// 弹出栈顶元素
+        ///     弹出栈顶元素
         /// </summary>
         /// <param name="callback">弹出后，是否执行新的栈顶的渐渐显示</param>
         public IBasePanel PopPanel(bool callback = true)
@@ -75,16 +65,10 @@ namespace UI
                 return null;
             }
 
-            if (Peek() != null)
-            {
-                Peek().CallBack(false);
-            }
+            if (Peek() != null) Peek().CallBack(false);
 
             var res = _panels.Pop();
-            if (callback && Peek() != null)
-            {
-                Peek().CallBack(true);
-            }
+            if (callback && Peek() != null) Peek().CallBack(true);
 
             return res;
         }
