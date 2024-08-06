@@ -43,17 +43,6 @@ namespace UI.Panel
             }
         }
 
-        private void OnEnable()
-        {
-            if (InstanceFinder.NetworkManager.IsServerStarted)
-            {
-                _btnText.text = "开始";
-            }
-            else if (InstanceFinder.NetworkManager.IsClientStarted)
-            {
-                _btnText.text = "准备";
-            }
-        }
 
         private void OnDisable()
         {
@@ -110,8 +99,10 @@ namespace UI.Panel
 
         private void OnUpdateJoin(ClientConnectionStateArgs obj)
         {
-            if (obj.ConnectionState == LocalConnectionState.Started) Debug.Log("生成一个玩家");
-
+            if (obj.ConnectionState == LocalConnectionState.Started)
+            {
+                _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
+            }
             if (obj.ConnectionState == LocalConnectionState.Stopped) HideMe();
         }
 

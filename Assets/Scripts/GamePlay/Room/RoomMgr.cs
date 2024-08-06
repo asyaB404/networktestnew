@@ -151,7 +151,7 @@ namespace GamePlay.Room
         }
 
         [ContextMenu("debuglist")]
-        public void Test()
+        private void Test()
         {
             foreach (var player in PlayersCon)
             {
@@ -161,9 +161,17 @@ namespace GamePlay.Room
         }
 
         [ContextMenu("debuglist1")]
-        public void Test1()
+        private void Test1()
         {
             foreach (var item in InstanceFinder.ServerManager.Clients) Debug.Log(item.Key + "___" + item.Value);
+        }
+
+        [ContextMenu("dedbug2")]
+        private void Test2()
+        {
+            Debug.Log(InstanceFinder.IsServerStarted);
+            Debug.Log(InstanceFinder.IsClientStarted);
+            Debug.Log(InstanceFinder.IsClientOnlyStarted);
         }
     }
 }

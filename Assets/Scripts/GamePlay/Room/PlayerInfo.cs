@@ -53,7 +53,7 @@ namespace GamePlay.Room
 
         public override string ToString()
         {
-            return id + "_" + playerName + "_" + connection;
+            return id + "_" + status + "_" + playerName + "_" + connection;
         }
     }
 }
