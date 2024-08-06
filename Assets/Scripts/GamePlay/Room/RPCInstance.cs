@@ -11,16 +11,12 @@ namespace GamePlay.Room
     public class RPCInstance : NetworkBehaviour
     {
         public static RPCInstance Instance { get; private set; }
-
-        public static PlayerStatus Status { get; set; }
+        public static PlayerStatus Status { get; private set; } = PlayerStatus.Idle;
 
         /// <summary>
         /// 在主机的_playersCon列表的下标
         /// </summary>
         public static int ID { get; private set; } = -1;
-
-        public static PlayerInfo DefaultInfo =>
-            new PlayerInfo(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
 
         [ContextMenu("test")]
         private void Test()
@@ -43,7 +39,7 @@ namespace GamePlay.Room
                     Instance = this;
                 }
 
-                SendPlayerInfo(DefaultInfo);
+                SendPlayerInfo(PlayerInfo.Default);
                 UpdateHostPlayerInfosPanel();
             }
             else
@@ -61,13 +57,17 @@ namespace GamePlay.Room
             }
         }
 
+        /// <summary>
+        /// 客户端建立连接时调用，向服务端发送玩家信息
+        /// </summary>
+        /// <param name="defaultInfo"></param>
         [ServerRpc]
         public void SendPlayerInfo(PlayerInfo defaultInfo)
         {
             var i = 0;
             foreach (var con in RoomMgr.Instance.PlayersCon)
             {
-                if (con.CustomData is string s && s == "init")
+                if (con.CustomData is "init") //con.CustomData is string s && s == "init"
                 {
                     Init(i);
                     defaultInfo.id = i;
@@ -79,22 +79,32 @@ namespace GamePlay.Room
             }
         }
 
-        [ServerRpc]
-        public void ChangeStatus(int id, PlayerStatus status)
+        public void ChangeStatus(PlayerStatus status)
         {
-            if (RoomMgr.Instance.PlayersCon[id].CustomData is PlayerInfo)
-            {
-                PlayerInfo info = DefaultInfo;
-                info.id = id;
-                info.status = status;
-                RoomMgr.Instance.PlayersCon[id].CustomData = info;
-            }
+            Status = status;
+            SyncStatus(ID, status);
         }
 
+        /// <summary>
+        /// 同步服务端玩家准备状态
+        /// </summary>
+        [ServerRpc]
+        private void SyncStatus(int id, PlayerStatus status)
+        {
+            if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
+            PlayerInfo info = PlayerInfo.Default;
+            info.id = id;
+            info.status = status;
+            RoomMgr.Instance.PlayersCon[id].CustomData = info;
+            UpdateStatusUI();
+        }
+
+        /// <summary>
+        /// 向所有客户端发送更新玩家准备状态的请求
+        /// </summary>
         [ObserversRpc]
         private void UpdateStatusUI()
         {
-            
         }
 
         /// <summary>

@@ -38,10 +38,10 @@ namespace UI.Panel
                 switch (RPCInstance.Status)
                 {
                     case PlayerStatus.Idle:
-                        RPCInstance.Instance.ChangeStatus(RPCInstance.ID,PlayerStatus.Ready);
+                        RPCInstance.Instance.ChangeStatus(PlayerStatus.Ready);
                         break;
                     case PlayerStatus.Ready:
-                        RPCInstance.Instance.ChangeStatus(RPCInstance.ID,PlayerStatus.Idle);
+                        RPCInstance.Instance.ChangeStatus(PlayerStatus.Idle);
                         break;
                     case PlayerStatus.Gaming:
                         break;

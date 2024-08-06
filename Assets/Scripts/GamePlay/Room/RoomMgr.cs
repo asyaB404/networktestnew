@@ -70,7 +70,7 @@ namespace GamePlay.Room
             {
                 if (con != null && con.CustomData is PlayerInfo info)
                     return info;
-                return new PlayerInfo(-1, "NULL", null);
+                return PlayerInfo.Null;
             }).ToList();
 
         /// <summary>
@@ -123,6 +123,7 @@ namespace GamePlay.Room
                 {
                     Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                     _playersCon[FirstIndex] = connection;
+                    //给这个连接标记需要初始化
                     connection.CustomData = "init";
                     // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
                 }
