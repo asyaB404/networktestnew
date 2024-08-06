@@ -1,5 +1,7 @@
+using System;
 using DG.Tweening;
 using FishNet.Transporting;
+using GamePlay.Room;
 using UI.GamingUI;
 using UI.InfoPanel;
 using UnityEngine;
@@ -31,6 +33,24 @@ namespace UI.Panel
             base.Init();
             GetComponentInChildren<PlayerInfoPanel>(true).Init();
             GetControl<Button>("menu").onClick.AddListener(() => { menuPanel.ChangeMe(); });
+            GetControl<Button>("readyOrStart").onClick.AddListener(() =>
+            {
+                switch (RPCInstance.Status)
+                {
+                    case PlayerStatus.Idle:
+                        RPCInstance.Instance.ChangeStatus(RPCInstance.ID,PlayerStatus.Ready);
+                        break;
+                    case PlayerStatus.Ready:
+                        RPCInstance.Instance.ChangeStatus(RPCInstance.ID,PlayerStatus.Idle);
+                        break;
+                    case PlayerStatus.Gaming:
+                        break;
+                    case PlayerStatus.Watch:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            });
         }
 
 

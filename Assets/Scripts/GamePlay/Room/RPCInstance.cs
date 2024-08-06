@@ -12,12 +12,15 @@ namespace GamePlay.Room
     {
         public static RPCInstance Instance { get; private set; }
 
-        public static PlayerStatus Status { get; private set; }
+        public static PlayerStatus Status { get; set; }
 
         /// <summary>
         /// 在主机的_playersCon列表的下标
         /// </summary>
         public static int ID { get; private set; } = -1;
+
+        public static PlayerInfo DefaultInfo =>
+            new PlayerInfo(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
 
         [ContextMenu("test")]
         private void Test()
@@ -40,7 +43,7 @@ namespace GamePlay.Room
                     Instance = this;
                 }
 
-                SendPlayerInfo(new PlayerInfo(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection));
+                SendPlayerInfo(DefaultInfo);
                 UpdateHostPlayerInfosPanel();
             }
             else
@@ -59,7 +62,7 @@ namespace GamePlay.Room
         }
 
         [ServerRpc]
-        public void SendPlayerInfo(PlayerInfo info)
+        public void SendPlayerInfo(PlayerInfo defaultInfo)
         {
             var i = 0;
             foreach (var con in RoomMgr.Instance.PlayersCon)
@@ -67,8 +70,8 @@ namespace GamePlay.Room
                 if (con.CustomData is string s && s == "init")
                 {
                     Init(i);
-                    info.id = i;
-                    con.CustomData = info;
+                    defaultInfo.id = i;
+                    con.CustomData = defaultInfo;
                     break;
                 }
 
@@ -81,12 +84,21 @@ namespace GamePlay.Room
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is PlayerInfo)
             {
-                (PlayerInfo)RoomMgr.Instance.PlayersCon[id].CustomData
+                PlayerInfo info = DefaultInfo;
+                info.id = id;
+                info.status = status;
+                RoomMgr.Instance.PlayersCon[id].CustomData = info;
             }
         }
 
+        [ObserversRpc]
+        private void UpdateStatusUI()
+        {
+            
+        }
+
         /// <summary>
-        /// 只更新主机的显示板
+        /// 只更新主机的玩家显示板
         /// </summary>
         [ServerRpc]
         public void UpdateHostPlayerInfosPanel()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet;
@@ -85,10 +86,18 @@ namespace GamePlay.Room
             get
             {
                 var count = 0;
-                if (CurType == RoomType.T1V1)
-                    count = 2;
-                else
-                    count = 4;
+                switch (CurType)
+                {
+                    case RoomType.T1V1:
+                        count = 2;
+                        break;
+                    case RoomType.T2V2:
+                    case RoomType.T4VS:
+                        count = 4;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 return count + watchersCount;
             }
