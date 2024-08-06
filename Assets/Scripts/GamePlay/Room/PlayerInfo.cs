@@ -30,12 +30,8 @@ namespace GamePlay.Room
         /// <summary>
         /// return new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
         /// </summary>
-        public static PlayerInfo Default
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get;
-        } = new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
-        
+        public static PlayerInfo Default => new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
+
         /// <summary>
         /// return new(-1, "", null);
         /// </summary>
@@ -43,7 +39,7 @@ namespace GamePlay.Room
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get;
-        } = new(-1, "", null);
+        } = new(-127, "", null);
 
 
         public PlayerInfo(int id, string playerName, NetworkConnection connection,
@@ -57,7 +53,7 @@ namespace GamePlay.Room
 
         public override string ToString()
         {
-            return id + "_" + playerName;
+            return id + "_" + playerName + "_" + connection;
         }
     }
 }

@@ -30,7 +30,7 @@ namespace UI.InfoPanel
             // size.y = (list.Count - 1) * (InfoDuration + y) + y;
             // rectTransform.sizeDelta = size;
             foreach (var info in list)
-                if (info.id != -1)
+                if (info.connection != null)
                 {
                     var gobj = Instantiate(infoPrefab, content, false);
                     gobj.GetComponent<PlayerInfoUI>().Init(info);

@@ -24,7 +24,7 @@ namespace GamePlay.Room
         /// <summary>
         /// 最大连接数
         /// </summary>
-        public const int MaxCons = 16;
+        public const int MaxCons = 8;
 
         /// <summary>
         /// 旁观玩家数
@@ -131,7 +131,6 @@ namespace GamePlay.Room
                 {
                     Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
                     var i = ((PlayerInfo)connection.CustomData).id;
-                    connection.CustomData = null;
                     _playersCon[i] = null;
                     PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                 }

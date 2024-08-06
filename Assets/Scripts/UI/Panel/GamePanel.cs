@@ -45,12 +45,11 @@ namespace UI.Panel
 
         private void OnEnable()
         {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
-            if (InstanceFinder.IsServerStarted)
+            if (InstanceFinder.NetworkManager.IsServerStarted)
             {
                 _btnText.text = "开始";
             }
-            else if (InstanceFinder.IsClientStarted)
+            else if (InstanceFinder.NetworkManager.IsClientStarted)
             {
                 _btnText.text = "准备";
             }
@@ -58,13 +57,13 @@ namespace UI.Panel
 
         private void OnDisable()
         {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnUpdateJoin;
             menuPanel.gameObject.SetActive(false);
         }
 
         public override void Init()
         {
             base.Init();
+            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
             GetComponentInChildren<PlayerInfoPanel>(true).Init();
             _btnText = GetControl<TextMeshProUGUI>("btnText");
             _btnMask = GetControl<Image>("btnMask");
