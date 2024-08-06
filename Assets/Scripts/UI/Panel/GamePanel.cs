@@ -1,7 +1,9 @@
 using System;
 using DG.Tweening;
+using FishNet;
 using FishNet.Transporting;
 using GamePlay.Room;
+using TMPro;
 using UI.GamingUI;
 using UI.InfoPanel;
 using UnityEngine;
@@ -16,10 +18,42 @@ namespace UI.Panel
     {
         [SerializeField] private MenuPanel menuPanel;
         private int _playerCount;
+        private float _btnCdTimer;
+        private Image _btnMask;
+        private TextMeshProUGUI _btnText;
+
+        private void Update()
+        {
+            if (_btnCdTimer >= 0)
+            {
+                _btnCdTimer -= Time.deltaTime;
+                switch (RPCInstance.Status)
+                {
+                    case PlayerStatus.Idle:
+                        _btnMask.fillAmount = _btnCdTimer / UIConst.BtnClickCoolDown;
+                        break;
+                    case PlayerStatus.Ready:
+                        _btnMask.fillAmount = (UIConst.BtnClickCoolDown - _btnCdTimer) / UIConst.BtnClickCoolDown;
+                        break;
+                    case PlayerStatus.Gaming:
+                    case PlayerStatus.Watch:
+                    default:
+                        break;
+                }
+            }
+        }
 
         private void OnEnable()
         {
             NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
+            if (InstanceFinder.IsServerStarted)
+            {
+                _btnText.text = "开始";
+            }
+            else if (InstanceFinder.IsClientStarted)
+            {
+                _btnText.text = "准备";
+            }
         }
 
         private void OnDisable()
@@ -32,24 +66,40 @@ namespace UI.Panel
         {
             base.Init();
             GetComponentInChildren<PlayerInfoPanel>(true).Init();
+            _btnText = GetControl<TextMeshProUGUI>("btnText");
+            _btnMask = GetControl<Image>("btnMask");
             GetControl<Button>("menu").onClick.AddListener(() => { menuPanel.ChangeMe(); });
             GetControl<Button>("readyOrStart").onClick.AddListener(() =>
             {
-                switch (RPCInstance.Status)
+                if (_btnCdTimer > 0)
+                    return;
+                if (InstanceFinder.IsServerStarted)
                 {
-                    case PlayerStatus.Idle:
-                        RPCInstance.Instance.ChangeStatus(PlayerStatus.Ready);
-                        break;
-                    case PlayerStatus.Ready:
-                        RPCInstance.Instance.ChangeStatus(PlayerStatus.Idle);
-                        break;
-                    case PlayerStatus.Gaming:
-                        break;
-                    case PlayerStatus.Watch:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
+                else if (InstanceFinder.IsClientStarted)
+                {
+                    switch (RPCInstance.Status)
+                    {
+                        case PlayerStatus.Idle:
+                            RPCInstance.Instance.ChangeStatus(PlayerStatus.Ready);
+                            break;
+                        case PlayerStatus.Ready:
+                            RPCInstance.Instance.ChangeStatus(PlayerStatus.Idle);
+                            break;
+                        case PlayerStatus.Gaming:
+                            break;
+                        case PlayerStatus.Watch:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("请先建立连接");
+                }
+
+                _btnCdTimer = UIConst.BtnClickCoolDown;
             });
         }
 
