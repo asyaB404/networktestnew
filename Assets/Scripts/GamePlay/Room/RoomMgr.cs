@@ -113,9 +113,24 @@ namespace GamePlay.Room
             networkManager.ServerManager.OnServerConnectionState += obj =>
             {
                 var state = obj.ConnectionState;
-                if (state == LocalConnectionState.Stopped)
-                    for (var i = 0; i < PlayersCon.Count; i++)
-                        _playersCon[i] = null;
+                switch (state)
+                {
+                    case LocalConnectionState.Stopped:
+                        for (var i = 0; i < PlayersCon.Count; i++)
+                            _playersCon[i] = null;
+                        break;
+                    case LocalConnectionState.Starting:
+                        break;
+                    case LocalConnectionState.Started:
+                        break;
+                    case LocalConnectionState.Stopping:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                // if (state == LocalConnectionState.Stopped)
+                //     for (var i = 0; i < PlayersCon.Count; i++)
+                //         _playersCon[i] = null;
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {

@@ -15,8 +15,8 @@ public class NetworkMgr : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+        networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
         networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
         {
             if (obj.ConnectionState == RemoteConnectionState.Started)
