@@ -6,6 +6,24 @@ using Random = System.Random;
 
 public static class Utils
 {
+    public static int BisectLeft<T>(this IList<T> arr, T value, int low = 0, int high = -1,
+        IComparer<T> comparer = null) where T:IComparable<T>
+    {
+        if (high == -1)
+            high = arr.Count();
+        comparer ??= Comparer<T>.Default;
+        while (low < high)
+        {
+            int mid = (low + high) >> 1;
+            if (comparer.Compare(arr[mid], value) < 0)
+                low = mid + 1;
+            else
+                high = mid;
+        }
+
+        return low;
+    }
+
     /// <summary>
     ///     得到枚举中的随机值
     /// </summary>
