@@ -134,29 +134,49 @@ namespace GamePlay.Room
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
-                if (obj.ConnectionState == RemoteConnectionState.Started)
+                switch (obj.ConnectionState)
                 {
-                    Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                    _playersCon[FirstIndex] = connection;
-                    //给这个连接标记需要初始化
-                    connection.CustomData = "init";
-                    // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
+                    case RemoteConnectionState.Started:
+                        Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
+                        _playersCon[FirstIndex] = connection;
+                        //给这个连接标记需要初始化
+                        connection.CustomData = "init";
+                        // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
+                        break;
+                    case RemoteConnectionState.Stopped:
+                    {
+                        Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                        var i = ((PlayerInfo)connection.CustomData).id;
+                        _playersCon[i] = null;
+                        PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
+                        break;
+                    }
                 }
-                else if (obj.ConnectionState == RemoteConnectionState.Stopped)
+            };
+            networkManager.ClientManager.OnClientConnectionState += obj =>
+            {
+                switch (obj.ConnectionState)
                 {
-                    Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                    var i = ((PlayerInfo)connection.CustomData).id;
-                    _playersCon[i] = null;
-                    PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
+                    case LocalConnectionState.Stopped:
+                        GameManager.Instance.gameObject.SetActive(false);
+                        break;
+                    case LocalConnectionState.Starting:
+                        break;
+                    case LocalConnectionState.Started:
+                        GameManager.Instance.gameObject.SetActive(true);
+                        break;
+                    case LocalConnectionState.Stopping:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             };
         }
 
         private void Start()
         {
-            gameObject.SetActive(false);
+            GameManager.Instance.gameObject.SetActive(false);
         }
-
 
         public void SetRoomConfig(RoomType roomType, string roomName)
         {

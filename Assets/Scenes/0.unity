@@ -4624,6 +4624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61af9c04037645e886f5d172d2e258df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  readySprite: {fileID: 638102165}
 --- !u!1 &1088348253
 GameObject:
   m_ObjectHideFlags: 0
@@ -10447,6 +10448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61af9c04037645e886f5d172d2e258df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  readySprite: {fileID: 5400491243740038836}
 --- !u!114 &5847692748669077190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10593,6 +10595,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1693296980605665293}
+  - component: {fileID: 8127827615015220638}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -10600,6 +10603,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8127827615015220638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8127827615015220637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4ed15a7924afa24ca83dfd6ceafcf5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinsPools:
+  - {fileID: 5740782690776999186}
+  - {fileID: 1036084585}
 --- !u!224 &8523426855370813787
 RectTransform:
   m_ObjectHideFlags: 0

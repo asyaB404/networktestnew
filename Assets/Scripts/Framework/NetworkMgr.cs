@@ -69,9 +69,5 @@ public class NetworkMgr : MonoBehaviour
     private void OnClientConnection(ClientConnectionStateArgs obj)
     {
         ClientState = obj.ConnectionState;
-        if (obj.ConnectionState == LocalConnectionState.Started)
-            RoomMgr.Instance.gameObject.SetActive(true);
-        else if (obj.ConnectionState == LocalConnectionState.Stopped) RoomMgr.Instance.gameObject.SetActive(false);
-        // networkManager.ServerManager.Despawn(RoomMgr.Instance.gameObject);
     }
 }
