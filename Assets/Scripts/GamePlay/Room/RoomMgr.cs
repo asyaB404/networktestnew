@@ -108,7 +108,6 @@ namespace GamePlay.Room
         private void Awake()
         {
             Instance = this;
-            Debug.Log("RoomManager正确初始化");
             var networkManager = InstanceFinder.NetworkManager;
             networkManager.ServerManager.OnServerConnectionState += obj =>
             {
@@ -137,6 +136,12 @@ namespace GamePlay.Room
                 switch (obj.ConnectionState)
                 {
                     case RemoteConnectionState.Started:
+                        if (RPCInstance.Status == PlayerStatus.Gaming)
+                        {
+                            Debug.Log("因为游戏已经开始，拒绝了来自远端的连接" + connection + "\n目前有:" + PlayerCount);
+                            connection.Disconnect(true);
+                            break;
+                        }
                         Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                         _playersCon[FirstIndex] = connection;
                         //给这个连接标记需要初始化
@@ -151,6 +156,8 @@ namespace GamePlay.Room
                         PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                         break;
                     }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             };
             networkManager.ClientManager.OnClientConnectionState += obj =>
@@ -185,6 +192,23 @@ namespace GamePlay.Room
             NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
         }
 
+        public bool TryStartGame()
+        {
+            IList<PlayerInfo> playerInfos = PlayerInfos;
+            //从1开始是因为不计入房主的准备状态
+            for (int i = 1; i < MaxPlayerCount; i++)
+            {
+                if (PlayerInfos[i].status != PlayerStatus.Ready)
+                {
+                    return false;
+                }
+                RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
+            }
+            
+            return true;
+        }
+
+        #region #DebugFunction
         [ContextMenu("debuglist")]
         private void Test()
         {
@@ -208,5 +232,6 @@ namespace GamePlay.Room
             Debug.Log(InstanceFinder.IsClientStarted);
             Debug.Log(InstanceFinder.IsClientOnlyStarted);
         }
+        #endregion
     }
 }

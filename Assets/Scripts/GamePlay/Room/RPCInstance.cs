@@ -1,5 +1,6 @@
 using System;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using UI.InfoPanel;
 using UnityEngine;
@@ -12,6 +13,10 @@ namespace GamePlay.Room
     public class RPCInstance : NetworkBehaviour
     {
         public static RPCInstance Instance { get; private set; }
+
+        /// <summary>
+        /// 客户端断开连接时不需要reset,因为客户端断开连接后会直接销毁RPC实例,服务端状态同理
+        /// </summary>
         public static PlayerStatus Status { get; private set; } = PlayerStatus.Idle;
 
         /// <summary>
@@ -80,17 +85,24 @@ namespace GamePlay.Room
             }
         }
 
+        [Client]
         public void ChangeStatus(PlayerStatus status)
         {
             Status = status;
             SyncStatus(ID, status);
         }
 
+        [ObserversRpc]
+        public void ChangeStatusFromServer(PlayerStatus status)
+        {
+            Status = status;
+        }
+
         /// <summary>
         /// 同步服务端玩家准备状态
         /// </summary>
         [ServerRpc]
-        private void SyncStatus(int id, PlayerStatus status)
+        private static void SyncStatus(int id, PlayerStatus status)
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
             PlayerInfo info = PlayerInfo.Default;
@@ -104,7 +116,7 @@ namespace GamePlay.Room
         /// 向所有客户端发送更新玩家准备状态的请求
         /// </summary>
         [ObserversRpc]
-        private void UpdateIsReady(int id, PlayerStatus status)
+        private static void UpdateIsReady(int id, PlayerStatus status)
         {
             switch (status)
             {
@@ -131,5 +143,15 @@ namespace GamePlay.Room
         {
             PlayerInfoPanel.Instance.UpdateInfoPanel(RoomMgr.Instance.PlayerInfos);
         }
+
+        #region # Debug
+
+        [ContextMenu("test")]
+        private void Test1()
+        {
+            Debug.Log(ID + " _ " + Status);
+        }
+
+        #endregion
     }
 }
