@@ -1,6 +1,5 @@
 using System;
-using FishNet;
-using FishNet.Connection;
+
 using FishNet.Object;
 using UI.InfoPanel;
 using UnityEngine;
@@ -102,7 +101,7 @@ namespace GamePlay.Room
         /// 同步服务端玩家准备状态
         /// </summary>
         [ServerRpc]
-        private static void SyncStatus(int id, PlayerStatus status)
+        private void SyncStatus(int id, PlayerStatus status)
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
             PlayerInfo info = PlayerInfo.Default;
@@ -116,7 +115,7 @@ namespace GamePlay.Room
         /// 向所有客户端发送更新玩家准备状态的请求
         /// </summary>
         [ObserversRpc]
-        private static void UpdateIsReady(int id, PlayerStatus status)
+        private void UpdateIsReady(int id, PlayerStatus status)
         {
             switch (status)
             {
@@ -147,9 +146,18 @@ namespace GamePlay.Room
         #region # Debug
 
         [ContextMenu("test")]
-        private void Test1()
+        private void Print()
         {
             Debug.Log(ID + " _ " + Status);
+        }
+
+        [SerializeField, ContextMenuItem("test2", nameof(SetStatus))]
+        private PlayerStatus status;
+
+        private void SetStatus()
+        {
+            Status = status;
+            Print();
         }
 
         #endregion
