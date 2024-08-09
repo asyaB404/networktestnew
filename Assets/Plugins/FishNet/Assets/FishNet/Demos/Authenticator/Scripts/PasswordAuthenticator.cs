@@ -15,20 +15,29 @@ namespace FishNet.Example.Authenticating
     public class PasswordAuthenticator : HostAuthenticator
     {
         #region Public.
+
         /// <summary>
         /// Called when authenticator has concluded a result for a connection. Boolean is true if authentication passed, false if failed.
         /// Server listens for this event automatically.
         /// </summary>
         public override event Action<NetworkConnection, bool> OnAuthenticationResult;
+
         #endregion
 
         #region Serialized.
+
         /// <summary>
         /// Password to authenticate.
         /// </summary>
-        [Tooltip("Password to authenticate.")]
-        [SerializeField]
+        [Tooltip("Password to authenticate.")] [SerializeField]
         private string _password = "HelloWorld";
+
+        public string Password
+        {
+            get => _password;
+            set => _password = value;
+        }
+
         #endregion
 
         public override void InitializeOnce(NetworkManager networkManager)
@@ -50,9 +59,9 @@ namespace FishNet.Example.Authenticating
         {
             /* If anything but the started state then exit early.
              * Only try to authenticate on started state. The server
-            * doesn't have to send an authentication request before client
-            * can authenticate, that is entirely optional and up to you. In this
-            * example the client tries to authenticate soon as they connect. */
+             * doesn't have to send an authentication request before client
+             * can authenticate, that is entirely optional and up to you. In this
+             * example the client tries to authenticate soon as they connect. */
             if (args.ConnectionState != LocalConnectionState.Started)
                 return;
             //Authentication was sent as host, no need to authenticate normally.
@@ -108,14 +117,15 @@ namespace FishNet.Example.Authenticating
         private void SendAuthenticationResponse(NetworkConnection conn, bool authenticated)
         {
             /* Tell client if they authenticated or not. This is
-            * entirely optional but does demonstrate that you can send
-            * broadcasts to client on pass or fail. */
+             * entirely optional but does demonstrate that you can send
+             * broadcasts to client on pass or fail. */
             ResponseBroadcast rb = new ResponseBroadcast()
             {
                 Passed = authenticated
             };
             base.NetworkManager.ServerManager.Broadcast(conn, rb, false);
         }
+
         /// <summary>
         /// Called after handling a host authentication result.
         /// </summary>
@@ -127,6 +137,4 @@ namespace FishNet.Example.Authenticating
             OnAuthenticationResult?.Invoke(conn, authenticated);
         }
     }
-
-
 }

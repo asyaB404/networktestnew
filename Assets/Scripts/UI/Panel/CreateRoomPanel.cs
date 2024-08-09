@@ -35,6 +35,10 @@ namespace UI.Panel
                 if (string.IsNullOrEmpty(s)) return;
                 tugboat.SetPort(ushort.Parse(s));
             });
+            GetControl<TMP_InputField>("password").onValueChanged.AddListener(s =>
+            {
+                RoomMgr.Instance.authenticator.Password = s;
+            });
             GetControl<Button>("create").onClick.AddListener(() =>
             {
                 var i = GetControl<ToggleGroup>("selectMode").ActiveToggles().FirstOrDefault()!.transform
@@ -61,17 +65,18 @@ namespace UI.Panel
             }
         }
 
-        private void UpdateAddress()
+        private void UpdateModel()
         {
             if (ushort.TryParse(GetControl<TMP_InputField>("port").text, out var res))
                 NetworkMgr.Instance.tugboat.SetPort(res);
+            RoomMgr.Instance.authenticator.Password = GetControl<TMP_InputField>("password").text;
         }
 
 
         public override void CallBack(bool flag)
         {
             base.CallBack(flag);
-            if (flag) UpdateAddress();
+            if (flag) UpdateModel();
         }
     }
 }

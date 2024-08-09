@@ -55,6 +55,8 @@ namespace ChatUI
             InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnection;
         }
 
+        
+
         private void OnDisable()
         {
             Clear();
@@ -90,10 +92,15 @@ namespace ChatUI
 
         private void OnRemoteConnection(NetworkConnection connection, RemoteConnectionStateArgs obj)
         {
-            if (obj.ConnectionState == RemoteConnectionState.Started)
-                InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
-            else if (obj.ConnectionState == RemoteConnectionState.Stopped)
-                InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
+            switch (obj.ConnectionState)
+            {
+                case RemoteConnectionState.Started:
+                    InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
+                    break;
+                case RemoteConnectionState.Stopped:
+                    InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
+                    break;
+            }
         }
 
         private void OnClientChatMessageReceived(ChatMessage chatMessage, Channel channel)

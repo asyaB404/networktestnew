@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FishNet;
 using FishNet.Connection;
+using FishNet.Example.Authenticating;
 using FishNet.Transporting;
 using UI.InfoPanel;
 using UnityEngine;
@@ -21,15 +22,17 @@ namespace GamePlay.Room
     /// </summary>
     public class RoomMgr : MonoBehaviour
     {
-        /// <summary>
-        /// 最大连接数
-        /// </summary>
-        public const int MaxCons = 8;
+        public PasswordAuthenticator authenticator;
 
         /// <summary>
         /// 旁观玩家数
         /// </summary>
         public int watchersCount;
+
+        /// <summary>
+        /// 最大连接数
+        /// </summary>
+        public const int MaxCons = 8;
 
         /// <summary>
         /// 连接列表，用来管理玩家的连接顺序
@@ -109,6 +112,7 @@ namespace GamePlay.Room
         {
             Instance = this;
             var networkManager = InstanceFinder.NetworkManager;
+            networkManager.ServerManager.SetAuthenticator(authenticator);
             networkManager.ServerManager.OnServerConnectionState += obj =>
             {
                 var state = obj.ConnectionState;
@@ -142,6 +146,7 @@ namespace GamePlay.Room
                             connection.Disconnect(true);
                             break;
                         }
+
                         Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                         _playersCon[FirstIndex] = connection;
                         //给这个连接标记需要初始化
@@ -189,7 +194,7 @@ namespace GamePlay.Room
         {
             CurType = roomType;
             RoomName = roomName;
-            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount);
+            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxCons);
         }
 
         public bool TryStartGame()
@@ -202,13 +207,15 @@ namespace GamePlay.Room
                 {
                     return false;
                 }
+
                 RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
             }
-            
+
             return true;
         }
 
         #region #DebugFunction
+
         [ContextMenu("debuglist")]
         private void Test()
         {
@@ -232,6 +239,14 @@ namespace GamePlay.Room
             Debug.Log(InstanceFinder.IsClientStarted);
             Debug.Log(InstanceFinder.IsClientOnlyStarted);
         }
+
+        [ContextMenu("debug3")]
+        private void Test3()
+        {
+            NetworkMgr.Instance.tugboat.CanBeConnected = !NetworkMgr.Instance.tugboat.CanBeConnected;
+            Debug.Log(NetworkMgr.Instance.tugboat.CanBeConnected);
+        }
+
         #endregion
     }
 }

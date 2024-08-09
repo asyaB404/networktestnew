@@ -106,11 +106,22 @@ namespace FishNet.Transporting.Tugboat
         private const int MAXIMUM_UDP_MTU = 1023;
         #endregion
 
+        #region MyRegion
+
+        public bool CanBeConnected
+        {
+            get => _server.CanBeConnected;
+            set => _server.CanBeConnected = value;
+        }
+
+        #endregion
+
         #region Initialization and unity.
         public override void Initialize(NetworkManager networkManager, int transportIndex)
         {
             base.Initialize(networkManager, transportIndex);
             networkManager.TimeManager.OnUpdate += TimeManager_OnUpdate;
+            
         }
 
         protected void OnDestroy()

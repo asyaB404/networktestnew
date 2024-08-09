@@ -135,6 +135,9 @@ namespace FishNet.Transporting.Tugboat.Server
             base.PollSocket(base.NetManager);
         }
 
+        
+        
+        
         /// <summary>
         /// Threaded operation to process server actions.
         /// </summary>
@@ -393,6 +396,11 @@ namespace FishNet.Transporting.Tugboat.Server
             }
         }
 
+        #region MyRegion
+
+        public bool CanBeConnected = true;
+
+        #endregion
 
         /// <summary>
         /// Called when a remote connection request is made.
@@ -403,7 +411,7 @@ namespace FishNet.Transporting.Tugboat.Server
                 return;
 
             //At maximum peers.
-            if (base.NetManager.ConnectedPeersCount >= _maximumClients)
+            if (!CanBeConnected || base.NetManager.ConnectedPeersCount >= _maximumClients)
             {
                 request.Reject();
                 return;
