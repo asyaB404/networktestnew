@@ -63,6 +63,7 @@ namespace UI.Panel
                     return;
                 if (InstanceFinder.IsServerStarted)
                 {
+                    //检查玩家是否全部准备完毕并开启
                 }
                 else if (InstanceFinder.IsClientStarted)
                 {

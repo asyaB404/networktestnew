@@ -10,7 +10,7 @@ public static class Utils
         IComparer<T> comparer = null) where T:IComparable<T>
     {
         if (high == -1)
-            high = arr.Count();
+            high = arr.Count;
         comparer ??= Comparer<T>.Default;
         while (low < high)
         {

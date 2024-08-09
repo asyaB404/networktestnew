@@ -13,5 +13,10 @@ namespace GamePlay
         {
             Instance = this;
         }
+
+        public void SetPlayerReady(int id, bool flag)
+        {
+            coinsPools[id].IsReady = flag;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using FishNet;
 using FishNet.Object;
 using UI.InfoPanel;
@@ -96,15 +97,30 @@ namespace GamePlay.Room
             info.id = id;
             info.status = status;
             RoomMgr.Instance.PlayersCon[id].CustomData = info;
-            UpdateStatusUI();
+            UpdateIsReady(id, status);
         }
 
         /// <summary>
         /// 向所有客户端发送更新玩家准备状态的请求
         /// </summary>
         [ObserversRpc]
-        private void UpdateStatusUI()
+        private void UpdateIsReady(int id, PlayerStatus status)
         {
+            switch (status)
+            {
+                case PlayerStatus.Idle:
+                    GameManager.Instance.SetPlayerReady(id, false);
+                    break;
+                case PlayerStatus.Ready:
+                    GameManager.Instance.SetPlayerReady(id, true);
+                    break;
+                case PlayerStatus.Gaming:
+                    break;
+                case PlayerStatus.Watch:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+            }
         }
 
         /// <summary>
