@@ -53,9 +53,9 @@ namespace ChatUI
             InstanceFinder.ClientManager.RegisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.RegisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
             InstanceFinder.ServerManager.OnRemoteConnectionState += OnRemoteConnection;
+            InstanceFinder.ServerManager.OnAuthenticationResult += OnAuthentication;
         }
 
-        
 
         private void OnDisable()
         {
@@ -66,6 +66,7 @@ namespace ChatUI
             InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
             InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
             InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnection;
+            InstanceFinder.ServerManager.OnAuthenticationResult -= OnAuthentication;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
@@ -95,11 +96,23 @@ namespace ChatUI
             switch (obj.ConnectionState)
             {
                 case RemoteConnectionState.Started:
-                    InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
+                    // InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
                     break;
                 case RemoteConnectionState.Stopped:
-                    InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
+                    if (connection.IsAuthenticated)
+                    {
+                        InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "离开了游戏"));
+                    }
+
                     break;
+            }
+        }
+
+        private void OnAuthentication(NetworkConnection connection, bool flag)
+        {
+            if (flag)
+            {
+                InstanceFinder.ServerManager.Broadcast(new ChatMessage("   ", "玩家" + connection + "加入了游戏"));
             }
         }
 

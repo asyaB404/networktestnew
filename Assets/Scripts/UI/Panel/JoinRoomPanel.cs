@@ -1,26 +1,16 @@
-using FishNet.Transporting;
+using FishNet;
 using GamePlay.Room;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Panel
 {
     public class JoinRoomPanel : BasePanel<JoinRoomPanel>
     {
-        private void OnEnable()
-        {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState += OnClientConnection;
-        }
-
-        private void OnDisable()
-        {
-            NetworkMgr.Instance.networkManager.ClientManager.OnClientConnectionState -= OnClientConnection;
-        }
-
         public override void Init()
         {
             base.Init();
+            InstanceFinder.ClientManager.OnAuthenticated += () => { GamePanel.Instance.ShowMe(); };
             GetControl<TMP_InputField>("IP").onValueChanged.AddListener(s =>
             {
                 if (string.IsNullOrEmpty(s)) return;
@@ -36,20 +26,7 @@ namespace UI.Panel
                 RoomMgr.Instance.authenticator.Password = s;
             });
             GetControl<Button>("join").onClick.AddListener(() => { NetworkMgr.Instance.JoinRoom(); });
-            GetControl<Button>("exit").onClick.AddListener(() => { HideMe(); });
-        }
-
-        private void OnClientConnection(ClientConnectionStateArgs obj)
-        {
-            switch (obj.ConnectionState)
-            {
-                case LocalConnectionState.Started:
-                    GamePanel.Instance.ShowMe();
-                    break;
-                case LocalConnectionState.Starting:
-                    Debug.Log("连接中。。。");
-                    break;
-            }
+            GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
 
         private void UpdateModel()

@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using FishNet;
 using FishNet.Transporting;
 using GamePlay.Room;
 using TMPro;
@@ -14,12 +16,12 @@ namespace UI.Panel
     {
         private void OnEnable()
         {
-            NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState += OnServerConnection;
+            InstanceFinder.ServerManager.OnServerConnectionState += OnServerConnection;
         }
 
         private void OnDisable()
         {
-            NetworkMgr.Instance.networkManager.ServerManager.OnServerConnectionState -= OnServerConnection;
+            InstanceFinder.ServerManager.OnServerConnectionState -= OnServerConnection;
         }
 
         public override void Init()
@@ -45,26 +47,33 @@ namespace UI.Panel
                     .GetSiblingIndex();
                 NetworkMgr.Instance.CreateRoom(RoomType.T1V1 + i, GetControl<TMP_InputField>("name").text);
             });
-            GetControl<Button>("exit").onClick.AddListener(() => { HideMe(); });
+            GetControl<Button>("exit").onClick.AddListener(HideMe);
         }
 
         private void OnServerConnection(ServerConnectionStateArgs obj)
         {
-            if (obj.ConnectionState == LocalConnectionState.Started)
+            switch (obj.ConnectionState)
             {
-                GamePanel.Instance.ShowMe();
-                NetworkMgr.Instance.JoinRoom();
-            }
-            else if (obj.ConnectionState == LocalConnectionState.Starting)
-            {
-                Debug.Log("连接中。。。");
-            }
-            else if (obj.ConnectionState == LocalConnectionState.Stopped)
-            {
-                Debug.Log("开启失败，请检查端口是否被占用");
+                case LocalConnectionState.Started:
+                    GamePanel.Instance.ShowMe();
+                    NetworkMgr.Instance.JoinRoom();
+                    break;
+                case LocalConnectionState.Starting:
+                    Debug.Log("开启服务器中。。。");
+                    break;
+                case LocalConnectionState.Stopped:
+                    Debug.Log("开启失败，请检查端口是否被占用");
+                    break;
+                case LocalConnectionState.Stopping:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
+        /// <summary>
+        ///     在打开面板时同步UI数据
+        /// </summary>
         private void UpdateModel()
         {
             if (ushort.TryParse(GetControl<TMP_InputField>("port").text, out var res))

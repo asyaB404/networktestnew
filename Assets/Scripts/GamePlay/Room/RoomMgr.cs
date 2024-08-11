@@ -137,32 +137,46 @@ namespace GamePlay.Room
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
+                Debug.Log(connection.IsAuthenticated);
                 switch (obj.ConnectionState)
                 {
                     case RemoteConnectionState.Started:
-                        if (RPCInstance.Status == PlayerStatus.Gaming)
-                        {
-                            Debug.Log("因为游戏已经开始，拒绝了来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                            connection.Disconnect(true);
-                            break;
-                        }
-
-                        Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
-                        _playersCon[FirstIndex] = connection;
-                        //给这个连接标记需要初始化
-                        connection.CustomData = "init";
-                        // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
+                        Debug.Log("收到来自远端的认证连接" + connection);
+                        // Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                         break;
                     case RemoteConnectionState.Stopped:
                     {
-                        Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
-                        var i = ((PlayerInfo)connection.CustomData).id;
-                        _playersCon[i] = null;
-                        PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
+                        if (connection.IsAuthenticated)
+                        {
+                            Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                            var i = ((PlayerInfo)connection.CustomData).id;
+                            _playersCon[i] = null;
+                            PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
+                        }
+                        else
+                        {
+                            Debug.Log("来自远端的认证连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                        }
+
                         break;
                     }
                     default:
                         throw new ArgumentOutOfRangeException();
+                }
+            };
+            networkManager.ServerManager.OnAuthenticationResult += (connection, flag) =>
+            {
+                if (flag)
+                {
+                    Debug.Log(connection + "通过认证");
+                    _playersCon[FirstIndex] = connection;
+                    //给这个连接标记需要初始化
+                    connection.CustomData = "init";
+                    // PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);  不在这里更新的原因是需要客户端的RPC为服务端赋值完才能更新
+                }
+                else
+                {
+                    Debug.Log(connection + "认证失败");
                 }
             };
             networkManager.ClientManager.OnClientConnectionState += obj =>
@@ -170,18 +184,24 @@ namespace GamePlay.Room
                 switch (obj.ConnectionState)
                 {
                     case LocalConnectionState.Stopped:
+                        Debug.Log("客户端关闭");
                         GameManager.Instance.gameObject.SetActive(false);
                         break;
                     case LocalConnectionState.Starting:
                         break;
                     case LocalConnectionState.Started:
-                        GameManager.Instance.gameObject.SetActive(true);
+                        Debug.Log("客户端启动成功");
                         break;
                     case LocalConnectionState.Stopping:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            };
+            networkManager.ClientManager.OnAuthenticated += () =>
+            {
+                GameManager.Instance.gameObject.SetActive(true);
+                Debug.Log("客户端通过验证");
             };
         }
 

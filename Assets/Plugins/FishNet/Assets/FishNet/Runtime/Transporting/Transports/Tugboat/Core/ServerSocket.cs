@@ -409,7 +409,6 @@ namespace FishNet.Transporting.Tugboat.Server
         {
             if (base.NetManager == null)
                 return;
-
             //At maximum peers.
             if (!CanBeConnected || base.NetManager.ConnectedPeersCount >= _maximumClients)
             {

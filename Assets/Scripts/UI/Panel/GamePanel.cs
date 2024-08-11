@@ -43,16 +43,20 @@ namespace UI.Panel
             }
         }
 
+        private void OnEnable()
+        {
+            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+        }
 
         private void OnDisable()
         {
+            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState -= OnClientConnection;
             menuPanel.gameObject.SetActive(false);
         }
 
         public override void Init()
         {
             base.Init();
-            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += OnUpdateJoin;
             GetComponentInChildren<PlayerInfoPanel>(true).Init();
             _btnText = GetControl<TextMeshProUGUI>("btnText");
             _btnMask = GetControl<Image>("btnMask");
@@ -98,13 +102,23 @@ namespace UI.Panel
             menuPanel.ChangeMe();
         }
 
-        private void OnUpdateJoin(ClientConnectionStateArgs obj)
+        private void OnClientConnection(ClientConnectionStateArgs obj)
         {
-            if (obj.ConnectionState == LocalConnectionState.Started)
+            switch (obj.ConnectionState)
             {
-                _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
+                case LocalConnectionState.Started:
+                    _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
+                    break;
+                case LocalConnectionState.Stopped:
+                    HideMe();
+                    break;
+                case LocalConnectionState.Starting:
+                    break;
+                case LocalConnectionState.Stopping:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            if (obj.ConnectionState == LocalConnectionState.Stopped) HideMe();
         }
 
         public override void CallBack(bool flag)
