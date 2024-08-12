@@ -27,7 +27,7 @@ namespace UI.Panel
             if (_btnCdTimer >= 0)
             {
                 _btnCdTimer -= Time.deltaTime;
-                switch (RPCInstance.Status)
+                switch (RPCInstance.CurStatus)
                 {
                     case PlayerStatus.Idle:
                         _btnMask.fillAmount = _btnCdTimer / UIConst.BtnClickCoolDown;
@@ -71,7 +71,7 @@ namespace UI.Panel
                 }
                 else if (InstanceFinder.IsClientStarted)
                 {
-                    switch (RPCInstance.Status)
+                    switch (RPCInstance.CurStatus)
                     {
                         case PlayerStatus.Idle:
                             RPCInstance.Instance.ChangeStatus(PlayerStatus.Ready);

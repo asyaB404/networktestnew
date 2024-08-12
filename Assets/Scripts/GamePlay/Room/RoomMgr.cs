@@ -88,19 +88,12 @@ namespace GamePlay.Room
         {
             get
             {
-                var count = 0;
-                switch (CurType)
+                var count = CurType switch
                 {
-                    case RoomType.T1V1:
-                        count = 2;
-                        break;
-                    case RoomType.T2V2:
-                    case RoomType.T4VS:
-                        count = 4;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    RoomType.T1V1 => 2,
+                    RoomType.T2V2 or RoomType.T4VS => 4,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
                 return count + watchersCount;
             }
@@ -137,12 +130,10 @@ namespace GamePlay.Room
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
-                Debug.Log(connection.IsAuthenticated);
                 switch (obj.ConnectionState)
                 {
                     case RemoteConnectionState.Started:
                         Debug.Log("收到来自远端的认证连接" + connection);
-                        // Debug.Log("收到来自远端的连接" + connection + "\n目前有:" + PlayerCount);
                         break;
                     case RemoteConnectionState.Stopped:
                     {

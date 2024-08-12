@@ -1,33 +1,32 @@
 using System;
-
+using System.Collections.Generic;
 using FishNet.Object;
+using GamePlay.Coins;
 using UI.InfoPanel;
 using UnityEngine;
 
 namespace GamePlay.Room
 {
     /// <summary>
+    /// 它能被生成也意味着客户端通过了验证。
     /// 每一个客户端仅有一个的RPC实例,与服务端建立连接之前之前Instance为null
     /// </summary>
     public class RPCInstance : NetworkBehaviour
     {
+        /// <summary>
+        /// 每个客户端的Instance都指向自己的RPCInstance
+        /// </summary>
         public static RPCInstance Instance { get; private set; }
 
         /// <summary>
         /// 客户端断开连接时不需要reset,因为客户端断开连接后会直接销毁RPC实例,服务端状态同理
         /// </summary>
-        public static PlayerStatus Status { get; private set; } = PlayerStatus.Idle;
+        public static PlayerStatus CurStatus { get; private set; } = PlayerStatus.Idle;
 
         /// <summary>
         /// 在主机的_playersCon列表的下标
         /// </summary>
         public static int ID { get; private set; } = -1;
-
-        [ContextMenu("test")]
-        private void Test()
-        {
-            Debug.Log(ID);
-        }
 
         public override void OnStartClient()
         {
@@ -87,14 +86,14 @@ namespace GamePlay.Room
         [Client]
         public void ChangeStatus(PlayerStatus status)
         {
-            Status = status;
+            CurStatus = status;
             SyncStatus(ID, status);
         }
 
         [ObserversRpc]
         public void ChangeStatusFromServer(PlayerStatus status)
         {
-            Status = status;
+            CurStatus = status;
         }
 
         /// <summary>
@@ -120,10 +119,10 @@ namespace GamePlay.Room
             switch (status)
             {
                 case PlayerStatus.Idle:
-                    GameManager.Instance.SetPlayerReady(id, false);
+                    GameManager.Instance.SetReady(id, false);
                     break;
                 case PlayerStatus.Ready:
-                    GameManager.Instance.SetPlayerReady(id, true);
+                    GameManager.Instance.SetReady(id, true);
                     break;
                 case PlayerStatus.Gaming:
                     break;
@@ -143,12 +142,26 @@ namespace GamePlay.Room
             PlayerInfoPanel.Instance.UpdateInfoPanel(RoomMgr.Instance.PlayerInfos);
         }
 
+        // [ServerRpc]
+        // public void SyncCoinsPoolsRequest()
+        // {
+        // }
+        //
+        // [ObserversRpc]
+        // public void SyncCoinsPoolsToClient(List<CoinsPool> coinsPools)
+        // {
+        //     if (base.IsOwner)
+        //     {
+        //         GameManager.Instance.coinsPools = coinsPools;
+        //     }
+        // }
+
         #region # Debug
 
         [ContextMenu("test")]
         private void Print()
         {
-            Debug.Log(ID + " _ " + Status);
+            Debug.Log(ID + " _ " + CurStatus);
         }
 
         [SerializeField, ContextMenuItem("test2", nameof(SetStatus))]
@@ -156,7 +169,7 @@ namespace GamePlay.Room
 
         private void SetStatus()
         {
-            Status = status;
+            CurStatus = status;
             Print();
         }
 
