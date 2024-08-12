@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using FishNet;
 using GamePlay.Coins;
@@ -25,39 +26,38 @@ namespace GamePlay
             }
             else if (InstanceFinder.IsClientStarted)
             {
-                CoinsPool[] pools = GetComponentsInChildren<CoinsPool>(true);
-                coinsPools = new List<CoinsPool>(pools);
+                // CoinsPool[] pools = GetComponentsInChildren<CoinsPool>(true);
+                // coinsPools = new List<CoinsPool>(pools);
             }
         }
 
         private void OnDisable()
         {
-            if (InstanceFinder.IsServerStarted)
-            {
-                coinsPools.Clear();
-            }
-            else if (InstanceFinder.IsClientStarted)
-            {
-                coinsPools.Clear();
-            }
+            coinsPools.Clear();
         }
 
 
-        private void InitRoom()
+        public void InitRoom()
         {
-            InitForMode((int)RoomMgr.Instance.CurType);
-            return;
+            StartCoroutine(InitForMode((int)RoomMgr.Instance.CurType));
+        }
 
-            void InitForMode(int i)
+        /// <summary>
+        /// 不知道为什么fishnet在同一帧中调用ServerManager.Spawn会出BUG,所以就用了协程
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private IEnumerator InitForMode(int i)
+        {
+            Transform mode = transform.GetChild(i);
+            for (int j = 0; j < mode.childCount; j++)
             {
-                Transform mode = transform.GetChild(i);
-                for (int j = 0; j < mode.childCount; j++)
-                {
-                    Transform p = mode.GetChild(j);
-                    GameObject coinsPool = Instantiate(coinsPoolsPrefab, p, false);
-                    InstanceFinder.ServerManager.Spawn(coinsPool);
-                    coinsPools.Add(coinsPool.GetComponent<CoinsPool>());
-                }
+                Transform p = mode.GetChild(j);
+                GameObject coinsPoolGobj = Instantiate(coinsPoolsPrefab, p, false);
+                coinsPoolGobj.name = "coinsPool" + j;
+                InstanceFinder.ServerManager.Spawn(coinsPoolGobj);
+                coinsPools.Add(coinsPoolGobj.GetComponent<CoinsPool>());
+                yield return null;
             }
         }
 

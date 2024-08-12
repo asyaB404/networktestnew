@@ -28,7 +28,7 @@ namespace Test
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (IsServerStarted) Despawn();
+            // if (IsServerStarted) Despawn();
         }
 
         public override void OnStartClient()

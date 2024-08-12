@@ -142,20 +142,6 @@ namespace GamePlay.Room
             PlayerInfoPanel.Instance.UpdateInfoPanel(RoomMgr.Instance.PlayerInfos);
         }
 
-        // [ServerRpc]
-        // public void SyncCoinsPoolsRequest()
-        // {
-        // }
-        //
-        // [ObserversRpc]
-        // public void SyncCoinsPoolsToClient(List<CoinsPool> coinsPools)
-        // {
-        //     if (base.IsOwner)
-        //     {
-        //         GameManager.Instance.coinsPools = coinsPools;
-        //     }
-        // }
-
         #region # Debug
 
         [ContextMenu("test")]

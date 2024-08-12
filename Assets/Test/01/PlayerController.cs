@@ -22,8 +22,11 @@ namespace Test
                 vector = new Vector2(x, y);
                 transform.Translate(vector * (Time.deltaTime * 4f));
                 if (Input.GetMouseButtonDown(0))
+                {
                     // AddScore();
                     Fire();
+                    Fire();
+                }
                 // DoScale();
             }
         }
