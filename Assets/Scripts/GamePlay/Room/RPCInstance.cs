@@ -90,6 +90,10 @@ namespace GamePlay.Room
             SyncStatus(ID, status);
         }
 
+        /// <summary>
+        /// CurStatus = status;
+        /// </summary>
+        /// <param name="status"></param>
         [ObserversRpc]
         public void ChangeStatusFromServer(PlayerStatus status)
         {

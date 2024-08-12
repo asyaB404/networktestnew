@@ -124,9 +124,6 @@ namespace GamePlay.Room
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                // if (state == LocalConnectionState.Stopped)
-                //     for (var i = 0; i < PlayersCon.Count; i++)
-                //         _playersCon[i] = null;
             };
             networkManager.ServerManager.OnRemoteConnectionState += (connection, obj) =>
             {
@@ -218,10 +215,8 @@ namespace GamePlay.Room
                 {
                     return false;
                 }
-
-                RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
             }
-
+            RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
             return true;
         }
 
