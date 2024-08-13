@@ -55,7 +55,7 @@ namespace GamePlay.Coins
         [ServerRpc(RequireOwnership = false)]
         public void SyncCoinsPoolsRequest()
         {
-            SyncCoinsPoolsToClient(GameManager.Instance.coinsPools, (int)RoomMgr.Instance.CurType);
+            SyncCoinsPoolsToClient(GameManager.Instance.coinsPools, (int)RoomMgr.Instance.CurRoomType);
         }
 
         [ObserversRpc]

@@ -7,6 +7,7 @@ using FishNet.Example.Authenticating;
 using FishNet.Transporting;
 using UI.InfoPanel;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GamePlay.Room
 {
@@ -27,18 +28,19 @@ namespace GamePlay.Room
         /// <summary>
         /// 旁观玩家数
         /// </summary>
-        public int watchersCount;
+        [FormerlySerializedAs("watchersCount")]
+        public int MaxWatchersCount;
 
         /// <summary>
-        /// 最大连接数
+        /// 连接列表的大小
         /// </summary>
-        public const int MaxCons = 8;
+        public const int MaxConsListSize = 8;
 
         /// <summary>
         /// 连接列表，用来管理玩家的连接顺序
         /// </summary>
         private readonly List<NetworkConnection> _playersCon =
-            Enumerable.Repeat<NetworkConnection>(null, MaxCons).ToList();
+            Enumerable.Repeat<NetworkConnection>(null, MaxConsListSize).ToList();
 
         /// <summary>
         ///     玩家连接管理，玩家连接时优先占用下标比较小的位置
@@ -79,7 +81,7 @@ namespace GamePlay.Room
         /// <summary>
         /// 当前房间类型
         /// </summary>
-        public RoomType CurType { get; private set; }
+        public RoomType CurRoomType { get; private set; }
 
         /// <summary>
         /// 最大玩家数
@@ -88,14 +90,14 @@ namespace GamePlay.Room
         {
             get
             {
-                var count = CurType switch
+                var count = CurRoomType switch
                 {
                     RoomType.T1V1 => 2,
                     RoomType.T2V2 or RoomType.T4VS => 4,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                return count + watchersCount;
+                return count;
             }
         }
 
@@ -194,35 +196,84 @@ namespace GamePlay.Room
             };
         }
 
-        private void Start()
-        {
-            GameManager.Instance.gameObject.SetActive(false);
-        }
-
         public void SetRoomConfig(RoomType roomType, string roomName)
         {
-            CurType = roomType;
+            CurRoomType = roomType;
             RoomName = roomName;
-            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxCons);
+            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount + MaxWatchersCount);
         }
 
         public bool TryStartGame()
         {
             IList<PlayerInfo> playerInfos = PlayerInfos;
-            //从1开始是因为不计入房主的准备状态
-            for (int i = 1; i < MaxPlayerCount; i++)
+            int idleCount = 0;
+            int readyCount = 0;
+            int watcherCount = 0;
+            for (int i = 0; i < MaxPlayerCount; i++)
             {
-                if (PlayerInfos[i] == PlayerInfos)
+                //对于房主来说 idle状态也是准备状态，除非房主观战
+                if (i == 0)
                 {
-                    
+                    if (playerInfos[0].status == PlayerStatus.Watch)
+                        watcherCount = 1;
+                    else
+                        readyCount = 1;
+                    continue;
                 }
-                if (PlayerInfos[i].status != PlayerStatus.Ready)
+
+                //when i>0
+                if (playerInfos[i] == PlayerInfo.Null)
+                    continue;
+                switch (playerInfos[i].status)
                 {
-                    return false;
+                    case PlayerStatus.Ready:
+                        readyCount++;
+                        break;
+                    case PlayerStatus.Watch:
+                        watcherCount++;
+                        break;
+                    case PlayerStatus.Idle:
+                        idleCount++;
+                        break;
+                    case PlayerStatus.Gaming:
+                        Debug.LogWarning("怎么还有游戏中的状态？");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
-            
-            RPCInstance.Instance.SetAllStatus(PlayerStatus.Gaming);
+
+            switch (CurRoomType)
+            {
+                case RoomType.T1V1:
+                case RoomType.T2V2:
+                    if (readyCount < MaxPlayerCount)
+                        return false;
+                    break;
+                case RoomType.T4VS:
+                    if (readyCount < 2 && idleCount > 0)
+                        return false;
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            //同步服务端
+            for (int i = 0; i < PlayersCon.Count; i++)
+            {
+                if (PlayersCon[i] == null || playerInfos[i].status == PlayerStatus.Watch)
+                {
+                    continue;
+                }
+
+                var playerInfo = PlayerInfos[i];
+                playerInfo.status = PlayerStatus.Gaming;
+                PlayersCon[i].CustomData = playerInfo;
+            }
+
+            //同步客户端
+            RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Gaming);
             return true;
         }
 

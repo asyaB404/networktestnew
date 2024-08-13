@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using FishNet;
 using FishNet.Connection;
@@ -32,7 +33,7 @@ namespace GamePlay.Room
         public static PlayerInfo Default => new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
 
         /// <summary>
-        /// return new(-1, "", null);
+        /// return new(-127, "", null);
         /// </summary>
         public static PlayerInfo Null
         {
@@ -48,6 +49,32 @@ namespace GamePlay.Room
             this.playerName = playerName;
             this.connection = connection;
             this.status = status;
+        }
+
+        public bool Equals(PlayerInfo other)
+        {
+            return id == other.id && playerName == other.playerName && Equals(connection, other.connection) &&
+                   status == other.status;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PlayerInfo other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(id, playerName, connection, (int)status);
+        }
+
+        public static bool operator ==(PlayerInfo left, PlayerInfo right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PlayerInfo left, PlayerInfo right)
+        {
+            return !left.Equals(right);
         }
 
         public override string ToString()

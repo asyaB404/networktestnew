@@ -103,9 +103,13 @@ namespace GamePlay.Room
         /// </summary>
         /// <param name="status"></param>
         [ObserversRpc]
-        public void SetAllStatus(PlayerStatus status)
+        public void SetAllStatusExceptWatcher(PlayerStatus status)
         {
+            if (CurStatus != PlayerStatus.Watch)
+            {
+                
             CurStatus = status;
+            }
         }
 
         /// <summary>

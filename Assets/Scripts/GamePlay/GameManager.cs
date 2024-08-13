@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
@@ -16,6 +17,11 @@ namespace GamePlay
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void Start()
+        {
+            gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -39,7 +45,7 @@ namespace GamePlay
 
         public void InitRoom()
         {
-            StartCoroutine(InitForMode((int)RoomMgr.Instance.CurType));
+            StartCoroutine(InitForMode((int)RoomMgr.Instance.CurRoomType));
         }
 
         /// <summary>
