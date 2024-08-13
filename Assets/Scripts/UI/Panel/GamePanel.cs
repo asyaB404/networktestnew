@@ -105,9 +105,14 @@ namespace UI.Panel
 
         public void UpdateUI()
         {
+            GameObject btn = GetControl<Button>("readyOrStart").gameObject;
             if (RPCInstance.CurStatus == PlayerStatus.Gaming || RPCInstance.CurStatus == PlayerStatus.Watch)
             {
-                GetControl<Button>("readyOrStart").gameObject.SetActive(false);
+                btn.SetActive(false);
+            }
+            else
+            {
+                btn.SetActive(true);
             }
         }
 

@@ -149,10 +149,7 @@ namespace GamePlay.Room
                                     break;
                                 case PlayerStatus.Gaming:
                                     if (!CheckCanStartGame())
-                                    {
                                         FinishGame();
-                                    }
-
                                     break;
                                 case PlayerStatus.Watch:
                                     break;
@@ -191,6 +188,7 @@ namespace GamePlay.Room
                     Debug.Log(connection + "认证失败");
                 }
             };
+
             #endregion
 
             #region Client
@@ -219,6 +217,7 @@ namespace GamePlay.Room
                 GameManager.Instance.gameObject.SetActive(true);
                 Debug.Log("客户端通过验证");
             };
+
             #endregion
         }
 
@@ -329,6 +328,7 @@ namespace GamePlay.Room
         /// </summary>
         public void FinishGame()
         {
+            Debug.Log("FinishGame");
             RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Idle);
             RPCInstance.Instance.UpdateGamingUI();
         }
