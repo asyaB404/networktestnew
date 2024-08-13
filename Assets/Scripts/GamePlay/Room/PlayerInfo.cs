@@ -28,18 +28,20 @@ namespace GamePlay.Room
         public PlayerStatus status;
 
         /// <summary>
-        /// return new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
+        /// 返回id为-1,本地名称,本地客户端连接,Idle状态的PlayerInfo
         /// </summary>
+        /// <example>new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);</example>
         public static PlayerInfo Default => new(-1, PlayerPrefsMgr.PlayerName, InstanceFinder.ClientManager.Connection);
 
         /// <summary>
-        /// return new(-127, "", null);
+        /// 返回id为-127,空字符串,空连接,Idle状态的PlayerInfo
         /// </summary>
+        /// <example>new(-127, string.Empty, null)</example>
         public static PlayerInfo Null
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get;
-        } = new(-127, "", null);
+        } = new(-127, string.Empty, null);
 
 
         public PlayerInfo(int id, string playerName, NetworkConnection connection,
@@ -50,6 +52,8 @@ namespace GamePlay.Room
             this.connection = connection;
             this.status = status;
         }
+
+        #region EqulasFunction
 
         public bool Equals(PlayerInfo other)
         {
@@ -77,9 +81,12 @@ namespace GamePlay.Room
             return !left.Equals(right);
         }
 
+        #endregion
+
         public override string ToString()
         {
-            return id + "_" + status + "_" + playerName + "_" + connection;
+            return
+                $"{nameof(id)}: {id}, {nameof(playerName)}: {playerName}, {nameof(connection)}: {connection}, {nameof(status)}: {status}";
         }
     }
 }

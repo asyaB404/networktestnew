@@ -28,8 +28,7 @@ namespace GamePlay.Room
         /// <summary>
         /// 旁观玩家数
         /// </summary>
-        [FormerlySerializedAs("watchersCount")]
-        public int MaxWatchersCount;
+        public int maxWatchersCount;
 
         /// <summary>
         /// 连接列表的大小
@@ -108,6 +107,9 @@ namespace GamePlay.Room
             Instance = this;
             var networkManager = InstanceFinder.NetworkManager;
             networkManager.ServerManager.SetAuthenticator(authenticator);
+
+            #region Server
+
             networkManager.ServerManager.OnServerConnectionState += obj =>
             {
                 var state = obj.ConnectionState;
@@ -139,6 +141,25 @@ namespace GamePlay.Room
                         if (connection.IsAuthenticated)
                         {
                             Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                            switch (RPCInstance.CurStatus)
+                            {
+                                case PlayerStatus.Idle:
+                                    break;
+                                case PlayerStatus.Ready:
+                                    break;
+                                case PlayerStatus.Gaming:
+                                    if (!CheckCanStartGame())
+                                    {
+                                        FinishGame();
+                                    }
+
+                                    break;
+                                case PlayerStatus.Watch:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
                             var i = ((PlayerInfo)connection.CustomData).id;
                             _playersCon[i] = null;
                             GameManager.Instance.SetReadySprite(i, false);
@@ -170,6 +191,10 @@ namespace GamePlay.Room
                     Debug.Log(connection + "认证失败");
                 }
             };
+            #endregion
+
+            #region Client
+
             networkManager.ClientManager.OnClientConnectionState += obj =>
             {
                 switch (obj.ConnectionState)
@@ -194,16 +219,21 @@ namespace GamePlay.Room
                 GameManager.Instance.gameObject.SetActive(true);
                 Debug.Log("客户端通过验证");
             };
+            #endregion
         }
 
         public void SetRoomConfig(RoomType roomType, string roomName)
         {
             CurRoomType = roomType;
             RoomName = roomName;
-            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount + MaxWatchersCount);
+            NetworkMgr.Instance.tugboat.SetMaximumClients(MaxPlayerCount + maxWatchersCount);
         }
 
-        public bool TryStartGame()
+        /// <summary>
+        /// 检查人数是否满足当前游戏模式开始的最小人数
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckCanStartGame()
         {
             IList<PlayerInfo> playerInfos = PlayerInfos;
             int idleCount = 0;
@@ -260,7 +290,19 @@ namespace GamePlay.Room
             }
 
             Debug.Log(idleCount + "_" + readyCount + "_" + watcherCount);
+            return true;
+        }
 
+        /// <summary>
+        /// 尝试开启游戏，开启成功后会将所有客户端的游戏状态设置为Gaming
+        /// </summary>
+        /// <returns></returns>
+        public bool TryStartGame()
+        {
+            if (!CheckCanStartGame())
+                return false;
+
+            IList<PlayerInfo> playerInfos = PlayerInfos;
             //同步服务端
             for (int i = 0; i < PlayersCon.Count; i++)
             {
@@ -277,9 +319,18 @@ namespace GamePlay.Room
             //同步客户端
             RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Gaming);
             RPCInstance.Instance.UpdateGamingUI();
-            
+
             GameManager.Instance.StartGame();
             return true;
+        }
+
+        /// <summary>
+        /// 游戏结算
+        /// </summary>
+        public void FinishGame()
+        {
+            RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Idle);
+            RPCInstance.Instance.UpdateGamingUI();
         }
 
         #region #DebugFunction

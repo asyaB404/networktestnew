@@ -104,7 +104,7 @@ namespace GamePlay.Room
         }
 
         /// <summary>
-        /// 同步所有客户端的status
+        /// 同步所有客户端的status,除了旁观者
         /// </summary>
         /// <param name="status"></param>
         [ObserversRpc]

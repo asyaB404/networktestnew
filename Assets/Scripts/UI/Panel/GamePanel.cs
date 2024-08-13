@@ -46,6 +46,7 @@ namespace UI.Panel
         private void OnEnable()
         {
             _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
+            UpdateUI();
         }
 
         private void OnDisable()
