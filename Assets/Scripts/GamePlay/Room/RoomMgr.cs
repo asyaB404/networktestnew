@@ -276,6 +276,9 @@ namespace GamePlay.Room
 
             //同步客户端
             RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Gaming);
+            RPCInstance.Instance.UpdateGamingUI();
+            
+            GameManager.Instance.StartGame();
             return true;
         }
 

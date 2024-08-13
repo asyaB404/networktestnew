@@ -30,7 +30,7 @@ namespace GamePlay.Room
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (IsOwner)
+            if (base.IsOwner)
             {
                 Debug.Log("OwenrRPC");
                 if (Instance != null)
@@ -55,7 +55,11 @@ namespace GamePlay.Room
         public override void OnStopClient()
         {
             base.OnStopClient();
-            CurStatus = PlayerStatus.Idle;
+            if (base.IsOwner)
+            {
+                GamePanel.Instance.HideMe();
+                CurStatus = PlayerStatus.Idle;
+            }
         }
 
         [ObserversRpc]

@@ -66,7 +66,8 @@ namespace UI.Panel
                     return;
                 if (InstanceFinder.IsServerStarted)
                 {
-                    //检查玩家是否全部准备完毕并开启
+                    bool flag = RoomMgr.Instance.TryStartGame();
+                    Debug.Log("TryStart" + flag);
                 }
                 else if (InstanceFinder.IsClientStarted)
                 {

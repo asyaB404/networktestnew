@@ -83,7 +83,6 @@ namespace GamePlay.Coins
         public void StartGame()
         {
             SetIsReadySprite(false);
-            RPCInstance.Instance.UpdateGamingUI();
         }
     }
 }
