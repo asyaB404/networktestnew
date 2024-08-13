@@ -212,13 +212,17 @@ namespace GamePlay.Room
             //从1开始是因为不计入房主的准备状态
             for (int i = 1; i < MaxPlayerCount; i++)
             {
+                if (PlayerInfos[i] == PlayerInfos)
+                {
+                    
+                }
                 if (PlayerInfos[i].status != PlayerStatus.Ready)
                 {
                     return false;
                 }
             }
-
-            RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
+            
+            RPCInstance.Instance.SetAllStatus(PlayerStatus.Gaming);
             return true;
         }
 

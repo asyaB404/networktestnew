@@ -42,7 +42,7 @@ namespace GamePlay.Room
                     Instance = this;
                 }
 
-                SendPlayerInfo(PlayerInfo.Default);
+                InitServerPlayerInfo(PlayerInfo.Default);
                 UpdateHostPlayerInfosPanel();
             }
             else
@@ -67,11 +67,11 @@ namespace GamePlay.Room
         }
 
         /// <summary>
-        /// 客户端建立连接时调用，向服务端发送玩家信息
+        /// 客户端建立连接时调用，向服务端发送初始化玩家信息
         /// </summary>
         /// <param name="defaultInfo"></param>
         [ServerRpc]
-        public void SendPlayerInfo(PlayerInfo defaultInfo)
+        public void InitServerPlayerInfo(PlayerInfo defaultInfo)
         {
             var i = 0;
             foreach (var con in RoomMgr.Instance.PlayersCon)
@@ -88,18 +88,22 @@ namespace GamePlay.Room
             }
         }
 
-        public void ChangeStatus(PlayerStatus status)
+        /// <summary>
+        /// 改变客户端本地的status的同时向服务端同步自己的status
+        /// </summary>
+        /// <param name="status"></param>
+        public void ChangeStatusRequest(PlayerStatus status)
         {
             CurStatus = status;
             SyncStatus(ID, status);
         }
 
         /// <summary>
-        /// CurStatus = status;
+        /// 同步所有客户端的status
         /// </summary>
         /// <param name="status"></param>
         [ObserversRpc]
-        public void ChangeStatusFromServer(PlayerStatus status)
+        public void SetAllStatus(PlayerStatus status)
         {
             CurStatus = status;
         }
@@ -108,7 +112,7 @@ namespace GamePlay.Room
         /// 同步服务端玩家准备状态
         /// </summary>
         [ServerRpc]
-        private void SyncStatus(int id, PlayerStatus status)
+        public void SyncStatus(int id, PlayerStatus status)
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
             PlayerInfo info = (PlayerInfo)RoomMgr.Instance.PlayersCon[id].CustomData;
@@ -123,6 +127,7 @@ namespace GamePlay.Room
                     GameManager.Instance.SetReady(id, true);
                     break;
                 case PlayerStatus.Gaming:
+                    GameManager.Instance.SetReady(id, false);
                     break;
                 case PlayerStatus.Watch:
                     break;
