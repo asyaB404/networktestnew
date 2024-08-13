@@ -63,7 +63,7 @@ namespace GamePlay
 
         public void SetReady(int id, bool flag)
         {
-            coinsPools[id].IsReady = flag;
+            coinsPools[id].SetIsReady(flag);
         }
     }
 }

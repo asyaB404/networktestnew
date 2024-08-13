@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FishNet;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
 
@@ -12,14 +13,23 @@ namespace GamePlay.Coins
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
+        private readonly SyncVar<bool> _isReady = new(false);
+
+        [ServerRpc(RequireOwnership = false)]
+        public void SetIsReady(bool value)
+        {
+            _isReady.Value = value;
+        }
+
         [SerializeField] private GameObject readySprite;
+
         [SerializeField] private GameObject playersParent;
+
         [SerializeField] private GameObject coinsParent;
 
-        public bool IsReady
+        private void OnChangeReady(bool prev, bool next, bool asServer)
         {
-            get => readySprite.activeSelf;
-            set => readySprite.SetActive(value);
+            readySprite.SetActive(next);
         }
 
         public override void OnStartClient()
@@ -27,15 +37,20 @@ namespace GamePlay.Coins
             base.OnStartClient();
             if (!IsSynced && InstanceFinder.IsClientOnlyStarted && GameManager.Instance.coinsPools.Count == 0)
             {
+                Debug.Log("从服务端获得硬币池列表并同步");
                 SyncCoinsPoolsRequest();
                 IsSynced = true;
             }
+
+            _isReady.OnChange += OnChangeReady;
         }
 
         public override void OnStopClient()
         {
             base.OnStopClient();
             IsSynced = false;
+            SetIsReady(false);
+            _isReady.OnChange -= OnChangeReady;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -64,7 +79,7 @@ namespace GamePlay.Coins
 
         public void GameStart()
         {
-            IsReady = false;
+            SetIsReady(false);
         }
     }
 }

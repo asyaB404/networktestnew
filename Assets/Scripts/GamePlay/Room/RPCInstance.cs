@@ -33,6 +33,7 @@ namespace GamePlay.Room
             base.OnStartClient();
             if (IsOwner)
             {
+                Debug.Log("OwenrRPC");
                 if (Instance != null)
                 {
                     Debug.Log("多余的RPC已经被移除");
