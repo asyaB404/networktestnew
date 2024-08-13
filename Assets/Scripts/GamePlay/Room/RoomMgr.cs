@@ -141,7 +141,7 @@ namespace GamePlay.Room
                             Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
                             var i = ((PlayerInfo)connection.CustomData).id;
                             _playersCon[i] = null;
-                            GameManager.Instance.SetReady(i, false);
+                            GameManager.Instance.SetReadySprite(i, false);
                             PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                         }
                         else
@@ -258,6 +258,8 @@ namespace GamePlay.Room
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            Debug.Log(idleCount + "_" + readyCount + "_" + watcherCount);
 
             //同步服务端
             for (int i = 0; i < PlayersCon.Count; i++)

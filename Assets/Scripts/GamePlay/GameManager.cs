@@ -42,7 +42,6 @@ namespace GamePlay
             coinsPools.Clear();
         }
 
-
         public void InitRoom()
         {
             StartCoroutine(InitForMode((int)RoomMgr.Instance.CurRoomType));
@@ -72,9 +71,17 @@ namespace GamePlay
         /// </summary>
         /// <param name="id"></param>
         /// <param name="flag"></param>
-        public void SetReady(int id, bool flag)
+        public void SetReadySprite(int id, bool flag)
         {
-            coinsPools[id].SetIsReady(flag);
+            coinsPools[id].SetIsReadySprite(flag);
+        }
+
+        public void StartGame()
+        {
+            foreach (var coinsPool in coinsPools)
+            {
+                coinsPool.StartGame();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using FishNet.Object;
 using UI.InfoPanel;
+using UI.Panel;
 using UnityEngine;
 
 namespace GamePlay.Room
@@ -111,6 +112,15 @@ namespace GamePlay.Room
         }
 
         /// <summary>
+        /// 调用一次所有客户端的UpdateGamingUI
+        /// </summary>
+        [ObserversRpc]
+        public void UpdateGamingUI()
+        {
+            GamePanel.Instance.UpdateUI();
+        }
+
+        /// <summary>
         /// 同步服务端玩家准备状态
         /// </summary>
         [ServerRpc]
@@ -123,13 +133,13 @@ namespace GamePlay.Room
             switch (status)
             {
                 case PlayerStatus.Idle:
-                    GameManager.Instance.SetReady(id, false);
+                    GameManager.Instance.SetReadySprite(id, false);
                     break;
                 case PlayerStatus.Ready:
-                    GameManager.Instance.SetReady(id, true);
+                    GameManager.Instance.SetReadySprite(id, true);
                     break;
                 case PlayerStatus.Gaming:
-                    GameManager.Instance.SetReady(id, false);
+                    GameManager.Instance.SetReadySprite(id, false);
                     break;
                 case PlayerStatus.Watch:
                     break;

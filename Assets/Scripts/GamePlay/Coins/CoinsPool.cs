@@ -16,7 +16,7 @@ namespace GamePlay.Coins
         private readonly SyncVar<bool> _isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
-        public void SetIsReady(bool value)
+        public void SetIsReadySprite(bool value)
         {
             _isReady.Value = value;
         }
@@ -35,6 +35,7 @@ namespace GamePlay.Coins
         public override void OnStartClient()
         {
             base.OnStartClient();
+            //只会同步一次
             if (!IsSynced && InstanceFinder.IsClientOnlyStarted && GameManager.Instance.coinsPools.Count == 0)
             {
                 Debug.Log("从服务端获得硬币池列表并同步");
@@ -76,9 +77,13 @@ namespace GamePlay.Coins
             }
         }
 
-        public void GameStart()
+        /// <summary>
+        /// 服务端调用
+        /// </summary>
+        public void StartGame()
         {
-            SetIsReady(false);
+            SetIsReadySprite(false);
+            RPCInstance.Instance.UpdateGamingUI();
         }
     }
 }

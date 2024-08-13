@@ -101,6 +101,31 @@ namespace UI.Panel
             menuPanel.ChangeMe();
         }
 
+        public void UpdateUI()
+        {
+            if (RPCInstance.CurStatus == PlayerStatus.Gaming || RPCInstance.CurStatus == PlayerStatus.Watch)
+            {
+                GetControl<Button>("readyOrStart").gameObject.SetActive(false);
+            }
+        }
+
+        public override void CallBack(bool flag)
+        {
+            transform.DOKill(true);
+            if (flag)
+            {
+                CanvasGroupInstance.interactable = true;
+                gameObject.SetActive(true);
+                transform.localScale = Vector3.zero;
+                transform.DOScale(1, UIConst.UIDuration);
+            }
+            else
+            {
+                CanvasGroupInstance.interactable = false;
+                transform.DOScale(0, UIConst.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
+            }
+        }
+
         // private void OnClientConnection(ClientConnectionStateArgs obj)
         // {
         //     switch (obj.ConnectionState)
@@ -119,22 +144,5 @@ namespace UI.Panel
         //             throw new ArgumentOutOfRangeException();
         //     }
         // }
-
-        public override void CallBack(bool flag)
-        {
-            transform.DOKill(true);
-            if (flag)
-            {
-                CanvasGroupInstance.interactable = true;
-                gameObject.SetActive(true);
-                transform.localScale = Vector3.zero;
-                transform.DOScale(1, UIConst.UIDuration);
-            }
-            else
-            {
-                CanvasGroupInstance.interactable = false;
-                transform.DOScale(0, UIConst.UIDuration).OnComplete(() => { gameObject.SetActive(false); });
-            }
-        }
     }
 }
