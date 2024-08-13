@@ -112,22 +112,13 @@ namespace GamePlay.Room
             info.id = id;
             info.status = status;
             RoomMgr.Instance.PlayersCon[id].CustomData = info;
-            UpdateIsReady(id, status);
-        }
-
-        /// <summary>
-        /// 向所有客户端发送更新玩家准备状态的请求
-        /// </summary>
-        [ObserversRpc]
-        private void UpdateIsReady(int id, PlayerStatus status)
-        {
             switch (status)
             {
                 case PlayerStatus.Idle:
-                    GameManager.Instance.SetReady(id, false);
+                    GameManager.Instance.SetReady(id,false);
                     break;
                 case PlayerStatus.Ready:
-                    GameManager.Instance.SetReady(id, true);
+                    GameManager.Instance.SetReady(id,true);
                     break;
                 case PlayerStatus.Gaming:
                     break;
