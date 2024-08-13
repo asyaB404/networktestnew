@@ -139,6 +139,7 @@ namespace GamePlay.Room
                             Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
                             var i = ((PlayerInfo)connection.CustomData).id;
                             _playersCon[i] = null;
+                            GameManager.Instance.SetReady(i, false);
                             PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);
                         }
                         else
@@ -216,6 +217,7 @@ namespace GamePlay.Room
                     return false;
                 }
             }
+
             RPCInstance.Instance.ChangeStatusFromServer(PlayerStatus.Gaming);
             return true;
         }

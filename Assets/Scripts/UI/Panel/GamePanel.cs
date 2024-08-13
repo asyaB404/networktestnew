@@ -45,12 +45,11 @@ namespace UI.Panel
 
         private void OnEnable()
         {
-            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState += OnClientConnection;
+            _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
         }
 
         private void OnDisable()
         {
-            InstanceFinder.NetworkManager.ClientManager.OnClientConnectionState -= OnClientConnection;
             menuPanel.gameObject.SetActive(false);
         }
 
@@ -102,24 +101,24 @@ namespace UI.Panel
             menuPanel.ChangeMe();
         }
 
-        private void OnClientConnection(ClientConnectionStateArgs obj)
-        {
-            switch (obj.ConnectionState)
-            {
-                case LocalConnectionState.Started:
-                    _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
-                    break;
-                case LocalConnectionState.Stopped:
-                    HideMe();
-                    break;
-                case LocalConnectionState.Starting:
-                    break;
-                case LocalConnectionState.Stopping:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        // private void OnClientConnection(ClientConnectionStateArgs obj)
+        // {
+        //     switch (obj.ConnectionState)
+        //     {
+        //         case LocalConnectionState.Started:
+        //             _btnText.text = InstanceFinder.NetworkManager.IsServerStarted ? "开始" : "准备";
+        //             break;
+        //         case LocalConnectionState.Stopped:
+        //             HideMe();
+        //             break;
+        //         case LocalConnectionState.Starting:
+        //             break;
+        //         case LocalConnectionState.Stopping:
+        //             break;
+        //         default:
+        //             throw new ArgumentOutOfRangeException();
+        //     }
+        // }
 
         public override void CallBack(bool flag)
         {

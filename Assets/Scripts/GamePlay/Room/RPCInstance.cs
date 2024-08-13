@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using FishNet.Object;
-using GamePlay.Coins;
 using UI.InfoPanel;
 using UnityEngine;
 
@@ -53,6 +51,12 @@ namespace GamePlay.Room
             }
         }
 
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            CurStatus = PlayerStatus.Idle;
+        }
+
         [ObserversRpc]
         private void Init(int id)
         {
@@ -84,7 +88,6 @@ namespace GamePlay.Room
             }
         }
 
-        [Client]
         public void ChangeStatus(PlayerStatus status)
         {
             CurStatus = status;
@@ -108,17 +111,16 @@ namespace GamePlay.Room
         private void SyncStatus(int id, PlayerStatus status)
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
-            PlayerInfo info = PlayerInfo.Default;
-            info.id = id;
+            PlayerInfo info = (PlayerInfo)RoomMgr.Instance.PlayersCon[id].CustomData;
             info.status = status;
             RoomMgr.Instance.PlayersCon[id].CustomData = info;
             switch (status)
             {
                 case PlayerStatus.Idle:
-                    GameManager.Instance.SetReady(id,false);
+                    GameManager.Instance.SetReady(id, false);
                     break;
                 case PlayerStatus.Ready:
-                    GameManager.Instance.SetReady(id,true);
+                    GameManager.Instance.SetReady(id, true);
                     break;
                 case PlayerStatus.Gaming:
                     break;

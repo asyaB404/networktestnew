@@ -49,7 +49,6 @@ namespace GamePlay.Coins
         {
             base.OnStopClient();
             IsSynced = false;
-            SetIsReady(false);
             _isReady.OnChange -= OnChangeReady;
         }
 
