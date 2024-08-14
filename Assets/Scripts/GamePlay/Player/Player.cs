@@ -7,14 +7,9 @@ namespace GamePlay.Player
 {
     public class Player : NetworkBehaviour
     {
-        [SerializeField] private CoinsPool coinsPool;
+        public CoinsPool coinsPool;
         [SerializeField] private PlayerController playerController;
-        [SerializeField] private float speed = 4;
-        public CoinsPool CoinsPool
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => coinsPool;
-        }
+        [SerializeField] private float speed = 8;
 
         #region pos
 
@@ -37,6 +32,18 @@ namespace GamePlay.Player
         }
 
         #endregion
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if (base.IsOwner)
+            {
+            }
+            else
+            {
+                playerController.enabled = false;
+            }
+        }
 
         public float Health { get; } = 100;
         public float Speed => speed;

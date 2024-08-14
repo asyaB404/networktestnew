@@ -32,9 +32,9 @@ namespace GamePlay.Coins
 
         [SerializeField] private GameObject readySprite;
 
-        [SerializeField] private GameObject playersParent;
+        public GameObject playersParent;
 
-        [SerializeField] private GameObject coinsParent;
+        public GameObject coinsParent;
 
         public override void OnStartClient()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FishNet;
 using GamePlay.Coins;
 using GamePlay.Room;
+using GamePlay.Player;
 using UnityEngine;
 
 namespace GamePlay
@@ -64,6 +65,13 @@ namespace GamePlay
                 var coinsPool = coinsPoolGobj.GetComponent<CoinsPool>();
                 coinsPools.Add(coinsPool);
                 yield return null;
+                if (j == 0)
+                {
+                    var playerObj = Instantiate(playerPrefab, coinsPool.playersParent.transform, false);
+                    playerObj.GetComponent<Player.Player>().coinsPool = coinsPool;
+                    InstanceFinder.ServerManager.Spawn(playerObj);
+                    yield return null;
+                }
             }
         }
 

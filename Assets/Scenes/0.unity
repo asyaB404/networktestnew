@@ -1190,110 +1190,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 248209812}
   m_CullTransparentMesh: 1
---- !u!1001 &290121713
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1434098684}
-    m_Modifications:
-    - target: {fileID: 1136854736306417059, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1503791054112344066, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: _networkObjectCache
-      value: 
-      objectReference: {fileID: 290121717}
-    - target: {fileID: 1503791054112344066, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: _componentIndexCache
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2322987636132922135, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_Name
-      value: coinsPool
-      objectReference: {fileID: 0}
-    - target: {fileID: 6027658829179255545, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: _networkBehaviours.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6027658829179255545, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: _networkBehaviours.Array.data[1]
-      value: 
-      objectReference: {fileID: 290121716}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
---- !u!4 &290121714 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6866172140579563658, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-  m_PrefabInstance: {fileID: 290121713}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &290121716 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1503791054112344066, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-  m_PrefabInstance: {fileID: 290121713}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &290121717 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6027658829179255545, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-  m_PrefabInstance: {fileID: 290121713}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &304391186
 GameObject:
   m_ObjectHideFlags: 0
@@ -6431,8 +6327,7 @@ Transform:
   m_LocalPosition: {x: 6, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 290121714}
+  m_Children: []
   m_Father: {fileID: 1517302331}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1446339165
@@ -11706,7 +11601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinsPoolsPrefab: {fileID: 2322987636132922135, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 3234039987966872393, guid: 4ba75e3b80d5324469a19f50e45d6b19, type: 3}
   coinsPools: []
 --- !u!224 &8523426855370813787
 RectTransform:
