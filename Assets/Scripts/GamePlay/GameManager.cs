@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
@@ -11,6 +10,7 @@ namespace GamePlay
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private GameObject coinsPoolsPrefab;
+        [SerializeField] private GameObject playerPrefab;
         public List<CoinsPool> coinsPools;
         public static GameManager Instance { get; private set; }
 
@@ -67,7 +67,7 @@ namespace GamePlay
         }
 
         /// <summary>
-        /// 改变那个硬币池的准备状态，同时那个状态为SyncVar，自动同步到服务端
+        /// 改变那个硬币池的准备状态，同时那个状态为SyncVar，自动同步到客户端
         /// </summary>
         /// <param name="id"></param>
         /// <param name="flag"></param>

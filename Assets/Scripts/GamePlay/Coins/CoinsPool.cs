@@ -13,6 +13,8 @@ namespace GamePlay.Coins
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
+        #region SyncVar
+
         private readonly SyncVar<bool> _isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
@@ -21,16 +23,18 @@ namespace GamePlay.Coins
             _isReady.Value = value;
         }
 
+        private void OnChangeReady(bool prev, bool next, bool asServer)
+        {
+            readySprite.SetActive(next);
+        }
+
+        #endregion
+
         [SerializeField] private GameObject readySprite;
 
         [SerializeField] private GameObject playersParent;
 
         [SerializeField] private GameObject coinsParent;
-
-        private void OnChangeReady(bool prev, bool next, bool asServer)
-        {
-            readySprite.SetActive(next);
-        }
 
         public override void OnStartClient()
         {
@@ -52,6 +56,8 @@ namespace GamePlay.Coins
             IsSynced = false;
             _isReady.OnChange -= OnChangeReady;
         }
+
+        #region SyncCoinsPools
 
         [ServerRpc(RequireOwnership = false)]
         public void SyncCoinsPoolsRequest()
@@ -76,6 +82,8 @@ namespace GamePlay.Coins
                 GameManager.Instance.coinsPools[j].transform.SetParent(p, false);
             }
         }
+
+        #endregion
 
         /// <summary>
         /// 服务端调用
