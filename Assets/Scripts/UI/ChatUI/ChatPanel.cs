@@ -63,8 +63,9 @@ namespace ChatUI
             _buttons[0].onClick.RemoveListener(SendInputField);
             messageInput.onSubmit.RemoveListener(OnInputSubmit);
             messageInput.onValidateInput -= ValidateInput;
-            InstanceFinder.ClientManager.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
-            InstanceFinder.ServerManager.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
+            InstanceFinder.ClientManager?.UnregisterBroadcast<ChatMessage>(OnClientChatMessageReceived);
+            InstanceFinder.ServerManager?.UnregisterBroadcast<ChatMessage>(OnServerChatMessageReceived);
+            if (InstanceFinder.ServerManager == null) return;
             InstanceFinder.ServerManager.OnRemoteConnectionState -= OnRemoteConnection;
             InstanceFinder.ServerManager.OnAuthenticationResult -= OnAuthentication;
         }

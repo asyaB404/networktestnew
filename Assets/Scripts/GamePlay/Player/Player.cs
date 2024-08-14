@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using GamePlay.Coins;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace GamePlay.Player
 {
     public class Player : NetworkBehaviour
     {
-        public CoinsPool coinsPool;
+        public readonly SyncVar<CoinsPool> coinsPool = new();
         [SerializeField] private PlayerController playerController;
         [SerializeField] private float speed = 8;
 
@@ -36,12 +37,13 @@ namespace GamePlay.Player
         public override void OnStartClient()
         {
             base.OnStartClient();
+            playerController.enabled = IsOwner;
             if (base.IsOwner)
             {
             }
             else
             {
-                playerController.enabled = false;
+                transform.SetParent(coinsPool.Value.playersParent.transform, false);
             }
         }
 
@@ -52,5 +54,16 @@ namespace GamePlay.Player
         {
             playerController ??= GetComponent<PlayerController>();
         }
+
+        #region Debug
+
+        [ContextMenu("Debug01")]
+        private void Fun()
+        {
+            Debug.Log(base.IsOwner);
+            Debug.Log(coinsPool.Value);
+        }
+
+        #endregion
     }
 }

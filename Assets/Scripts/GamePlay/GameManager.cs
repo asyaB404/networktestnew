@@ -68,8 +68,8 @@ namespace GamePlay
                 if (j == 0)
                 {
                     var playerObj = Instantiate(playerPrefab, coinsPool.playersParent.transform, false);
-                    playerObj.GetComponent<Player.Player>().coinsPool = coinsPool;
-                    InstanceFinder.ServerManager.Spawn(playerObj);
+                    playerObj.GetComponent<Player.Player>().coinsPool.Value = coinsPool;
+                    InstanceFinder.ServerManager.Spawn(playerObj, RoomMgr.Instance.PlayersCon[0]);
                     yield return null;
                 }
             }
