@@ -61,7 +61,8 @@ namespace GamePlay
                 GameObject coinsPoolGobj = Instantiate(coinsPoolsPrefab, p, false);
                 coinsPoolGobj.name = "coinsPool" + j;
                 InstanceFinder.ServerManager.Spawn(coinsPoolGobj);
-                coinsPools.Add(coinsPoolGobj.GetComponent<CoinsPool>());
+                var coinsPool = coinsPoolGobj.GetComponent<CoinsPool>();
+                coinsPools.Add(coinsPool);
                 yield return null;
             }
         }
