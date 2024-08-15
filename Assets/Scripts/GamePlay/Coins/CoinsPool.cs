@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GamePlay.Coins
 {
+    /// <summary>
+    /// 硬币池的Owner是房主
+    /// </summary>
     public class CoinsPool : NetworkBehaviour
     {
         public static bool IsSynced;
@@ -15,6 +20,7 @@ namespace GamePlay.Coins
 
         #region SyncVar
 
+        public readonly SyncVar<int> id = new();
         private readonly SyncVar<bool> _isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
@@ -39,12 +45,16 @@ namespace GamePlay.Coins
         public override void OnStartClient()
         {
             base.OnStartClient();
-            //只会同步一次
-            if (!IsSynced && InstanceFinder.IsClientOnlyStarted && GameManager.Instance.coinsPools.Count == 0)
+            if (InstanceFinder.IsClientOnlyStarted)
             {
-                Debug.Log("从服务端获得硬币池列表并同步");
-                SyncCoinsPoolsRequest();
-                IsSynced = true;
+                var gameManager = GameManager.Instance;
+                if (!IsSynced && gameManager.coinsPools.Count == 0)
+                {
+                    Debug.Log("从服务端获得硬币池列表并同步");
+                    SyncCoinsPoolsRequest();
+                    SpawnPlayer(id.Value);
+                    IsSynced = true;
+                }
             }
 
             _isReady.OnChange += OnChangeReady;
@@ -60,17 +70,16 @@ namespace GamePlay.Coins
         #region SyncCoinsPools
 
         [ServerRpc(RequireOwnership = false)]
-        public void SyncCoinsPoolsRequest()
+        public void SyncCoinsPoolsRequest(NetworkConnection target = null)
         {
-            SyncCoinsPoolsToClient(GameManager.Instance.coinsPools, (int)RoomMgr.Instance.CurRoomType);
+            SyncCoinsPoolsToClient(target, GameManager.Instance.coinsPools, (int)RoomMgr.Instance.CurRoomType);
         }
 
-        [ObserversRpc]
-        public void SyncCoinsPoolsToClient(List<CoinsPool> coinsPools, int i)
+        [TargetRpc]
+        public void SyncCoinsPoolsToClient(NetworkConnection conn, List<CoinsPool> coinsPools, int roomType)
         {
-            Debug.Log(i);
             GameManager.Instance.coinsPools = coinsPools;
-            SetCoinsPoolFromMode(i);
+            SetCoinsPoolFromMode(roomType);
         }
 
         private void SetCoinsPoolFromMode(int i)
@@ -85,9 +94,20 @@ namespace GamePlay.Coins
 
         #endregion
 
+        [ServerRpc(RequireOwnership = false)]
+        public void SpawnPlayer(int id, NetworkConnection owner = null)
+        {
+            var gameManager = GameManager.Instance;
+            var coinsPool = gameManager.coinsPools[id];
+            var playerObj = Instantiate(gameManager.playerPrefab, coinsPool.playersParent.transform, false);
+            playerObj.GetComponent<Player.Player>().coinsPool.Value = coinsPool;
+            InstanceFinder.ServerManager.Spawn(playerObj, owner);
+        }
+
         /// <summary>
         /// 服务端调用
         /// </summary>
+        [Server]
         public void StartGame()
         {
             SetIsReadySprite(false);

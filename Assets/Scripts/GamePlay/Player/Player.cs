@@ -38,12 +38,15 @@ namespace GamePlay.Player
         {
             base.OnStartClient();
             playerController.enabled = IsOwner;
+            // 服务端的父子关系是正确的,客户端不是,需要单独设置正确的父子关系
+            if (IsClientOnlyStarted)
+                transform.SetParent(coinsPool.Value.playersParent.transform, false);
+
             if (base.IsOwner)
             {
             }
             else
             {
-                transform.SetParent(coinsPool.Value.playersParent.transform, false);
             }
         }
 
@@ -60,7 +63,7 @@ namespace GamePlay.Player
         [ContextMenu("Debug01")]
         private void Fun()
         {
-            Debug.Log(base.IsOwner);
+            Debug.Log(base.IsOwner + " __ " + Owner);
             Debug.Log(coinsPool.Value);
         }
 

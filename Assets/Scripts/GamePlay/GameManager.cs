@@ -11,7 +11,7 @@ namespace GamePlay
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private GameObject coinsPoolsPrefab;
-        [SerializeField] private GameObject playerPrefab;
+        public GameObject playerPrefab;
         public List<CoinsPool> coinsPools;
         public static GameManager Instance { get; private set; }
 
@@ -51,18 +51,19 @@ namespace GamePlay
         /// <summary>
         /// 不知道为什么fishnet在同一帧中调用ServerManager.Spawn会出BUG,所以就用了协程
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="roomTypeIndex"></param>
         /// <returns></returns>
-        private IEnumerator InitForMode(int i)
+        private IEnumerator InitForMode(int roomTypeIndex)
         {
-            Transform mode = transform.GetChild(i);
+            Transform mode = transform.GetChild(roomTypeIndex);
             for (int j = 0; j < mode.childCount; j++)
             {
                 Transform p = mode.GetChild(j);
                 GameObject coinsPoolGobj = Instantiate(coinsPoolsPrefab, p, false);
                 coinsPoolGobj.name = "coinsPool" + j;
-                InstanceFinder.ServerManager.Spawn(coinsPoolGobj);
+                InstanceFinder.ServerManager.Spawn(coinsPoolGobj, RoomMgr.Instance.PlayersCon[0]);
                 var coinsPool = coinsPoolGobj.GetComponent<CoinsPool>();
+                coinsPool.id.Value = j;
                 coinsPools.Add(coinsPool);
                 yield return null;
                 if (j == 0)

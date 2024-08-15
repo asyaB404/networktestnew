@@ -1,4 +1,6 @@
 using System;
+using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using UI.InfoPanel;
 using UI.Panel;
@@ -62,8 +64,8 @@ namespace GamePlay.Room
             }
         }
 
-        [ObserversRpc]
-        private void Init(int id)
+        [TargetRpc]
+        private void Init(NetworkConnection con, int id)
         {
             if (base.IsOwner)
             {
@@ -76,14 +78,14 @@ namespace GamePlay.Room
         /// </summary>
         /// <param name="defaultInfo"></param>
         [ServerRpc]
-        public void InitServerPlayerInfo(PlayerInfo defaultInfo)
+        public void InitServerPlayerInfo(PlayerInfo defaultInfo, NetworkConnection target = null)
         {
             var i = 0;
             foreach (var con in RoomMgr.Instance.PlayersCon)
             {
                 if (con.CustomData is "init") //con.CustomData is string s && s == "init"
                 {
-                    Init(i);
+                    Init(target, i);
                     defaultInfo.id = i;
                     con.CustomData = defaultInfo;
                     break;
