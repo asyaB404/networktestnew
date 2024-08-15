@@ -1,5 +1,5 @@
 using System;
-using FishNet;
+using ChatUI;
 using FishNet.Connection;
 using FishNet.Object;
 using UI.InfoPanel;
@@ -32,9 +32,10 @@ namespace GamePlay.Room
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if (base.IsOwner)
+            if (IsOwner)
             {
-                Debug.Log("OwenrRPC");
+                Debug.Log("OwnerRPC");
+                ChatPanel.Instance.SendChatMessage("   ", "玩家" + PlayerPrefsMgr.PlayerName + "加入了游戏");
                 if (Instance != null)
                 {
                     Debug.Log("多余的RPC已经被移除");
@@ -57,9 +58,10 @@ namespace GamePlay.Room
         public override void OnStopClient()
         {
             base.OnStopClient();
-            if (base.IsOwner)
+            if (IsOwner)
             {
                 GamePanel.Instance.HideMe();
+                ChatPanel.Instance.SendChatMessage("   ", "玩家" + PlayerPrefsMgr.PlayerName + "退出了游戏");
                 CurStatus = PlayerStatus.Idle;
             }
         }
@@ -77,6 +79,7 @@ namespace GamePlay.Room
         /// 客户端建立连接时调用，向服务端发送初始化玩家信息
         /// </summary>
         /// <param name="defaultInfo"></param>
+        /// <param name="target"></param>
         [ServerRpc]
         public void InitServerPlayerInfo(PlayerInfo defaultInfo, NetworkConnection target = null)
         {
@@ -98,23 +101,23 @@ namespace GamePlay.Room
         /// <summary>
         /// 改变客户端本地的status的同时向服务端同步自己的status
         /// </summary>
-        /// <param name="status"></param>
-        public void ChangeStatusRequest(PlayerStatus status)
+        /// <param name="newStatus"></param>
+        public void ChangeStatusRequest(PlayerStatus newStatus)
         {
-            CurStatus = status;
-            SyncStatus(ID, status);
+            CurStatus = newStatus;
+            SyncStatus(ID, newStatus);
         }
 
         /// <summary>
         /// 同步所有客户端的status,除了旁观者
         /// </summary>
-        /// <param name="status"></param>
+        /// <param name="newStatus"></param>
         [ObserversRpc]
-        public void SetAllStatusExceptWatcher(PlayerStatus status)
+        public void SetAllStatusExceptWatcher(PlayerStatus newStatus)
         {
             if (CurStatus == PlayerStatus.Watch)
                 return;
-            CurStatus = status;
+            CurStatus = newStatus;
         }
 
         /// <summary>
@@ -130,13 +133,13 @@ namespace GamePlay.Room
         /// 同步服务端玩家准备状态
         /// </summary>
         [ServerRpc]
-        public void SyncStatus(int id, PlayerStatus status)
+        public void SyncStatus(int id, PlayerStatus newStatus)
         {
             if (RoomMgr.Instance.PlayersCon[id].CustomData is not PlayerInfo) return;
             PlayerInfo info = (PlayerInfo)RoomMgr.Instance.PlayersCon[id].CustomData;
-            info.status = status;
+            info.status = newStatus;
             RoomMgr.Instance.PlayersCon[id].CustomData = info;
-            switch (status)
+            switch (newStatus)
             {
                 case PlayerStatus.Idle:
                     GameManager.Instance.SetReadySprite(id, false);
@@ -150,7 +153,7 @@ namespace GamePlay.Room
                 case PlayerStatus.Watch:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+                    throw new ArgumentOutOfRangeException(nameof(newStatus), newStatus, null);
             }
         }
 

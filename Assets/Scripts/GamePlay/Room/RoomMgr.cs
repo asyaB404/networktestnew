@@ -296,11 +296,11 @@ namespace GamePlay.Room
         /// 尝试开启游戏，开启成功后会将所有客户端的游戏状态设置为Gaming
         /// </summary>
         /// <returns></returns>
-        public bool TryStartGame()
+        public void TryStartGame()
         {
             if (!CheckCanStartGame())
-                return false;
-
+                return;
+            NetworkMgr.Instance.tugboat.CanBeConnected = false;
             IList<PlayerInfo> playerInfos = PlayerInfos;
             //同步服务端
             for (int i = 0; i < PlayersCon.Count; i++)
@@ -320,7 +320,6 @@ namespace GamePlay.Room
             RPCInstance.Instance.UpdateGamingUI();
 
             GameManager.Instance.StartGame();
-            return true;
         }
 
         /// <summary>
@@ -333,7 +332,7 @@ namespace GamePlay.Room
             RPCInstance.Instance.UpdateGamingUI();
         }
 
-        #region #DebugFunction
+        #region #Debug
 
         [ContextMenu("debuglist")]
         private void Test()
@@ -356,7 +355,6 @@ namespace GamePlay.Room
         {
             Debug.Log(InstanceFinder.IsServerStarted);
             Debug.Log(InstanceFinder.IsClientStarted);
-            Debug.Log(InstanceFinder.IsClientOnlyStarted);
         }
 
         [ContextMenu("debug3")]
