@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ChatUI;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Example.Authenticating;
 using FishNet.Transporting;
 using UI.InfoPanel;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GamePlay.Room
 {
@@ -19,7 +19,9 @@ namespace GamePlay.Room
     }
 
     /// <summary>
-    /// 作为服务端时生效，管理玩家连接的顺序以及主机房间的基本配置
+    /// 房间管理器
+    /// 作为服务端时,管理玩家连接的顺序以及主机房间的基本配置
+    /// 仅作为客户端时,管理基本的客户端事件
     /// </summary>
     public class RoomMgr : MonoBehaviour
     {
@@ -140,7 +142,9 @@ namespace GamePlay.Room
                     {
                         if (connection.IsAuthenticated)
                         {
-                            Debug.Log("来自远端的连接已断开" + connection + "\n目前有:" + (PlayerCount - 1));
+                            var playerInfo = (PlayerInfo)connection.CustomData;
+                            ChatPanel.Instance.SendChatMessage("   ", "玩家" + playerInfo.playerName + "退出了游戏");
+                            Debug.Log("来自远端的连接已断开" + playerInfo.playerName + "\n目前有:" + (PlayerCount - 1));
                             switch (RPCInstance.CurStatus)
                             {
                                 case PlayerStatus.Idle:
@@ -157,7 +161,7 @@ namespace GamePlay.Room
                                     throw new ArgumentOutOfRangeException();
                             }
 
-                            var i = ((PlayerInfo)connection.CustomData).id;
+                            var i = playerInfo.id;
                             _playersCon[i] = null;
                             GameManager.Instance.SetReadySprite(i, false);
                             PlayerInfoPanel.Instance.UpdateInfoPanel(PlayerInfos);

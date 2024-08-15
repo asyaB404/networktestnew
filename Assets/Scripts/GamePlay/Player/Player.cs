@@ -10,7 +10,7 @@ namespace GamePlay.Player
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
         [SerializeField] private PlayerController playerController;
-        [SerializeField] private float speed = 8;
+        [SerializeField] private float speed = 15;
 
         #region pos
 

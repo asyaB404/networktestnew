@@ -52,6 +52,7 @@ namespace GamePlay.Coins
                 {
                     Debug.Log("从服务端获得硬币池列表并同步");
                     SyncCoinsPoolsRequest();
+                    // if不是旁观的话
                     SpawnPlayer(id.Value);
                     IsSynced = true;
                 }

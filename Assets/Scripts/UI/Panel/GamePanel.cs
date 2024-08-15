@@ -67,8 +67,7 @@ namespace UI.Panel
                     return;
                 if (InstanceFinder.IsServerStarted)
                 {
-                    bool flag = RoomMgr.Instance.TryStartGame();
-                    Debug.Log("TryStart" + flag);
+                    RoomMgr.Instance.TryStartGame();
                 }
                 else if (InstanceFinder.IsClientStarted)
                 {

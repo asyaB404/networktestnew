@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using FishNet;
 using GamePlay.Coins;
 using GamePlay.Room;
-using GamePlay.Player;
 using UnityEngine;
 
 namespace GamePlay
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GameObject coinsPoolsPrefab;
+        public GameObject coinsPoolsPrefab;
         public GameObject playerPrefab;
         public List<CoinsPool> coinsPools;
         public static GameManager Instance { get; private set; }
@@ -43,7 +42,7 @@ namespace GamePlay
             coinsPools.Clear();
         }
 
-        public void InitRoom()
+        private void InitRoom()
         {
             StartCoroutine(InitForMode((int)RoomMgr.Instance.CurRoomType));
         }
@@ -93,5 +92,16 @@ namespace GamePlay
                 coinsPool.StartGame();
             }
         }
+
+        #region debug
+
+        [SerializeField, ContextMenuItem("spawnCoin",nameof(SpawnCoinTest))]
+        private CoinsType spawnTypeTest;
+        public void SpawnCoinTest()
+        {
+            CoinFactory.Instance.GenerateCoin(spawnTypeTest,Vector2.zero, coinsPools[0],InstanceFinder.ClientManager.Connection);
+        }
+
+        #endregion
     }
 }

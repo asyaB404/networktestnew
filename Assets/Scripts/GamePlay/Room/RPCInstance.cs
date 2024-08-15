@@ -61,7 +61,6 @@ namespace GamePlay.Room
             if (IsOwner)
             {
                 GamePanel.Instance.HideMe();
-                ChatPanel.Instance.SendChatMessage("   ", "玩家" + PlayerPrefsMgr.PlayerName + "退出了游戏");
                 CurStatus = PlayerStatus.Idle;
             }
         }
