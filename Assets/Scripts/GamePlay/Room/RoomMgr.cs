@@ -56,7 +56,7 @@ namespace GamePlay.Room
         /// <summary>
         /// 遍历连接列表得到第一个空位置的下标
         /// </summary>
-        public int FirstIndex
+        private int FirstIndex
         {
             get
             {

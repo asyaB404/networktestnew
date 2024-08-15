@@ -8,8 +8,8 @@ namespace GamePlay.Coins
     public class Coin : NetworkBehaviour
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
+        public readonly SyncVar<CoinsType> coinsType = new();
         public SpriteRenderer sr;
-        public CoinsType coinsType;
 
         public override void OnStartClient()
         {
@@ -17,7 +17,7 @@ namespace GamePlay.Coins
             if (IsClientOnlyStarted)
             {
                 transform.SetParent(coinsPool.Value.coinsParent.transform, false);
-                sr.sprite = CoinFactory.Instance.coinSprites[(int)coinsType];
+                sr.sprite = CoinFactory.Instance.coinSprites[(int)coinsType.Value];
             }
         }
     }

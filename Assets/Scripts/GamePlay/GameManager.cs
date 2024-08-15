@@ -62,7 +62,6 @@ namespace GamePlay
                 coinsPoolGobj.name = "coinsPool" + j;
                 InstanceFinder.ServerManager.Spawn(coinsPoolGobj, RoomMgr.Instance.PlayersCon[0]);
                 var coinsPool = coinsPoolGobj.GetComponent<CoinsPool>();
-                coinsPool.id.Value = j;
                 coinsPools.Add(coinsPool);
                 yield return null;
                 if (j == 0)

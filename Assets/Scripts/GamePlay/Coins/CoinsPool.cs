@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GamePlay.Coins
@@ -14,13 +14,12 @@ namespace GamePlay.Coins
     /// </summary>
     public class CoinsPool : NetworkBehaviour
     {
-        public static bool IsSynced;
+        public static bool IsSynced { get; private set; }
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
         #region SyncVar
-
-        public readonly SyncVar<int> id = new();
+        
         private readonly SyncVar<bool> _isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
@@ -52,14 +51,14 @@ namespace GamePlay.Coins
                 {
                     Debug.Log("从服务端获得硬币池列表并同步");
                     SyncCoinsPoolsRequest();
-                    // if不是旁观的话
-                    SpawnPlayer(id.Value);
+                    SpawnPlayer();
                     IsSynced = true;
                 }
             }
 
             _isReady.OnChange += OnChangeReady;
         }
+
 
         public override void OnStopClient()
         {
@@ -95,15 +94,48 @@ namespace GamePlay.Coins
 
         #endregion
 
+        #region spawnPlayer
+
         [ServerRpc(RequireOwnership = false)]
-        public void SpawnPlayer(int id, NetworkConnection owner = null)
+        public void SpawnPlayer(int id = -1, NetworkConnection owner = null)
         {
+            if (id == -1)
+            {
+                id = GetNextSpawnIndex();
+            }
+
             var gameManager = GameManager.Instance;
             var coinsPool = gameManager.coinsPools[id];
             var playerObj = Instantiate(gameManager.playerPrefab, coinsPool.playersParent.transform, false);
             playerObj.GetComponent<Player.Player>().coinsPool.Value = coinsPool;
             InstanceFinder.ServerManager.Spawn(playerObj, owner);
         }
+        
+        [Server]
+        private int GetNextSpawnIndex()
+        {
+            switch (RoomMgr.Instance.CurRoomType)
+            {
+                case RoomType.T1V1:
+                case RoomType.T2V2:
+                case RoomType.T4VS:
+                    for (var i = 0; i < GameManager.Instance.coinsPools.Count; i++)
+                    {
+                        var coinsPool = GameManager.Instance.coinsPools[i];
+                        if (coinsPool.playersParent.transform.childCount == 0)
+                            return i;
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Debug.LogError("怎么回事呢。。？GetNextSpawnIndex 返回了-1");
+            return -1;
+        }
+
+        #endregion
 
         /// <summary>
         /// 服务端调用

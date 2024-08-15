@@ -32,7 +32,7 @@ namespace GamePlay.Coins
             var coinObj = Instantiate(coinPrefab, coinsPool.coinsParent.transform, false);
             var coin = coinObj.GetComponent<Coin>();
             coin.transform.localPosition = pos;
-            coin.coinsType = coinsType;
+            coin.coinsType.Value = coinsType;
             coin.sr.sprite = coinSprites[(int)coinsType];
             coin.coinsPool.Value = coinsPool;
             InstanceFinder.ServerManager.Spawn(coinObj, owner);
