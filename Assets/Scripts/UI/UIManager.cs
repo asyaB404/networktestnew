@@ -24,10 +24,12 @@ namespace UI
 
         public void ClearPanels()
         {
-            foreach (var panel in _panels)
+            var panelArrays = _panels.ToArray();
+            foreach (var panel in panelArrays)
             {
-                PopPanel(false);
+                panel.HideMe();
                 (panel as MonoBehaviour)?.gameObject.SetActive(false);
+                // PopPanel(false);
             }
 
             _panels.Clear();

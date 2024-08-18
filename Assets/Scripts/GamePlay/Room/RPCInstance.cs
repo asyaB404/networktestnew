@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ChatUI;
 using FishNet.Connection;
 using FishNet.Object;
@@ -178,6 +179,7 @@ namespace GamePlay.Room
 
         private void SetStatus()
         {
+            
             CurStatus = status;
             Print();
         }
