@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
+using FishNet.Object;
 using GamePlay.Coins;
 using GamePlay.Room;
 using UnityEngine;
@@ -84,6 +85,10 @@ namespace GamePlay
             coinsPools[id].SetIsReadySprite(flag);
         }
 
+        /// <summary>
+        /// 服务端开始游戏时调用一次
+        /// </summary>
+        [Server]
         public void StartGame()
         {
             foreach (var coinsPool in coinsPools)

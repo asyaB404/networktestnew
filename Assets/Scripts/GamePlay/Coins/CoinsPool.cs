@@ -19,7 +19,7 @@ namespace GamePlay.Coins
         public int Height { get; private set; } = 16;
 
         #region SyncVar
-        
+
         private readonly SyncVar<bool> _isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
@@ -28,7 +28,7 @@ namespace GamePlay.Coins
             _isReady.Value = value;
         }
 
-        private void OnChangeReady(bool prev, bool next, bool asServer)
+        private void OnReadyChanged(bool prev, bool next, bool asServer)
         {
             readySprite.SetActive(next);
         }
@@ -56,7 +56,7 @@ namespace GamePlay.Coins
                 }
             }
 
-            _isReady.OnChange += OnChangeReady;
+            _isReady.OnChange += OnReadyChanged;
         }
 
 
@@ -64,7 +64,7 @@ namespace GamePlay.Coins
         {
             base.OnStopClient();
             IsSynced = false;
-            _isReady.OnChange -= OnChangeReady;
+            _isReady.OnChange -= OnReadyChanged;
         }
 
         #region SyncCoinsPools
@@ -110,7 +110,7 @@ namespace GamePlay.Coins
             playerObj.GetComponent<Player.Player>().coinsPool.Value = coinsPool;
             InstanceFinder.ServerManager.Spawn(playerObj, owner);
         }
-        
+
         [Server]
         private int GetNextSpawnIndex()
         {
@@ -137,13 +137,42 @@ namespace GamePlay.Coins
 
         #endregion
 
+        [Server]
+        private void InitCoinsPool()
+        {
+        }
+
+        [Server]
+        private void SpawnRowCoins(int count = 1)
+        {
+            if (count >= Height)
+                count = Height;
+            for (int i = 0; i < Weight; i++)
+            {
+                for (int j = 0; j < count; j++)
+                {
+                }
+            }
+        }
+
         /// <summary>
-        /// 服务端调用
+        /// 服务端上调用,开始游戏时,每个硬币池都会调用一次
         /// </summary>
         [Server]
         public void StartGame()
         {
             SetIsReadySprite(false);
+            Debug.Log("当前房间模式为:" + RoomMgr.Instance.CurRoomType);
+            switch (RoomMgr.Instance.CurRoomType)
+            {
+                case RoomType.T1V1:
+                case RoomType.T2V2:
+                case RoomType.T4VS:
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

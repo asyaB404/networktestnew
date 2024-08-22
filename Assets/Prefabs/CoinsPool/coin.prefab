@@ -103,7 +103,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: -7410041526369925717}
   _networkObjectCache: {fileID: -7410041526369925717}
   sr: {fileID: 2440053975213310178}
-  coinsType: 0
 --- !u!114 &-7410041526369925717
 MonoBehaviour:
   m_ObjectHideFlags: 0

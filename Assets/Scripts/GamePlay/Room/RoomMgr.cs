@@ -322,7 +322,6 @@ namespace GamePlay.Room
             //同步客户端
             RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Gaming);
             RPCInstance.Instance.UpdateGamingUI();
-
             GameManager.Instance.StartGame();
         }
 
@@ -332,6 +331,7 @@ namespace GamePlay.Room
         public void FinishGame()
         {
             Debug.Log("FinishGame");
+            NetworkMgr.Instance.tugboat.CanBeConnected = true;
             RPCInstance.Instance.SetAllStatusExceptWatcher(PlayerStatus.Idle);
             RPCInstance.Instance.UpdateGamingUI();
         }

@@ -1,6 +1,7 @@
-using System;
+
 using FishNet;
 using FishNet.Connection;
+using FishNet.Object;
 using UnityEngine;
 
 namespace GamePlay.Coins
@@ -26,6 +27,15 @@ namespace GamePlay.Coins
             Instance = this;
         }
 
+        /// <summary>
+        /// 在服务端创建硬币，一般为服务端调用，同时也会给客户端同步生成
+        /// </summary>
+        /// <param name="coinsType"></param>
+        /// <param name="pos"></param>
+        /// <param name="coinsPool"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        [Server]
         public Coin GenerateCoin(CoinsType coinsType, Vector2 pos, CoinsPool coinsPool,
             NetworkConnection owner = null)
         {
@@ -38,6 +48,5 @@ namespace GamePlay.Coins
             InstanceFinder.ServerManager.Spawn(coinObj, owner);
             return coin;
         }
-        
     }
 }
