@@ -20,5 +20,11 @@ namespace GamePlay.Coins
                 sr.sprite = CoinFactory.Instance.coinSprites[(int)coinsType.Value];
             }
         }
+
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            
+        }
     }
 }
