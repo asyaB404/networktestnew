@@ -35,6 +35,9 @@ namespace GamePlay.Coins
 
         #endregion
 
+        private Dictionary<Vector2Int, Coin> _coinsMap;
+        public IReadOnlyDictionary<Vector2Int, Coin> CoinsMap => _coinsMap;
+
         [SerializeField] private GameObject readySprite;
 
         public GameObject playersParent;
