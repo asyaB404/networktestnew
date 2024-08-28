@@ -103,7 +103,7 @@ namespace GamePlay
         private CoinsType spawnTypeTest;
         public void SpawnCoinTest()
         {
-            CoinFactory.Instance.GenerateCoin(spawnTypeTest,Vector2.zero, coinsPools[0],InstanceFinder.ClientManager.Connection);
+            // CoinFactory.Instance.GenerateCoin(spawnTypeTest,Vector2.zero, coinsPools[0],InstanceFinder.ClientManager.Connection);
         }
 
         #endregion

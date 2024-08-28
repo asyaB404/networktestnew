@@ -6,8 +6,18 @@ using Random = System.Random;
 
 public static class Utils
 {
+    public static Vector2Int ToVectorInt(this Vector2 vector2)
+    {
+        return new Vector2Int(Mathf.FloorToInt(vector2.x), Mathf.FloorToInt(vector2.y));
+    }
+
+    public static Vector3Int ToVectorInt(this Vector3 vector3)
+    {
+        return new Vector3Int(Mathf.FloorToInt(vector3.x), Mathf.FloorToInt(vector3.y), Mathf.FloorToInt(vector3.z));
+    }
+
     public static int BisectLeft<T>(this IList<T> arr, T value, int low = 0, int high = -1,
-        IComparer<T> comparer = null) where T:IComparable<T>
+        IComparer<T> comparer = null) where T : IComparable<T>
     {
         if (high == -1)
             high = arr.Count;

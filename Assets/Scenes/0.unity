@@ -6347,6 +6347,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1434098684}
     m_Modifications:
     - target: {fileID: 822090613269420166, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
+      propertyPath: m_Size.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 822090613269420166, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
       propertyPath: m_SpriteSortPoint
       value: 0
       objectReference: {fileID: 0}
@@ -6448,11 +6452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7708828303239398045, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7708828303239398045, guid: 7be4629aa340cb2449e54400e8ef0ced, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8
+      value: -8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

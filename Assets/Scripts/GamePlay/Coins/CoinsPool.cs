@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
@@ -35,9 +35,9 @@ namespace GamePlay.Coins
 
         #endregion
 
-        private Dictionary<Vector2Int, Coin> _coinsMap;
+        private Dictionary<Vector2Int, Coin> _coinsDict;
 
-        public IReadOnlyDictionary<Vector2Int, Coin> CoinsMap => _coinsMap;
+        public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => _coinsDict;
 
         [SerializeField] private GameObject readySprite;
 
@@ -132,7 +132,8 @@ namespace GamePlay.Coins
 
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Debug.LogError("错误的enum");
+                    break;
             }
 
             Debug.LogError("怎么回事呢。。？GetNextSpawnIndex 返回了-1");
@@ -147,6 +148,24 @@ namespace GamePlay.Coins
         }
 
         [Server]
+        public Coin SpawnCoin(CoinsType coinsType, Vector2 pos,
+            NetworkConnection owner = null)
+        {
+            Coin newCoin = CoinsFactory.Instance.GenerateCoin(coinsType, owner);
+            newCoin.transform.SetParent(coinsParent.transform, false);
+            newCoin.transform.localPosition = pos;
+            newCoin.coinsPool.Value = this;
+            Vector2Int key = pos.ToVectorInt();
+            if (_coinsDict.ContainsKey(key))
+            {
+                Debug.LogWarning("将" + key + "上的值覆盖了");
+            }
+
+            _coinsDict[key] = newCoin;
+            return newCoin;
+        }
+
+        [Server]
         private void SpawnRowCoins(int count = 1)
         {
             if (count >= Height)
@@ -155,6 +174,8 @@ namespace GamePlay.Coins
             {
                 for (int j = 0; j < count; j++)
                 {
+                    Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), new Vector2(i, 1));
+                    coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }
             }
         }
@@ -172,10 +193,11 @@ namespace GamePlay.Coins
                 case RoomType.T1V1:
                 case RoomType.T2V2:
                 case RoomType.T4VS:
-
+                    SpawnRowCoins(5);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    Debug.LogError("enum");
+                    break;
             }
         }
     }

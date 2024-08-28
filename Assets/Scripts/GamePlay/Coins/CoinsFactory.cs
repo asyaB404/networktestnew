@@ -1,4 +1,3 @@
-
 using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
@@ -16,11 +15,11 @@ namespace GamePlay.Coins
         C500
     }
 
-    public class CoinFactory : MonoBehaviour
+    public class CoinsFactory : MonoBehaviour
     {
         public GameObject coinPrefab;
         public Sprite[] coinSprites;
-        public static CoinFactory Instance { get; private set; }
+        public static CoinsFactory Instance { get; private set; }
 
         private void Awake()
         {
@@ -32,19 +31,16 @@ namespace GamePlay.Coins
         /// </summary>
         /// <param name="coinsType"></param>
         /// <param name="pos"></param>
-        /// <param name="coinsPool"></param>
         /// <param name="owner"></param>
         /// <returns></returns>
         [Server]
-        public Coin GenerateCoin(CoinsType coinsType, Vector2 pos, CoinsPool coinsPool,
+        public Coin GenerateCoin(CoinsType coinsType,
             NetworkConnection owner = null)
         {
-            var coinObj = Instantiate(coinPrefab, coinsPool.coinsParent.transform, false);
+            var coinObj = Instantiate(coinPrefab);
             var coin = coinObj.GetComponent<Coin>();
-            coin.transform.localPosition = pos;
             coin.coinsType.Value = coinsType;
             coin.sr.sprite = coinSprites[(int)coinsType];
-            coin.coinsPool.Value = coinsPool;
             InstanceFinder.ServerManager.Spawn(coinObj, owner);
             return coin;
         }
