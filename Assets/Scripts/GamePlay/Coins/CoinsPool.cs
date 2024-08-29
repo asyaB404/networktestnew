@@ -7,6 +7,7 @@ using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
 
+
 namespace GamePlay.Coins
 {
     /// <summary>
@@ -14,6 +15,7 @@ namespace GamePlay.Coins
     /// </summary>
     public class CoinsPool : NetworkBehaviour
     {
+        public int coinsFallSpeed = 10;
         public static bool IsSynced { get; private set; }
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
@@ -39,11 +41,19 @@ namespace GamePlay.Coins
 
         public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => _coinsDict;
 
+        public Coin GetCoin(Vector2Int pos)
+        {
+            if (!_coinsDict.TryGetValue(pos, out var res)) Debug.LogWarning(pos + " 这个位置不存在一个元素");
+            return res;
+        }
+
         [SerializeField] private GameObject readySprite;
 
         public GameObject playersParent;
 
         public GameObject coinsParent;
+
+        #region OnClient
 
         public override void OnStartClient()
         {
@@ -63,7 +73,6 @@ namespace GamePlay.Coins
             _isReady.OnChange += OnReadyChanged;
         }
 
-
         public override void OnStopClient()
         {
             base.OnStopClient();
@@ -71,7 +80,9 @@ namespace GamePlay.Coins
             _isReady.OnChange -= OnReadyChanged;
         }
 
-        #region SyncCoinsPools
+        #endregion
+
+        #region SyncCoinsPoolsInFirst
 
         [ServerRpc(RequireOwnership = false)]
         public void SyncCoinsPoolsRequest(NetworkConnection target = null)
@@ -98,7 +109,7 @@ namespace GamePlay.Coins
 
         #endregion
 
-        #region spawnPlayer
+        #region SpawnPlayerInFirst
 
         [ServerRpc(RequireOwnership = false)]
         public void SpawnPlayer(int id = -1, NetworkConnection owner = null)
@@ -156,24 +167,38 @@ namespace GamePlay.Coins
             newCoin.transform.localPosition = pos;
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
-            if (_coinsDict.ContainsKey(key))
-            {
-                Debug.LogWarning("将" + key + "上的值覆盖了");
-            }
-
+            // if (_coinsDict.ContainsKey(key))
+            // {
+            //     Debug.LogWarning("将" + key + "上的值覆盖了");
+            // }
             _coinsDict[key] = newCoin;
             return newCoin;
         }
 
-        [Server]
-        private void SpawnRowCoins(int count = 1)
+        private void CoinFall(Coin coin, int fallHeight)
         {
+            var pos = ((Vector2)transform.position).ToVectorInt();
+            pos.y -= fallHeight;
+            coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            _coinsDict[pos] = coin;
+        }
+
+        [Server]
+        public void SpawnRowCoins(int count = 1)
+        {
+            Vector2Int targetPos;
             if (count >= Height)
                 count = Height;
             for (int i = 0; i < Weight; i++)
             {
                 for (int j = 0; j < count; j++)
                 {
+                    targetPos = new Vector2Int(i, j);
+                    if (_coinsDict.TryGetValue(targetPos, out Coin curCoin))
+                    {
+                        CoinFall(curCoin, count);
+                    }
+
                     Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), new Vector2(i, 1));
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }
