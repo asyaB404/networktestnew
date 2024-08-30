@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using FishNet;
+using FishNet.CodeGenerating;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 namespace GamePlay.Coins
@@ -20,14 +22,15 @@ namespace GamePlay.Coins
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
-        #region SyncVar
+        #region IsReady
 
-        private readonly SyncVar<bool> _isReady = new(false);
+        [AllowMutableSyncType] [SerializeField]
+        private SyncVar<bool> isReady = new(false);
 
         [ServerRpc(RequireOwnership = false)]
         public void SetIsReadySprite(bool value)
         {
-            _isReady.Value = value;
+            isReady.Value = value;
         }
 
         private void OnReadyChanged(bool prev, bool next, bool asServer)
@@ -37,13 +40,14 @@ namespace GamePlay.Coins
 
         #endregion
 
-        private Dictionary<Vector2Int, Coin> _coinsDict;
+        [AllowMutableSyncType] [SerializeField]
+        private SyncDictionary<Vector2Int, Coin> coinsDict = new();
 
-        public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => _coinsDict;
+        public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
 
         public Coin GetCoin(Vector2Int pos)
         {
-            if (!_coinsDict.TryGetValue(pos, out var res)) Debug.LogWarning(pos + " 这个位置不存在一个元素");
+            if (!coinsDict.TryGetValue(pos, out var res)) Debug.LogWarning(pos + " 这个位置不存在一个元素");
             return res;
         }
 
@@ -70,14 +74,14 @@ namespace GamePlay.Coins
                 }
             }
 
-            _isReady.OnChange += OnReadyChanged;
+            isReady.OnChange += OnReadyChanged;
         }
 
         public override void OnStopClient()
         {
             base.OnStopClient();
             IsSynced = false;
-            _isReady.OnChange -= OnReadyChanged;
+            isReady.OnChange -= OnReadyChanged;
         }
 
         #endregion
@@ -162,16 +166,12 @@ namespace GamePlay.Coins
         public Coin SpawnCoin(CoinsType coinsType, Vector2 pos,
             NetworkConnection owner = null)
         {
-            Coin newCoin = CoinsFactory.Instance.GenerateCoin(coinsType, owner);
+            Coin newCoin = CoinsFactory.Instance.GenerateCoinFromServer(coinsType, owner);
             newCoin.transform.SetParent(coinsParent.transform, false);
             newCoin.transform.localPosition = pos;
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
-            // if (_coinsDict.ContainsKey(key))
-            // {
-            //     Debug.LogWarning("将" + key + "上的值覆盖了");
-            // }
-            _coinsDict[key] = newCoin;
+            coinsDict[key] = newCoin;
             return newCoin;
         }
 
@@ -180,7 +180,7 @@ namespace GamePlay.Coins
             var pos = ((Vector2)transform.position).ToVectorInt();
             pos.y -= fallHeight;
             coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
-            _coinsDict[pos] = coin;
+            coinsDict[pos] = coin;
         }
 
         [Server]
@@ -194,7 +194,7 @@ namespace GamePlay.Coins
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, j);
-                    if (_coinsDict.TryGetValue(targetPos, out Coin curCoin))
+                    if (coinsDict.TryGetValue(targetPos, out Coin curCoin))
                     {
                         CoinFall(curCoin, count);
                     }

@@ -34,7 +34,7 @@ namespace GamePlay.Coins
         /// <param name="owner"></param>
         /// <returns></returns>
         [Server]
-        public Coin GenerateCoin(CoinsType coinsType,
+        public Coin GenerateCoinFromServer(CoinsType coinsType,
             NetworkConnection owner = null)
         {
             var coinObj = Instantiate(coinPrefab);
