@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using FishNet;
@@ -8,6 +9,7 @@ using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 
 namespace GamePlay.Coins
@@ -56,6 +58,25 @@ namespace GamePlay.Coins
         public GameObject playersParent;
 
         public GameObject coinsParent;
+
+        [SerializeField] private float spawnDuration = 5;
+        private float _spawnTimer;
+
+        private void Update()
+        {
+            if (IsServerStarted)
+            {
+                if (_spawnTimer > 0)
+                {
+                    _spawnTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    SpawnRowCoins(1);
+                    _spawnTimer = spawnDuration;
+                }
+            }
+        }
 
         #region OnClient
 
@@ -172,6 +193,7 @@ namespace GamePlay.Coins
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
             coinsDict[key] = newCoin;
+            coinsDict.Dirty(key);
             return newCoin;
         }
 
@@ -181,6 +203,7 @@ namespace GamePlay.Coins
             pos.y -= fallHeight;
             coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
             coinsDict[pos] = coin;
+            coinsDict.Dirty(pos);
         }
 
         [Server]
@@ -225,5 +248,18 @@ namespace GamePlay.Coins
                     break;
             }
         }
+
+        #region Debug
+
+        [ContextMenu(nameof(Fun1))]
+        private void Fun1()
+        {
+            foreach (var item in coinsDict)
+            {
+                Debug.Log(item.Key + " : " + item.Value);
+            }
+        }
+
+        #endregion
     }
 }
