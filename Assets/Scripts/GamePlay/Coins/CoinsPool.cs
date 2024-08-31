@@ -64,7 +64,7 @@ namespace GamePlay.Coins
 
         private void Update()
         {
-            if (IsServerStarted)
+            if (IsServerStarted && RPCInstance.CurStatus != PlayerStatus.Gaming)
             {
                 if (_spawnTimer > 0)
                 {
@@ -216,13 +216,14 @@ namespace GamePlay.Coins
             {
                 for (int j = 0; j < count; j++)
                 {
-                    targetPos = new Vector2Int(i, j);
+                    targetPos = new Vector2Int(i, -j);
                     if (coinsDict.TryGetValue(targetPos, out Coin curCoin))
                     {
                         CoinFall(curCoin, count);
                     }
 
-                    Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), new Vector2(i, 1));
+                    Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), targetPos);
+                    coin.transform.localPosition = new Vector3(i, 1);
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }
             }
