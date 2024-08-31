@@ -183,6 +183,35 @@ namespace GamePlay.Coins
         {
         }
 
+        private void FallCoin(Coin coin, int fallHeight)
+        {
+            var pos = ((Vector2)transform.localPosition).ToVectorInt();
+            pos.y -= fallHeight;
+            coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            coinsDict[pos] = coin;
+            coinsDict.Dirty(pos);
+        }
+
+        private int FindCoinMinY(int x)
+        {
+            int y = 0;
+            Vector2Int key;
+            while (y >= -Height)
+            {
+                key = new Vector2Int(x, y);
+                if (coinsDict.ContainsKey(key))
+                {
+                    y--;
+                }
+                else
+                {
+                    return y + 1;
+                }
+            }
+
+            return 1;
+        }
+
         [Server]
         public Coin SpawnCoin(CoinsType coinsType, Vector2 pos,
             NetworkConnection owner = null)
@@ -197,15 +226,6 @@ namespace GamePlay.Coins
             return newCoin;
         }
 
-        private void CoinFall(Coin coin, int fallHeight)
-        {
-            var pos = ((Vector2)transform.position).ToVectorInt();
-            pos.y -= fallHeight;
-            coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
-            coinsDict[pos] = coin;
-            coinsDict.Dirty(pos);
-        }
-
         [Server]
         public void SpawnRowCoins(int count = 1)
         {
@@ -214,14 +234,16 @@ namespace GamePlay.Coins
                 count = Height;
             for (int i = 0; i < Weight; i++)
             {
+                int curY = FindCoinMinY(i);
+                while (curY <= 0)
+                {
+                    FallCoin(coinsDict[new Vector2Int(i, curY)], count);
+                    curY++;
+                }
+
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
-                    if (coinsDict.TryGetValue(targetPos, out Coin curCoin))
-                    {
-                        CoinFall(curCoin, count);
-                    }
-
                     Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
@@ -251,6 +273,16 @@ namespace GamePlay.Coins
         }
 
         #region Debug
+
+        void OnDrawGizmos()
+        {
+            foreach (var pair in coinsDict)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawCube(coinsParent.transform.position + new Vector3(pair.Key.x, pair.Key.y),
+                    new(0.3f, 0.3f, 0));
+            }
+        }
 
         [ContextMenu(nameof(Fun1))]
         private void Fun1()
