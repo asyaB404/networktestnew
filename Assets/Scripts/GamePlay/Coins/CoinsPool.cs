@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using FishNet;
 using FishNet.CodeGenerating;
@@ -185,7 +186,7 @@ namespace GamePlay.Coins
 
         private void FallCoin(Coin coin, int fallHeight)
         {
-            var pos = ((Vector2)transform.localPosition).ToVectorInt();
+            var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
             pos.y -= fallHeight;
             coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
             coinsDict[pos] = coin;
@@ -232,15 +233,19 @@ namespace GamePlay.Coins
             Vector2Int targetPos;
             if (count >= Height)
                 count = Height;
+            foreach (var item in coinsDict.ToList())
+            {
+                FallCoin(item.Value, count);
+            }
+
             for (int i = 0; i < Weight; i++)
             {
-                int curY = FindCoinMinY(i);
-                while (curY <= 0)
-                {
-                    FallCoin(coinsDict[new Vector2Int(i, curY)], count);
-                    curY++;
-                }
-
+                // int curY = FindCoinMinY(i);
+                // while (curY <= 0)
+                // {
+                //     FallCoin(coinsDict[new Vector2Int(i, curY)], count);
+                //     curY++;
+                // }
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
