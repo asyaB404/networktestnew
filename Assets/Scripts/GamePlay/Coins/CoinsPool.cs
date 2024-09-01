@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
@@ -9,7 +8,6 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 
@@ -24,6 +22,8 @@ namespace GamePlay.Coins
         public static bool IsSynced { get; private set; }
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
+
+        public System.Random random;
 
         #region IsReady
 
@@ -77,6 +77,11 @@ namespace GamePlay.Coins
                     _spawnTimer = spawnDuration;
                 }
             }
+        }
+
+        private void Awake()
+        {
+            random = MyRandom.RandomInstance;
         }
 
         #region OnClient
@@ -250,7 +255,7 @@ namespace GamePlay.Coins
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
-                    Coin coin = SpawnCoin(CoinsType.C1 + Random.Range(0, 6), targetPos);
+                    Coin coin = SpawnCoin(CoinsType.C1 + random.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }

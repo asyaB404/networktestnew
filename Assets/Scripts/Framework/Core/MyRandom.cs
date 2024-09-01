@@ -8,15 +8,13 @@ public static class MyRandom
 {
     private static Random _random;
 
-    private static Random RandomInstance
+    public static Random RandomInstance
     {
         get
         {
-            if (_random == null)
-            {
-                _random = new Random();
-                Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成");
-            }
+            if (_random != null) return _random;
+            _random = new Random();
+            Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成");
 
             return _random;
         }
