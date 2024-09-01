@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
+using FishNet.Managing.Scened;
 using FishNet.Object;
 using GamePlay.Coins;
 using GamePlay.Room;
@@ -22,20 +23,14 @@ namespace GamePlay
 
         private void Start()
         {
+            InstanceFinder.SceneManager.OnClientLoadedStartScenes += (connection, b) =>
+            {
+                if (b)
+                {
+                    InitRoom();
+                }
+            };
             gameObject.SetActive(false);
-        }
-
-        private void OnEnable()
-        {
-            if (InstanceFinder.IsServerStarted)
-            {
-                InitRoom();
-            }
-            else if (InstanceFinder.IsClientStarted)
-            {
-                // CoinsPool[] pools = GetComponentsInChildren<CoinsPool>(true);
-                // coinsPools = new List<CoinsPool>(pools);
-            }
         }
 
         private void OnDisable()
@@ -99,8 +94,9 @@ namespace GamePlay
 
         #region debug
 
-        [SerializeField, ContextMenuItem("spawnCoin",nameof(SpawnCoinTest))]
+        [SerializeField, ContextMenuItem("spawnCoin", nameof(SpawnCoinTest))]
         private CoinsType spawnTypeTest;
+
         public void SpawnCoinTest()
         {
             // CoinFactory.Instance.GenerateCoin(spawnTypeTest,Vector2.zero, coinsPools[0],InstanceFinder.ClientManager.Connection);
