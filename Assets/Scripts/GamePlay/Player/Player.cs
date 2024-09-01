@@ -1,8 +1,10 @@
 using System.Runtime.CompilerServices;
+using FishNet.CodeGenerating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Coins;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GamePlay.Player
 {
@@ -10,7 +12,23 @@ namespace GamePlay.Player
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
         [SerializeField] private PlayerController playerController;
-        [SerializeField] private float speed = 15;
+
+        [FormerlySerializedAs("speed")] [SerializeField]
+        private float moveSpeed = 15;
+
+        public float MoveSpeed => moveSpeed;
+        public float Health { get; } = 100;
+
+        [AllowMutableSyncType] [SerializeField]
+        private SyncList<Coin> catchingCoins = new SyncList<Coin>(new SyncTypeSettings(WritePermission.ClientUnsynchronized,
+            ReadPermission.ExcludeOwner));
+
+        // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
+        [ServerRpc(RunLocally = true)]
+        private void SetCatchingCoins(int index,Coin coin)
+        {
+            catchingCoins[index] = coin;
+        }
 
         #region pos
 
@@ -49,9 +67,6 @@ namespace GamePlay.Player
             {
             }
         }
-
-        public float Health { get; } = 100;
-        public float Speed => speed;
 
         private void Awake()
         {

@@ -5,6 +5,14 @@ using UnityEngine;
 
 namespace GamePlay.Coins
 {
+    public enum CoinStatus
+    {
+        Idle,
+        Moving,
+        Transforming,
+        Catching
+    }
+
     public class Coin : NetworkBehaviour
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
@@ -24,7 +32,6 @@ namespace GamePlay.Coins
         public override void OnStopClient()
         {
             base.OnStopClient();
-            
         }
     }
 }

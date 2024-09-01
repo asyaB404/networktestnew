@@ -21,7 +21,7 @@ namespace GamePlay.Player
 
         private float _moveTimer;
         private Tween _moveTween;
-        private float MoveDuration => 1 / player.Speed;
+        private float MoveDuration => 1 / player.MoveSpeed;
 
         #endregion
 
@@ -36,6 +36,8 @@ namespace GamePlay.Player
 
         private void Update()
         {
+            #region Move
+
             if (_moveTimer <= 0)
             {
                 if (Input.GetKeyDown(KeyCode.A) && X > 0)
@@ -56,6 +58,10 @@ namespace GamePlay.Player
                 _moveTimer -= Time.deltaTime;
             }
 
+            #endregion
+
+            #region Catch
+
             if (_catchTimer <= 0)
             {
             }
@@ -63,12 +69,18 @@ namespace GamePlay.Player
             {
             }
 
+            #endregion
+
+            #region Shoot
+
             if (_shootTimer <= 0)
             {
             }
             else
             {
             }
+
+            #endregion
         }
     }
 }

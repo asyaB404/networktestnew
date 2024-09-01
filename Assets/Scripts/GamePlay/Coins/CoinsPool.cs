@@ -43,6 +43,8 @@ namespace GamePlay.Coins
 
         #endregion
 
+        #region Coins
+
         [AllowMutableSyncType] [SerializeField]
         private SyncDictionary<Vector2Int, Coin> coinsDict = new();
 
@@ -53,6 +55,8 @@ namespace GamePlay.Coins
             if (!coinsDict.TryGetValue(pos, out var res)) Debug.LogWarning(pos + " 这个位置不存在一个元素");
             return res;
         }
+
+        #endregion
 
         [SerializeField] private GameObject readySprite;
 
@@ -195,7 +199,7 @@ namespace GamePlay.Coins
             pos.y -= fallHeight;
             coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
             coinsDict[pos] = coin;
-            coinsDict.Dirty(pos);
+            // coinsDict.Dirty(pos);
         }
 
         private int FindCoinMinY(int x)
@@ -228,7 +232,7 @@ namespace GamePlay.Coins
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
             coinsDict[key] = newCoin;
-            coinsDict.Dirty(key);
+            // coinsDict.Dirty(key);
             InstanceFinder.ServerManager.Spawn(newCoin.gameObject, owner);
             return newCoin;
         }
