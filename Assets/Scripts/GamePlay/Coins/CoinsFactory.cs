@@ -33,15 +33,12 @@ namespace GamePlay.Coins
         /// <param name="pos"></param>
         /// <param name="owner"></param>
         /// <returns></returns>
-        [Server]
-        public Coin GenerateCoinFromServer(CoinsType coinsType,
-            NetworkConnection owner = null)
+        public Coin GenerateCoin(CoinsType coinsType)
         {
             var coinObj = Instantiate(coinPrefab);
             var coin = coinObj.GetComponent<Coin>();
             coin.coinsType.Value = coinsType;
             coin.sr.sprite = coinSprites[(int)coinsType];
-            InstanceFinder.ServerManager.Spawn(coinObj, owner);
             return coin;
         }
     }

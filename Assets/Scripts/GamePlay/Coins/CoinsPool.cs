@@ -217,13 +217,14 @@ namespace GamePlay.Coins
         public Coin SpawnCoin(CoinsType coinsType, Vector2 pos,
             NetworkConnection owner = null)
         {
-            Coin newCoin = CoinsFactory.Instance.GenerateCoinFromServer(coinsType, owner);
+            Coin newCoin = CoinsFactory.Instance.GenerateCoin(coinsType);
             newCoin.transform.SetParent(coinsParent.transform, false);
             newCoin.transform.localPosition = pos;
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
             coinsDict[key] = newCoin;
             coinsDict.Dirty(key);
+            InstanceFinder.ServerManager.Spawn(newCoin.gameObject, owner);
             return newCoin;
         }
 
