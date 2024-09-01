@@ -7,15 +7,16 @@ using Random = System.Random;
 public static class MyRandom
 {
     private static Random _random;
+    public static int Seed;
 
     public static Random RandomInstance
     {
         get
         {
             if (_random != null) return _random;
-            _random = new Random();
-            Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成");
-
+            Seed = UnityEngine.Random.Range(-99999999, 99999999);
+            _random = new Random(Seed);
+            Debug.LogWarning("注意随机数没有手动设置种子!已自动生成随机生成" + Seed);
             return _random;
         }
     }

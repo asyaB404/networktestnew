@@ -6,10 +6,24 @@ namespace GamePlay.Player
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private Player player;
-        private float _moveTimer;
 
+        #region CatchAndShootCoin
+
+        private float _catchTimer;
+        [SerializeField] private float catchDuration;
+
+        private float _shootTimer;
+        [SerializeField] private float shootDuration;
+
+        #endregion
+
+        #region Move
+
+        private float _moveTimer;
         private Tween _moveTween;
         private float MoveDuration => 1 / player.Speed;
+
+        #endregion
 
         private float X => player.X;
 
@@ -19,6 +33,7 @@ namespace GamePlay.Player
         }
 
         [SerializeField] private Ease ease = Ease.InQuad;
+
         private void Update()
         {
             if (_moveTimer <= 0)
@@ -39,6 +54,20 @@ namespace GamePlay.Player
             else
             {
                 _moveTimer -= Time.deltaTime;
+            }
+
+            if (_catchTimer <= 0)
+            {
+            }
+            else
+            {
+            }
+
+            if (_shootTimer <= 0)
+            {
+            }
+            else
+            {
             }
         }
     }

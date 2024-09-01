@@ -81,7 +81,7 @@ namespace GamePlay.Coins
 
         private void Awake()
         {
-            random = MyRandom.RandomInstance;
+            random = new System.Random(MyRandom.Seed);
         }
 
         #region OnClient
