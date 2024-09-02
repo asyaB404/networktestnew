@@ -22,9 +22,15 @@ namespace GamePlay.Coins
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
+        public GameObject playersParent;
+
+        public GameObject coinsParent;
+
         private System.Random _random;
 
         #region IsReady
+
+        [SerializeField] private GameObject readySprite;
 
         [AllowMutableSyncType] [SerializeField]
         private SyncVar<bool> isReady = new(false);
@@ -51,10 +57,14 @@ namespace GamePlay.Coins
         [ServerRpc(RunLocally = true)]
         private void SetCoinsDict(Vector2Int key, Coin coin)
         {
+            if (coin == null)
+                coinsDict.Remove(key);
+
             coinsDict[key] = coin;
         }
 
         public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
+
 
         public Coin GetCoin(Vector2Int pos)
         {
@@ -64,11 +74,6 @@ namespace GamePlay.Coins
 
         #endregion
 
-        [SerializeField] private GameObject readySprite;
-
-        public GameObject playersParent;
-
-        public GameObject coinsParent;
 
         [SerializeField] private float spawnDuration = 5;
         private float _spawnTimer;

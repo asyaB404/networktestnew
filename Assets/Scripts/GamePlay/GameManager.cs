@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
-using FishNet.Managing.Scened;
 using FishNet.Object;
 using GamePlay.Coins;
 using GamePlay.Room;

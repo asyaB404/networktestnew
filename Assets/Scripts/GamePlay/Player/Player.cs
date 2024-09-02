@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using FishNet.CodeGenerating;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Coins;
@@ -21,6 +22,8 @@ namespace GamePlay.Player
         public float MoveSpeed => moveSpeed;
         public float Health { get; } = 100;
 
+        #region Coins
+
         [AllowMutableSyncType] [SerializeField]
         private SyncList<Coin> catchingCoins = new SyncList<Coin>(new SyncTypeSettings(
             WritePermission.ClientUnsynchronized,
@@ -28,10 +31,13 @@ namespace GamePlay.Player
 
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
         [ServerRpc(RunLocally = true)]
-        private void SetCatchingCoins(int index, Coin coin)
+        private void SetCatchingCoins(int index, Coin coin, NetworkConnection owner)
         {
+            // GetComponent<NetworkObject>().SetLocalOwnership(owner);
             catchingCoins[index] = coin;
         }
+
+        #endregion
 
         #region pos
 

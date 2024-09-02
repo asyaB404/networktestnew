@@ -62,11 +62,13 @@ namespace GamePlay.Player
 
             #region Catch
 
-            if (_catchTimer <= 0)
+            if (_catchTimer <= 0 && Input.GetKeyDown(KeyCode.K))
             {
+                _catchTimer = catchDuration;
             }
             else
             {
+                _catchTimer -= Time.deltaTime;
             }
 
             #endregion
