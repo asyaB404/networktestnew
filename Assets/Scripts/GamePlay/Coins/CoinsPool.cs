@@ -54,8 +54,8 @@ namespace GamePlay.Coins
         private SyncDictionary<Vector2Int, Coin> coinsDict =
             new(new SyncTypeSettings(WritePermission.ClientUnsynchronized, ReadPermission.ExcludeOwner));
 
-        [ServerRpc(RunLocally = true)]
-        private void SetCoinsDict(Vector2Int key, Coin coin)
+        [ServerRpc(RequireOwnership = false, RunLocally = true)]
+        public void SetCoinsDict(Vector2Int key, Coin coin)
         {
             if (coin == null)
                 coinsDict.Remove(key);
@@ -213,7 +213,7 @@ namespace GamePlay.Coins
             // coinsDict.Dirty(pos);
         }
 
-        private int FindCoinMinY(int x)
+        public int FindCoinMinY(int x)
         {
             int y = 0;
             Vector2Int key;

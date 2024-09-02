@@ -1,4 +1,5 @@
 using DG.Tweening;
+using GamePlay.Coins;
 using UnityEngine;
 
 namespace GamePlay.Player
@@ -19,13 +20,13 @@ namespace GamePlay.Player
 
         #region Move
 
+        private float X => player.X;
+        private int XInt => Mathf.FloorToInt(player.X);
         private float _moveTimer;
         private Tween _moveTween;
         private float MoveDuration => 1 / player.MoveSpeed;
 
         #endregion
-
-        private float X => player.X;
 
         private void Awake()
         {
@@ -64,6 +65,19 @@ namespace GamePlay.Player
 
             if (_catchTimer <= 0 && Input.GetKeyDown(KeyCode.K))
             {
+                CoinsPool coinsPool = player.coinsPool.Value;
+                int minY;
+                Vector2Int key = new Vector2Int(XInt, 0);
+                if (player.CatchingCoins.Count <= 0)
+                {
+                    minY = coinsPool.FindCoinMinY(XInt);
+                    key.y = minY;
+                    CoinsType coinsType = coinsPool.GetCoin(key).coinsType.Value;
+                }
+                else
+                {
+                }
+
                 _catchTimer = catchDuration;
             }
             else

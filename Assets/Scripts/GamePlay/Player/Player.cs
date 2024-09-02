@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using FishNet.CodeGenerating;
 using FishNet.Connection;
@@ -29,9 +30,11 @@ namespace GamePlay.Player
             WritePermission.ClientUnsynchronized,
             ReadPermission.ExcludeOwner));
 
+        public IReadOnlyList<Coin> CatchingCoins => catchingCoins;
+
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
         [ServerRpc(RunLocally = true)]
-        private void SetCatchingCoins(int index, Coin coin, NetworkConnection owner)
+        private void SetCatchingCoin(int index, Coin coin, NetworkConnection owner)
         {
             // GetComponent<NetworkObject>().SetLocalOwnership(owner);
             catchingCoins[index] = coin;
