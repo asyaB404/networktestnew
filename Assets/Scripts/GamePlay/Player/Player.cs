@@ -10,7 +10,9 @@ namespace GamePlay.Player
 {
     public class Player : NetworkBehaviour
     {
-        public readonly SyncVar<CoinsPool> coinsPool = new();
+        [SerializeField] [AllowMutableSyncType]
+        public SyncVar<CoinsPool> coinsPool = new();
+
         [SerializeField] private PlayerController playerController;
 
         [FormerlySerializedAs("speed")] [SerializeField]
@@ -20,12 +22,13 @@ namespace GamePlay.Player
         public float Health { get; } = 100;
 
         [AllowMutableSyncType] [SerializeField]
-        private SyncList<Coin> catchingCoins = new SyncList<Coin>(new SyncTypeSettings(WritePermission.ClientUnsynchronized,
+        private SyncList<Coin> catchingCoins = new SyncList<Coin>(new SyncTypeSettings(
+            WritePermission.ClientUnsynchronized,
             ReadPermission.ExcludeOwner));
 
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
         [ServerRpc(RunLocally = true)]
-        private void SetCatchingCoins(int index,Coin coin)
+        private void SetCatchingCoins(int index, Coin coin)
         {
             catchingCoins[index] = coin;
         }

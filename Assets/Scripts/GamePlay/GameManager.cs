@@ -25,7 +25,7 @@ namespace GamePlay
         {
             InstanceFinder.SceneManager.OnClientLoadedStartScenes += (connection, b) =>
             {
-                if (b)
+                if (b && connection == RoomMgr.Instance.PlayersCon[0])
                 {
                     InitRoom();
                 }

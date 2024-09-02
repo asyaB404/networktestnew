@@ -8,7 +8,6 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 
 namespace GamePlay.Coins
@@ -23,7 +22,7 @@ namespace GamePlay.Coins
         public int Weight { get; private set; } = 8;
         public int Height { get; private set; } = 16;
 
-        public System.Random random;
+        private System.Random _random;
 
         #region IsReady
 
@@ -46,7 +45,14 @@ namespace GamePlay.Coins
         #region Coins
 
         [AllowMutableSyncType] [SerializeField]
-        private SyncDictionary<Vector2Int, Coin> coinsDict = new();
+        private SyncDictionary<Vector2Int, Coin> coinsDict =
+            new(new SyncTypeSettings(WritePermission.ClientUnsynchronized, ReadPermission.ExcludeOwner));
+
+        [ServerRpc(RunLocally = true)]
+        private void SetCoinsDict(Vector2Int key, Coin coin)
+        {
+            coinsDict[key] = coin;
+        }
 
         public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
 
@@ -85,7 +91,7 @@ namespace GamePlay.Coins
 
         private void Awake()
         {
-            random = new System.Random(MyRandom.Seed);
+            _random = new System.Random(MyRandom.Seed);
         }
 
         #region OnClient
@@ -259,7 +265,7 @@ namespace GamePlay.Coins
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
-                    Coin coin = SpawnCoin(CoinsType.C1 + random.Next(6), targetPos);
+                    Coin coin = SpawnCoin(CoinsType.C1 + _random.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }
