@@ -4,6 +4,7 @@ namespace GamePlay.Coins
 {
     public enum CoinsType
     {
+        Null = -1,
         C1,
         C5,
         C10,

@@ -18,9 +18,14 @@ namespace GamePlay.Coins
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
 
-        [AllowMutableSyncType]
-        public SyncVar<CoinStatus> coinStatus =
+        [AllowMutableSyncType] public SyncVar<CoinStatus> coinStatus =
             new(new SyncTypeSettings(WritePermission.ClientUnsynchronized, ReadPermission.ExcludeOwner));
+
+        [ServerRpc(RunLocally = true, RequireOwnership = false)]
+        public void SetCoinStatus(CoinStatus newCoinStatus)
+        {
+            coinStatus.Value = newCoinStatus;
+        }
 
         [SerializeField] [AllowMutableSyncType]
         public SyncVar<CoinsType> coinsType = new();

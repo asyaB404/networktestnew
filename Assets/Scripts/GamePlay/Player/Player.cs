@@ -30,7 +30,7 @@ namespace GamePlay.Player
             WritePermission.ClientUnsynchronized,
             ReadPermission.ExcludeOwner));
 
-        public IReadOnlyList<Coin> CatchingCoins => catchingCoins;
+        public IList<Coin> CatchingCoins => catchingCoins;
 
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
         [ServerRpc(RunLocally = true)]

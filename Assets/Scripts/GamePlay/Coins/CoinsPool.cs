@@ -8,6 +8,7 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using GamePlay.Room;
 using UnityEngine;
+using Random = System.Random;
 
 
 namespace GamePlay.Coins
@@ -26,7 +27,13 @@ namespace GamePlay.Coins
 
         public GameObject coinsParent;
 
-        private System.Random _random;
+        private Random _random;
+
+        public Random RandomInstance
+        {
+            get => _random ??= new Random(0);
+            set => _random = value;
+        }
 
         #region IsReady
 
@@ -92,11 +99,6 @@ namespace GamePlay.Coins
                     _spawnTimer = spawnDuration;
                 }
             }
-        }
-
-        private void Awake()
-        {
-            _random = new System.Random(MyRandom.Seed);
         }
 
         #region OnClient
@@ -270,7 +272,7 @@ namespace GamePlay.Coins
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
-                    Coin coin = SpawnCoin(CoinsType.C1 + _random.Next(6), targetPos);
+                    Coin coin = SpawnCoin(CoinsType.C1 + RandomInstance.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
                     coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
                 }

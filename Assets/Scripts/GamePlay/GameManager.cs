@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FishNet;
@@ -5,6 +6,7 @@ using FishNet.Object;
 using GamePlay.Coins;
 using GamePlay.Room;
 using UnityEngine;
+using Random = System.Random;
 
 namespace GamePlay
 {
@@ -85,8 +87,10 @@ namespace GamePlay
         [Server]
         public void StartGame()
         {
+            int seed = UnityEngine.Random.Range(-9999999, 99999999);
             foreach (var coinsPool in coinsPools)
             {
+                coinsPool.RandomInstance = new Random(seed);
                 coinsPool.StartGame();
             }
         }

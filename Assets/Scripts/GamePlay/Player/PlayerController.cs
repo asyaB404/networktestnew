@@ -35,6 +35,43 @@ namespace GamePlay.Player
 
         [SerializeField] private Ease ease = Ease.InQuad;
 
+        private void CatchCoin(CoinsPool coinsPool, Vector2Int key, Coin coin)
+        {
+            coinsPool.SetCoinsDict(key, null);
+            coin.SetCoinStatus(CoinStatus.Catching);
+            player.CatchingCoins.Add(coin);
+        }
+
+        private void CatchCoins()
+        {
+            CoinsPool coinsPool = player.coinsPool.Value;
+            Vector2Int key = new Vector2Int(XInt, 0);
+            var minY = coinsPool.FindCoinMinY(XInt);
+            key.y = minY;
+            Coin coin = coinsPool.GetCoin(key);
+            while (key.y <= 0 && coin.coinStatus.Value == CoinStatus.Idle)
+            {
+                if (player.CatchingCoins.Count <= 0)
+                {
+                    CatchCoin(coinsPool, key, coin);
+                }
+                else if (player.CatchingCoins.Count > 0)
+                {
+                    if (coin.coinsType.Value == player.CatchingCoins[0].coinsType.Value)
+                    {
+                        CatchCoin(coinsPool, key, coin);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                key.y++;
+                coin = coinsPool.GetCoin(key);
+            }
+        }
+
         private void Update()
         {
             #region Move
@@ -65,19 +102,6 @@ namespace GamePlay.Player
 
             if (_catchTimer <= 0 && Input.GetKeyDown(KeyCode.K))
             {
-                CoinsPool coinsPool = player.coinsPool.Value;
-                int minY;
-                Vector2Int key = new Vector2Int(XInt, 0);
-                if (player.CatchingCoins.Count <= 0)
-                {
-                    minY = coinsPool.FindCoinMinY(XInt);
-                    key.y = minY;
-                    CoinsType coinsType = coinsPool.GetCoin(key).coinsType.Value;
-                }
-                else
-                {
-                }
-
                 _catchTimer = catchDuration;
             }
             else
