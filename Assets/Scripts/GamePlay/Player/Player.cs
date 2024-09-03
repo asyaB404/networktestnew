@@ -12,16 +12,21 @@ namespace GamePlay.Player
 {
     public class Player : NetworkBehaviour
     {
+        [SerializeField] private Transform catchingCoinsParent;
+        public Transform CatchingCoinsParent => catchingCoinsParent;
+
         [SerializeField] [AllowMutableSyncType]
         public SyncVar<CoinsPool> coinsPool = new();
 
         [SerializeField] private PlayerController playerController;
+
 
         [FormerlySerializedAs("speed")] [SerializeField]
         private float moveSpeed = 15;
 
         public float MoveSpeed => moveSpeed;
         public float Health { get; } = 100;
+
 
         #region Coins
 
@@ -32,7 +37,9 @@ namespace GamePlay.Player
 
         public IList<Coin> CatchingCoins => catchingCoins;
 
+
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
+
         [ServerRpc(RunLocally = true)]
         private void SetCatchingCoin(int index, Coin coin, NetworkConnection owner)
         {

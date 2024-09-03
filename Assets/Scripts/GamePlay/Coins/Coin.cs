@@ -1,3 +1,4 @@
+using System;
 using FishNet.CodeGenerating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -25,6 +26,14 @@ namespace GamePlay.Coins
         public void SetCoinStatus(CoinStatus newCoinStatus)
         {
             coinStatus.Value = newCoinStatus;
+            sr.rendererPriority = newCoinStatus switch
+            {
+                CoinStatus.Idle => 0,
+                CoinStatus.Moving => 2,
+                CoinStatus.Transforming => 0,
+                CoinStatus.Catching => 2,
+                _ => throw new ArgumentOutOfRangeException(nameof(newCoinStatus), newCoinStatus, null)
+            };
         }
 
         [SerializeField] [AllowMutableSyncType]

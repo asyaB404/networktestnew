@@ -37,8 +37,11 @@ namespace GamePlay.Player
 
         private void CatchCoin(CoinsPool coinsPool, Vector2Int key, Coin coin)
         {
+            Transform parent = player.CatchingCoinsParent;
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
+            coin.transform.SetParent(parent);
+            coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
             player.CatchingCoins.Add(coin);
         }
 
