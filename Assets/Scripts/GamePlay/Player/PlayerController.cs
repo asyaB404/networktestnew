@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FishNet.Object;
 using GamePlay.Coins;
 using UnityEngine;
 
@@ -105,6 +106,7 @@ namespace GamePlay.Player
 
             if (_catchTimer <= 0 && Input.GetKeyDown(KeyCode.K))
             {
+                CatchCoins();
                 _catchTimer = catchDuration;
             }
             else

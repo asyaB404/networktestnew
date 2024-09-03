@@ -36,7 +36,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5315510111863497313}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6867599217777189753
@@ -127,8 +128,14 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 261878454260277096}
   _networkObjectCache: {fileID: 261878454260277096}
+  catchingCoinsParent: {fileID: 5315510111863497313}
+  coinsPool:
+    _value: {fileID: 0}
   playerController: {fileID: 5183960960693874850}
-  speed: 15
+  moveSpeed: 15
+  catchingCoins:
+    Collection: []
+    ClientHostCollection: []
 --- !u!114 &5183960960693874850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +149,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 7748976637602190545}
+  catchDuration: 0
+  shootDuration: 0
   ease: 1
 --- !u!114 &261878454260277096
 MonoBehaviour:
@@ -274,3 +283,34 @@ MonoBehaviour:
   _componentIndexCache: 3
   _addedNetworkObject: {fileID: 261878454260277096}
   _networkObjectCache: {fileID: 261878454260277096}
+--- !u!1 &6117745146081654714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5315510111863497313}
+  m_Layer: 0
+  m_Name: coins
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5315510111863497313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117745146081654714}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2547362122057055415}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

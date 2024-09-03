@@ -65,7 +65,10 @@ namespace GamePlay.Coins
         public void SetCoinsDict(Vector2Int key, Coin coin)
         {
             if (coin == null)
+            {
                 coinsDict.Remove(key);
+                return;
+            }
 
             coinsDict[key] = coin;
         }
