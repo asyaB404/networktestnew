@@ -1,11 +1,12 @@
 using DG.Tweening;
 using FishNet.Object;
 using GamePlay.Coins;
+using GamePlay.Room;
 using UnityEngine;
 
 namespace GamePlay.Player
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : NetworkBehaviour
     {
         [SerializeField] private Player player;
 
@@ -38,13 +39,29 @@ namespace GamePlay.Player
 
         private void CatchCoin(CoinsPool coinsPool, Vector2Int key, Coin coin)
         {
-            coin.GiveOwnership(player.Owner);
-            Transform parent = player.CatchingCoinsParent;
+            RPCInstance.Instance.SetOwnerShip(coin, player.Owner);
+            // Transform parent = player.CatchingCoinsParent;
+            // coin.transform.SetParent(parent);
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
-            coin.transform.SetParent(parent);
+            SyncCoinsParentRequest(coin);
             coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
             player.AddCatchingCoin(coin);
+        }
+
+        [ServerRpc(RunLocally = true, RequireOwnership = false)]
+        private void SyncCoinsParentRequest(Coin coin)
+        {
+            Transform parent = player.CatchingCoinsParent;
+            coin.transform.SetParent(parent);
+            SyncCoinsParent(coin);
+        }
+
+        [ObserversRpc(ExcludeOwner = true, ExcludeServer = true)]
+        private void SyncCoinsParent(Coin coin)
+        {
+            Transform parent = player.CatchingCoinsParent;
+            coin.transform.SetParent(parent);
         }
 
         private void CatchCoins()

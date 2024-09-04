@@ -166,6 +166,12 @@ namespace GamePlay.Room
             PlayerInfoPanel.Instance.UpdateInfoPanel(RoomMgr.Instance.PlayerInfos);
         }
 
+        [ServerRpc]
+        public void SetOwnerShip(NetworkBehaviour networkBehaviour, NetworkConnection owner = null)
+        {
+            networkBehaviour.GiveOwnership(owner);
+        }
+
         #region # Debug
 
         [ContextMenu("test")]
@@ -179,7 +185,6 @@ namespace GamePlay.Room
 
         private void SetStatus()
         {
-            
             CurStatus = status;
             Print();
         }

@@ -44,6 +44,17 @@ namespace GamePlay.Coins
         public override void OnStartClient()
         {
             base.OnStartClient();
+            coinStatus.OnChange += (prev, newCoinStatus, server) =>
+            {
+                sr.rendererPriority = newCoinStatus switch
+                {
+                    CoinStatus.Idle => 0,
+                    CoinStatus.Moving => 2,
+                    CoinStatus.Transforming => 0,
+                    CoinStatus.Catching => 2,
+                    _ => throw new ArgumentOutOfRangeException(nameof(newCoinStatus), newCoinStatus, null)
+                };
+            };
             if (!IsClientOnlyStarted) return;
             transform.SetParent(coinsPool.Value.coinsParent.transform, false);
             sr.sprite = CoinsFactory.Instance.coinSprites[(int)coinsType.Value];
