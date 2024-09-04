@@ -45,7 +45,7 @@ namespace GamePlay.Player
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
             SyncCoinsParentRequest(coin);
-            coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
+            coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
             player.AddCatchingCoin(coin);
         }
 

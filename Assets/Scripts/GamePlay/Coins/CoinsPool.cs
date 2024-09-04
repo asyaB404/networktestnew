@@ -213,7 +213,7 @@ namespace GamePlay.Coins
         {
             var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
             pos.y -= fallHeight;
-            coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
         }

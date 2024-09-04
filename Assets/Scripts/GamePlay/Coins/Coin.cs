@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using FishNet.CodeGenerating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -18,6 +19,10 @@ namespace GamePlay.Coins
     public class Coin : NetworkBehaviour
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
+
+        public Tween FallTween;
+        public Tween catchTween;
+        public Tween shootTween;
 
         [AllowMutableSyncType] public SyncVar<CoinStatus> coinStatus =
             new(new SyncTypeSettings(WritePermission.ClientUnsynchronized, ReadPermission.ExcludeOwner));
