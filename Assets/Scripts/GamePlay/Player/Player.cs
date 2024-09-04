@@ -41,10 +41,17 @@ namespace GamePlay.Player
         // 创建一个ServerRpc，以允许所有者在服务器上更新该值。
 
         [ServerRpc(RunLocally = true)]
-        private void SetCatchingCoin(int index, Coin coin, NetworkConnection owner)
+        public void SetCatchingCoin(int index, Coin coin, NetworkConnection owner = null)
         {
             // GetComponent<NetworkObject>().SetLocalOwnership(owner);
             catchingCoins[index] = coin;
+        }
+
+        [ServerRpc(RunLocally = true)]
+        public void AddCatchingCoin(Coin coin, NetworkConnection owner = null)
+        {
+            // GetComponent<NetworkObject>().SetLocalOwnership(owner);
+            catchingCoins.Add(coin);
         }
 
         #endregion
