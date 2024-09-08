@@ -213,19 +213,15 @@ namespace GamePlay.Coins
         {
             var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
             pos.y -= fallHeight;
-            if (!coin.catchTween.IsPlaying() && !coin.shootTween.IsPlaying())
-            {
-                coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
-            }
-
-            if (coin.shootTween.IsPlaying())
-            {
-                coin.shootTween.Kill();
-                coin.shootTween = coin.transform.
-            }
-
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
+            if (coin.catchTween != null && coin.shootTween != null && coin.catchTween.IsPlaying() &&
+                coin.shootTween.IsPlaying())
+            {
+                return;
+            }
+
+            coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
         }
 
         public int FindCoinMinY(int x)

@@ -31,7 +31,7 @@ namespace GamePlay.Coins
         public void SetCoinStatus(CoinStatus newCoinStatus)
         {
             coinStatus.Value = newCoinStatus;
-            sr.rendererPriority = newCoinStatus switch
+            sr.sortingOrder = newCoinStatus switch
             {
                 CoinStatus.Idle => 0,
                 CoinStatus.Moving => 2,
