@@ -209,11 +209,21 @@ namespace GamePlay.Coins
         {
         }
 
-        private void FallCoin(Coin coin, int fallHeight)
+        private void FallCoin(Coin coin, int fallHeight = 1)
         {
             var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
             pos.y -= fallHeight;
-            coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            if (!coin.catchTween.IsPlaying() && !coin.shootTween.IsPlaying())
+            {
+                coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            }
+
+            if (coin.shootTween.IsPlaying())
+            {
+                coin.shootTween.Kill();
+                coin.shootTween = coin.transform.
+            }
+
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
         }
@@ -266,18 +276,12 @@ namespace GamePlay.Coins
 
             for (int i = 0; i < Weight; i++)
             {
-                // int curY = FindCoinMinY(i);
-                // while (curY <= 0)
-                // {
-                //     FallCoin(coinsDict[new Vector2Int(i, curY)], count);
-                //     curY++;
-                // }
                 for (int j = 0; j < count; j++)
                 {
                     targetPos = new Vector2Int(i, -j);
                     Coin coin = SpawnCoin(CoinsType.C1 + RandomInstance.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
-                    coin.transform.DOLocalMoveY(-j, 10).SetSpeedBased();
+                    coin.FallTween = coin.transform.DOLocalMoveY(-j, coinsFallSpeed).SetSpeedBased();
                 }
             }
         }

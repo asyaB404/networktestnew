@@ -50,17 +50,17 @@ namespace GamePlay.Player
         }
 
         [ServerRpc(RunLocally = true, RequireOwnership = false)]
-        private void SyncCoinsParentRequest(Coin coin)
+        private void SyncCoinsParentRequest(Coin coin, bool isPlayer = true)
         {
-            Transform parent = player.CatchingCoinsParent;
+            var parent = isPlayer ? player.CatchingCoinsParent : coin.coinsPool.Value.coinsParent.transform;
             coin.transform.SetParent(parent);
-            SyncCoinsParent(coin);
+            SyncCoinsParent(coin, isPlayer);
         }
 
         [ObserversRpc(ExcludeOwner = true, ExcludeServer = true)]
-        private void SyncCoinsParent(Coin coin)
+        private void SyncCoinsParent(Coin coin, bool isPlayer = true)
         {
-            Transform parent = player.CatchingCoinsParent;
+            var parent = isPlayer ? player.CatchingCoinsParent : coin.coinsPool.Value.coinsParent.transform;
             coin.transform.SetParent(parent);
         }
 

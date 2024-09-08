@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using FishNet;
 using FishNet.Object;
 using GamePlay.Coins;
@@ -39,17 +40,17 @@ namespace GamePlay
             coinsPools.Clear();
         }
 
-        private void InitRoom()
+        private async UniTask InitRoom()
         {
-            StartCoroutine(InitForMode((int)RoomMgr.Instance.CurRoomType));
+            await InitForMode((int)RoomMgr.Instance.CurRoomType);
         }
 
         /// <summary>
-        /// 不知道为什么fishnet在同一帧中调用ServerManager.Spawn会出BUG,所以就用了协程
+        /// 不知道为什么fishnet在同一帧中调用ServerManager.Spawn会出BUG,所以就用了异步编程
         /// </summary>
         /// <param name="roomTypeIndex"></param>
         /// <returns></returns>
-        private IEnumerator InitForMode(int roomTypeIndex)
+        private async UniTask InitForMode(int roomTypeIndex)
         {
             Transform mode = transform.GetChild(roomTypeIndex);
             for (int j = 0; j < mode.childCount; j++)
@@ -60,13 +61,18 @@ namespace GamePlay
                 InstanceFinder.ServerManager.Spawn(coinsPoolGobj, RoomMgr.Instance.PlayersCon[0]);
                 var coinsPool = coinsPoolGobj.GetComponent<CoinsPool>();
                 coinsPools.Add(coinsPool);
-                yield return null;
+        
+                // 替代 yield return null
+                await UniTask.Yield();
+
                 if (j == 0)
                 {
                     var playerObj = Instantiate(playerPrefab, coinsPool.playersParent.transform, false);
                     playerObj.GetComponent<Player.Player>().coinsPool.Value = coinsPool;
                     InstanceFinder.ServerManager.Spawn(playerObj, RoomMgr.Instance.PlayersCon[0]);
-                    yield return null;
+            
+                    // 替代 yield return null
+                    await UniTask.Yield();
                 }
             }
         }
