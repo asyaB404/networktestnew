@@ -37,17 +37,83 @@ namespace GamePlay.Player
 
         [SerializeField] private Ease ease = Ease.InQuad;
 
-        private void CatchCoin(CoinsPool coinsPool, Vector2Int key, Coin coin)
+        #region Catch
+
+        private void CatchCoin(Vector2Int key, Coin coin)
         {
-            RPCInstance.Instance.SetOwnerShip(coin, player.Owner);
             // Transform parent = player.CatchingCoinsParent;
             // coin.transform.SetParent(parent);
+            coin.shootTween?.onComplete();
+            var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
             SyncCoinsParentRequest(coin);
             coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
             player.AddCatchingCoin(coin);
         }
+
+        private void CatchCoins()
+        {
+            CoinsPool coinsPool = player.coinsPool.Value;
+            Vector2Int key = new Vector2Int(XInt, 0);
+            var minY = coinsPool.FindCoinMinY(XInt);
+            key.y = minY;
+            Coin coin = coinsPool.GetCoin(key);
+            while (key.y <= 0 && coin.coinStatus.Value == CoinStatus.Idle)
+            {
+                if (player.CatchingCoins.Count <= 0)
+                {
+                    CatchCoin(key, coin);
+                }
+                else if (player.CatchingCoins.Count > 0)
+                {
+                    if (coin.coinsType.Value == player.CatchingCoins[0].coinsType.Value)
+                    {
+                        CatchCoin(key, coin);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                key.y++;
+                coin = coinsPool.GetCoin(key);
+            }
+        }
+
+        #endregion
+
+        private void ShootCoin(Coin coin, Vector2Int key)
+        {
+            // Transform parent = player.CatchingCoinsParent;
+            // coin.transform.SetParent(parent);
+            var coinsPool = player.coinsPool.Value;
+            coinsPool.SetCoinsDict(key, coin);
+            coin.SetCoinStatus(CoinStatus.Moving);
+            SyncCoinsParentRequest(coin);
+            coin.shootTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased().OnComplete(
+                () => { coin.SetCoinStatus(CoinStatus.Idle); });
+        }
+
+        private void ShootCoins()
+        {
+            if (player.CatchingCoins.Count > 0)
+            {
+                CoinsPool coinsPool = player.coinsPool.Value;
+                Vector2Int key = new(XInt, 0);
+                var minY = coinsPool.FindCoinMinY(XInt) - 1;
+                key.y = minY;
+                foreach (var coin in player.CatchingCoins)
+                {
+                    ShootCoin(coin, key);
+                    key.y -= 1;
+                }
+                player.CatchingCoins.Clear();
+            }
+        }
+
+        #region SyncCoinsParent
 
         [ServerRpc(RunLocally = true, RequireOwnership = false)]
         private void SyncCoinsParentRequest(Coin coin, bool isPlayer = true)
@@ -64,35 +130,7 @@ namespace GamePlay.Player
             coin.transform.SetParent(parent);
         }
 
-        private void CatchCoins()
-        {
-            CoinsPool coinsPool = player.coinsPool.Value;
-            Vector2Int key = new Vector2Int(XInt, 0);
-            var minY = coinsPool.FindCoinMinY(XInt);
-            key.y = minY;
-            Coin coin = coinsPool.GetCoin(key);
-            while (key.y <= 0 && coin.coinStatus.Value == CoinStatus.Idle)
-            {
-                if (player.CatchingCoins.Count <= 0)
-                {
-                    CatchCoin(coinsPool, key, coin);
-                }
-                else if (player.CatchingCoins.Count > 0)
-                {
-                    if (coin.coinsType.Value == player.CatchingCoins[0].coinsType.Value)
-                    {
-                        CatchCoin(coinsPool, key, coin);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                key.y++;
-                coin = coinsPool.GetCoin(key);
-            }
-        }
+        #endregion
 
         private void Update()
         {
@@ -120,8 +158,6 @@ namespace GamePlay.Player
 
             #endregion
 
-            #region Catch
-
             if (_catchTimer <= 0 && Input.GetKeyDown(KeyCode.K))
             {
                 CatchCoins();
@@ -132,18 +168,16 @@ namespace GamePlay.Player
                 _catchTimer -= Time.deltaTime;
             }
 
-            #endregion
-
-            #region Shoot
 
             if (_shootTimer <= 0)
             {
+                ShootCoins();
+                _shootTimer = shootDuration;
             }
             else
             {
+                _shootTimer -= Time.deltaTime;
             }
-
-            #endregion
         }
     }
 }
