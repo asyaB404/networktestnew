@@ -43,7 +43,10 @@ namespace GamePlay.Player
         {
             // Transform parent = player.CatchingCoinsParent;
             // coin.transform.SetParent(parent);
-            coin.shootTween?.onComplete();
+            if (coin.shootTween != null && coin.shootTween.IsActive())
+            {
+                coin.shootTween.onComplete();
+            }
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
@@ -86,14 +89,13 @@ namespace GamePlay.Player
 
         private void ShootCoin(Coin coin, Vector2Int key)
         {
-            // Transform parent = player.CatchingCoinsParent;
-            // coin.transform.SetParent(parent);
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, coin);
             coin.SetCoinStatus(CoinStatus.Moving);
-            SyncCoinsParentRequest(coin);
-            coin.shootTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased().OnComplete(
-                () => { coin.SetCoinStatus(CoinStatus.Idle); });
+            SyncCoinsParentRequest(coin, false);
+            coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 8)
+                .SetSpeedBased().OnComplete(
+                    () => { coin.SetCoinStatus(CoinStatus.Idle); });
         }
 
         private void ShootCoins()
@@ -109,6 +111,7 @@ namespace GamePlay.Player
                     ShootCoin(coin, key);
                     key.y -= 1;
                 }
+
                 player.CatchingCoins.Clear();
             }
         }
@@ -169,7 +172,7 @@ namespace GamePlay.Player
             }
 
 
-            if (_shootTimer <= 0)
+            if (_shootTimer <= 0 && Input.GetKeyDown(KeyCode.I))
             {
                 ShootCoins();
                 _shootTimer = shootDuration;

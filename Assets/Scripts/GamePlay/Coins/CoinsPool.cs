@@ -209,9 +209,11 @@ namespace GamePlay.Coins
         {
         }
 
-        private void FallCoin(Coin coin, int fallHeight = 1)
+        private void FallCoin(Vector2Int pos, int fallHeight = 1)
         {
-            var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
+            // var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
+            var coin = coinsDict[pos];
+            coinsDict.Remove(pos);
             pos.y -= fallHeight;
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
@@ -267,7 +269,7 @@ namespace GamePlay.Coins
                 count = Height;
             foreach (var item in coinsDict.ToList())
             {
-                FallCoin(item.Value, count);
+                FallCoin(item.Key, count);
             }
 
             for (int i = 0; i < Weight; i++)
