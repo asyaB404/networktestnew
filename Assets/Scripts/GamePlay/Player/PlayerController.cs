@@ -46,12 +46,13 @@ namespace GamePlay.Player
             if (coin.shootTween != null && coin.shootTween.IsActive())
             {
                 coin.shootTween.onComplete();
+                coin.shootTween.Kill();
             }
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
             SyncCoinsParentRequest(coin);
-            coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 0.1f).SetSpeedBased();
+            coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8f).SetSpeedBased();
             player.AddCatchingCoin(coin);
         }
 
@@ -93,7 +94,7 @@ namespace GamePlay.Player
             coinsPool.SetCoinsDict(key, coin);
             coin.SetCoinStatus(CoinStatus.Moving);
             SyncCoinsParentRequest(coin, false);
-            coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 0.1f)
+            coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 8f)
                 .SetSpeedBased().OnComplete(
                     () => { coin.SetCoinStatus(CoinStatus.Idle); });
         }

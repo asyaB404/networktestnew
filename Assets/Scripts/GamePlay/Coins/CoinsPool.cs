@@ -222,6 +222,7 @@ namespace GamePlay.Coins
             // {
             //     return;
             // }
+            coin.transform.DOComplete();
             coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
         }
 
