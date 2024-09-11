@@ -266,11 +266,21 @@ namespace GamePlay.Coins
             Vector2Int targetPos;
             if (count >= Height)
                 count = Height;
-            var keyValuePairs = coinsDict.ToList();
-            foreach (var item in keyValuePairs)
+            for (int i = 0; i < Weight; i++)
             {
-                FallCoin(item.Key, count);
+                int minY = FindCoinMinY(i);
+                Vector2Int pos = new(i, minY);
+                while (pos.y <= 0)
+                {
+                    FallCoin(pos, count);
+                    pos.y++;
+                }
             }
+            // var keyValuePairs = coinsDict.ToList();
+            // foreach (var item in keyValuePairs)
+            // {
+            //     FallCoin(item.Key, count);
+            // }
 
             for (int i = 0; i < Weight; i++)
             {
@@ -314,14 +324,17 @@ namespace GamePlay.Coins
             {
                 if (i == 0)
                 {
-                    Gizmos.color =  Color.red;
-                }else if (i == 1)
+                    Gizmos.color = Color.red;
+                }
+                else if (i == 1)
                 {
                     Gizmos.color = Color.blue;
-                }else if (i == 2)
+                }
+                else if (i == 2)
                 {
                     Gizmos.color = Color.green;
                 }
+
                 Gizmos.DrawCube(coinsParent.transform.position + new Vector3(pair.Key.x, pair.Key.y),
                     new(0.3f, 0.3f, 0));
                 i++;
