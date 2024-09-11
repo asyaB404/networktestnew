@@ -217,13 +217,12 @@ namespace GamePlay.Coins
             pos.y -= fallHeight;
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
-            if (coin.catchTween != null && coin.shootTween != null && coin.catchTween.IsPlaying() &&
-                coin.shootTween.IsPlaying())
-            {
-                return;
-            }
-
-            coin.FallTween = coin.transform.DOLocalMoveY(pos.y, coinsFallSpeed).SetSpeedBased();
+            // if (coin.catchTween != null && coin.shootTween != null && coin.catchTween.IsPlaying() &&
+            //     coin.shootTween.IsPlaying())
+            // {
+            //     return;
+            // }
+            coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
         }
 
         public int FindCoinMinY(int x)
@@ -267,7 +266,8 @@ namespace GamePlay.Coins
             Vector2Int targetPos;
             if (count >= Height)
                 count = Height;
-            foreach (var item in coinsDict.ToList())
+            var keyValuePairs = coinsDict.ToList();
+            foreach (var item in keyValuePairs)
             {
                 FallCoin(item.Key, count);
             }
@@ -309,11 +309,23 @@ namespace GamePlay.Coins
 
         void OnDrawGizmos()
         {
+            int i = 0;
             foreach (var pair in coinsDict)
             {
-                Gizmos.color = Color.red;
+                if (i == 0)
+                {
+                    Gizmos.color =  Color.red;
+                }else if (i == 1)
+                {
+                    Gizmos.color = Color.blue;
+                }else if (i == 2)
+                {
+                    Gizmos.color = Color.green;
+                }
                 Gizmos.DrawCube(coinsParent.transform.position + new Vector3(pair.Key.x, pair.Key.y),
                     new(0.3f, 0.3f, 0));
+                i++;
+                i %= 3;
             }
         }
 

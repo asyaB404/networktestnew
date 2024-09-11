@@ -51,7 +51,7 @@ namespace GamePlay.Player
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
             SyncCoinsParentRequest(coin);
-            coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8).SetSpeedBased();
+            coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 0.1f).SetSpeedBased();
             player.AddCatchingCoin(coin);
         }
 
@@ -62,7 +62,7 @@ namespace GamePlay.Player
             var minY = coinsPool.FindCoinMinY(XInt);
             key.y = minY;
             Coin coin = coinsPool.GetCoin(key);
-            while (key.y <= 0 && coin.coinStatus.Value == CoinStatus.Idle)
+            while (key.y <= 0 && coin.coinStatus.Value != CoinStatus.Transforming)
             {
                 if (player.CatchingCoins.Count <= 0)
                 {
@@ -93,7 +93,7 @@ namespace GamePlay.Player
             coinsPool.SetCoinsDict(key, coin);
             coin.SetCoinStatus(CoinStatus.Moving);
             SyncCoinsParentRequest(coin, false);
-            coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 8)
+            coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 0.1f)
                 .SetSpeedBased().OnComplete(
                     () => { coin.SetCoinStatus(CoinStatus.Idle); });
         }
