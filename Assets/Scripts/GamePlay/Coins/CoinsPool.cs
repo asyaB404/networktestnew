@@ -218,17 +218,13 @@ namespace GamePlay.Coins
             pos.y -= fallHeight;
             coinsDict[pos] = coin;
             // coinsDict.Dirty(pos);
-            // if (coin.catchTween != null && coin.shootTween != null && coin.catchTween.IsPlaying() &&
-            //     coin.shootTween.IsPlaying())
+            // if (coin.shootTween != null && coin.shootTween.IsActive())
             // {
-            //     return;
+            //     coin.shootTween.onComplete();
             // }
-            if (coin.shootTween != null && coin.shootTween.IsActive())
-            {
-                coin.shootTween.onComplete();
-            }
-            coin.transform.DOKill();
-            coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
+            // coin.transform.DOKill();
+            // coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
+            coin.movingController.MoveTo(new Vector2(pos.x, pos.y), coinsFallSpeed, -1);
         }
 
         public int FindCoinMinY(int x)
@@ -295,7 +291,7 @@ namespace GamePlay.Coins
                     targetPos = new Vector2Int(i, -j);
                     Coin coin = SpawnCoin(CoinsType.C1 + RandomInstance.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
-                    coin.FallTween = coin.transform.DOLocalMoveY(-j, coinsFallSpeed).SetSpeedBased();
+                    // coin.FallTween = coin.transform.DOLocalMoveY(-j, coinsFallSpeed).SetSpeedBased();
                 }
             }
         }

@@ -19,10 +19,7 @@ namespace GamePlay.Coins
     public class Coin : NetworkBehaviour
     {
         public readonly SyncVar<CoinsPool> coinsPool = new();
-
-        public Tween FallTween;
-        public Tween catchTween;
-        public Tween shootTween;
+        public MovingController movingController;
 
         [AllowMutableSyncType] public SyncVar<CoinStatus> coinStatus =
             new(new SyncTypeSettings(WritePermission.ClientUnsynchronized, ReadPermission.ExcludeOwner));
