@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
@@ -222,7 +223,11 @@ namespace GamePlay.Coins
             // {
             //     return;
             // }
-            coin.transform.DOComplete();
+            if (coin.shootTween != null && coin.shootTween.IsActive())
+            {
+                coin.shootTween.onComplete();
+            }
+            coin.transform.DOKill();
             coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
         }
 
