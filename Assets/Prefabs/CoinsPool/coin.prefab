@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1592838653172183179}
   - component: {fileID: 2440053975213310178}
   - component: {fileID: 7049626412146354733}
+  - component: {fileID: 5591630904042663751}
   - component: {fileID: -7410041526369925717}
   - component: {fileID: -4263156851477337631}
   - component: {fileID: 7627951476500131179}
@@ -103,11 +104,30 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: -7410041526369925717}
   _networkObjectCache: {fileID: -7410041526369925717}
+  movingController: {fileID: 5591630904042663751}
   coinStatus:
     _value: 0
   coinsType:
     _value: 0
   sr: {fileID: 2440053975213310178}
+--- !u!114 &5591630904042663751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8728075252074978974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aa4a33ec1eb4c12b768fb3712c42bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: -128
+  speed: 0
+  endPoint: {fileID: 0}
+  endPosition: {x: 0, y: 0, z: 0}
+  isActive: 0
+  coin: {fileID: 7049626412146354733}
 --- !u!114 &-7410041526369925717
 MonoBehaviour:
   m_ObjectHideFlags: 0

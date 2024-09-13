@@ -291,6 +291,7 @@ namespace GamePlay.Coins
                     targetPos = new Vector2Int(i, -j);
                     Coin coin = SpawnCoin(CoinsType.C1 + RandomInstance.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
+                    coin.movingController.MoveTo(new Vector2(i, -j), coinsFallSpeed, -1);
                     // coin.FallTween = coin.transform.DOLocalMoveY(-j, coinsFallSpeed).SetSpeedBased();
                 }
             }

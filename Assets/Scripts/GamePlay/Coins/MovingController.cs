@@ -6,10 +6,10 @@ namespace GamePlay.Coins
 {
     public class MovingController : MonoBehaviour
     {
-        [SerializeField] private int priority;
+        [SerializeField] private int priority = -128;
         [SerializeField] private float speed;
         [SerializeField] private Transform endPoint;
-        [SerializeField] private Vector2 endPosition;
+        [SerializeField] private Vector3 endPosition;
         [SerializeField] private bool isActive;
         [SerializeField] private Coin coin;
         public event UnityAction OnComplete;
@@ -18,11 +18,13 @@ namespace GamePlay.Coins
         {
             if (!isActive) return;
             if (endPoint) endPosition = endPoint.transform.localPosition;
-            transform.localPosition =
-                Vector2.MoveTowards(transform.localPosition, endPosition, speed * Time.fixedDeltaTime);
-            var isAtEndPos = Vector2.Distance(transform.localPosition, endPosition) < 0.01f;
+            transform.Translate((endPosition - transform.localPosition).normalized * (speed * Time.fixedDeltaTime));
+            // transform.localPosition =
+            //     Vector2.MoveTowards(transform.localPosition, endPosition, speed * Time.fixedDeltaTime);
+            var isAtEndPos = Vector2.Distance(transform.localPosition, endPosition) < 0.1f;
             if (isAtEndPos)
             {
+                transform.localPosition = endPosition;
                 OnComplete?.Invoke();
                 OnComplete = null;
                 isActive = false;
@@ -30,7 +32,7 @@ namespace GamePlay.Coins
             }
         }
 
-        public bool MoveTo(Vector2 pos, float newSpeed, int newPriority = 0, UnityAction onComplete = null)
+        public bool MoveTo(Vector3 pos, float newSpeed, int newPriority = 0, UnityAction onComplete = null)
         {
             if (priority > newPriority)
             {

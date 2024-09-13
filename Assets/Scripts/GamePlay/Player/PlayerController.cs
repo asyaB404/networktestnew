@@ -1,7 +1,6 @@
 using DG.Tweening;
 using FishNet.Object;
 using GamePlay.Coins;
-using GamePlay.Room;
 using UnityEngine;
 
 namespace GamePlay.Player
@@ -107,7 +106,7 @@ namespace GamePlay.Player
             // coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 8f)
             //     .SetSpeedBased().OnComplete(
             //         () => { coin.SetCoinStatus(CoinStatus.Idle); });
-            coin.movingController.MoveTo(Vector2.zero, player.MoveSpeed * 8f, 1,
+            coin.movingController.MoveTo(Vector3.zero, player.MoveSpeed * 8f, 1,
                 () => { coin.SetCoinStatus(CoinStatus.Idle); });
         }
 
