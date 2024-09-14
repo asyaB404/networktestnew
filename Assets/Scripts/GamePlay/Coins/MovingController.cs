@@ -18,19 +18,25 @@ namespace GamePlay.Coins
         {
             if (!isActive) return;
             if (endPoint) endPosition = endPoint.transform.localPosition;
-            transform.Translate((endPosition - transform.localPosition).normalized * (speed * Time.fixedDeltaTime));
-            // transform.localPosition =
-            //     Vector2.MoveTowards(transform.localPosition, endPosition, speed * Time.fixedDeltaTime);
-            var isAtEndPos = Vector2.Distance(transform.localPosition, endPosition) < 0.1f;
+            var moveDistance = speed * Time.fixedDeltaTime;
+            transform.Translate((endPosition - transform.localPosition).normalized * moveDistance);
+            var isAtEndPos = Vector2.Distance(transform.localPosition, endPosition) < moveDistance;
             if (isAtEndPos)
             {
-                transform.localPosition = endPosition;
-                OnComplete?.Invoke();
-                OnComplete = null;
-                isActive = false;
-                endPoint = null;
+                CompleteImmediate();
             }
         }
+
+        public void CompleteImmediate()
+        {
+            transform.localPosition = endPosition;
+            OnComplete?.Invoke();
+            OnComplete = null;
+            isActive = false;
+            endPoint = null;
+            priority = -128;
+        }
+
 
         public bool MoveTo(Vector3 pos, float newSpeed, int newPriority = 0, UnityAction onComplete = null)
         {
