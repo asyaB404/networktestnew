@@ -5,11 +5,11 @@ namespace GamePlay.Coins
 {
     public struct CheckCoinsSystem
     {
-        private CoinsPool _coinsPool;
-        private CoinsType _coinsType;
         private int _minY;
         private int _minX;
-        private HashSet<Vector2Int> _hashSet;
+        private readonly CoinsPool _coinsPool;
+        private readonly CoinsType _coinsType;
+        private readonly HashSet<Vector2Int> _hashSet;
 
         public CheckCoinsSystem(CoinsPool coinsPool, CoinsType coinsType)
         {
@@ -24,6 +24,13 @@ namespace GamePlay.Coins
         {
             CheckCoinsSystem checkCoinsSystem = new CheckCoinsSystem(coinsPool, coinsType);
             checkCoinsSystem.CheckForCoin(pos);
+            if (checkCoinsSystem._hashSet.Count >= 2)
+            {
+            }
+            else if (checkCoinsSystem._hashSet.Count >= 5)
+            {
+            }
+
             checkCoinsSystem._hashSet.Clear();
         }
 

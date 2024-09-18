@@ -1,4 +1,5 @@
 using System;
+using FishNet;
 using FishNet.CodeGenerating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -41,7 +42,6 @@ namespace GamePlay.Coins
         public SyncVar<CoinsType> coinsType = new();
 
         public SpriteRenderer sr;
-
         
         public override void OnStartClient()
         {
@@ -60,6 +60,12 @@ namespace GamePlay.Coins
             if (!IsClientOnlyStarted) return;
             transform.SetParent(coinsPool.Value.coinsParent.transform, false);
             sr.sprite = CoinsFactory.Instance.coinSprites[(int)coinsType.Value];
+        }
+
+        [ServerRpc]
+        public void DeSpawnRequest()
+        {
+            Despawn();
         }
     }
 }
