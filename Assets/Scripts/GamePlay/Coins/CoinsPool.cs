@@ -71,7 +71,7 @@ namespace GamePlay.Coins
             coinsDict[key] = coin;
         }
 
-        // public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
+        public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
 
 
         public Coin GetCoin(Vector2Int pos)

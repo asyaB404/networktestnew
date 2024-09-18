@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace GamePlay.Coins
@@ -18,6 +19,24 @@ namespace GamePlay.Coins
         public GameObject coinPrefab;
         public Sprite[] coinSprites;
         public static CoinsFactory Instance { get; private set; }
+
+        public static bool IsTypeNeedTwo(CoinsType coinsType)
+        {
+            return coinsType switch
+            {
+                CoinsType.C5 or CoinsType.C50 or CoinsType.C500 => true,
+                _ => false
+            };
+        }
+        
+        public static bool IsTypeNeedFive(CoinsType coinsType)
+        {
+            return coinsType switch
+            {
+                CoinsType.C1 or CoinsType.C10 or CoinsType.C100 => true,
+                _ => false
+            };
+        }
 
         private void Awake()
         {

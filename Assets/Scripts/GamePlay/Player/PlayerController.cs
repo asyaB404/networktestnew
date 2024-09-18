@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using DG.Tweening;
 using FishNet.Object;
 using GamePlay.Coins;
@@ -80,18 +82,23 @@ namespace GamePlay.Player
 
         #endregion
 
-        private void ShootCoin(Coin coin, Vector2Int key)
+        private void ShootCoin(Coin coin, Vector2Int key, Action onComplete = null)
         {
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, coin);
             coin.SetCoinStatus(CoinStatus.Moving);
             SyncCoinsParentRequest(coin, false);
             coin.movingController.MoveTo(new Vector3(key.x, key.y), player.MoveSpeed * 6f, 1,
-                () => { coin.SetCoinStatus(CoinStatus.Idle); });
+                () =>
+                {
+                    coin.SetCoinStatus(CoinStatus.Idle);
+                    onComplete?.Invoke();
+                });
         }
 
         private void ShootCoins()
         {
+            bool first = true;
             if (player.CatchingCoins.Count > 0)
             {
                 CoinsPool coinsPool = player.coinsPool.Value;
@@ -100,8 +107,22 @@ namespace GamePlay.Player
                 key.y = minY;
                 foreach (var coin in player.CatchingCoins)
                 {
-                    ShootCoin(coin, key);
+                    if (first)
+                    {
+                        ShootCoin(coin, key,
+                            () =>
+                            {
+                                CheckCoinsSystem.CheckForCoins(coinsPool, player.CatchingCoins[0].coinsType.Value,
+                                    coinsPool.CoinsDict.FirstOrDefault(x => x.Value == coin).Key);
+                            });
+                    }
+                    else
+                    {
+                        ShootCoin(coin, key);
+                    }
+
                     key.y -= 1;
+                    first = false;
                 }
 
                 player.CatchingCoins.Clear();

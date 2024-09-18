@@ -12,7 +12,7 @@ namespace GamePlay.Coins
         [SerializeField] private Vector3 endPosition;
         [SerializeField] private bool isActive;
         [SerializeField] private Coin coin;
-        public event UnityAction OnComplete;
+        public event Action OnComplete;
 
         private void FixedUpdate()
         {
@@ -38,7 +38,7 @@ namespace GamePlay.Coins
         }
 
 
-        public bool MoveTo(Vector3 pos, float newSpeed, int newPriority = 0, UnityAction onComplete = null)
+        public bool MoveTo(Vector3 pos, float newSpeed, int newPriority = 0, Action onComplete = null)
         {
             if (priority > newPriority)
             {
@@ -53,7 +53,7 @@ namespace GamePlay.Coins
             return true;
         }
 
-        public bool MoveTo(Transform newEndPoint, float newSpeed, int newPriority = 0, UnityAction onComplete = null)
+        public bool MoveTo(Transform newEndPoint, float newSpeed, int newPriority = 0, Action onComplete = null)
         {
             if (priority > newPriority)
             {
