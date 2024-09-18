@@ -1,5 +1,4 @@
 using System;
-using DG.Tweening;
 using FishNet.CodeGenerating;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
@@ -60,11 +59,6 @@ namespace GamePlay.Coins
             if (!IsClientOnlyStarted) return;
             transform.SetParent(coinsPool.Value.coinsParent.transform, false);
             sr.sprite = CoinsFactory.Instance.coinSprites[(int)coinsType.Value];
-        }
-
-        public override void OnStopClient()
-        {
-            base.OnStopClient();
         }
     }
 }

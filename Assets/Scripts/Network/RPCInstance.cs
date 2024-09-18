@@ -180,7 +180,7 @@ namespace GamePlay.Room
             Debug.Log(ID + " _ " + CurStatus);
         }
 
-        [SerializeField, ContextMenuItem("test2", nameof(SetStatus))]
+        [SerializeField, ContextMenuItem("SetStatus", nameof(SetStatus))]
         private PlayerStatus status;
 
         private void SetStatus()

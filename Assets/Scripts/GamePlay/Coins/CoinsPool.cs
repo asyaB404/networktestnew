@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using FishNet;
 using FishNet.CodeGenerating;
@@ -72,7 +71,7 @@ namespace GamePlay.Coins
             coinsDict[key] = coin;
         }
 
-        public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
+        // public IReadOnlyDictionary<Vector2Int, Coin> CoinsDict => coinsDict;
 
 
         public Coin GetCoin(Vector2Int pos)
@@ -89,7 +88,8 @@ namespace GamePlay.Coins
 
         private void Update()
         {
-            if (IsServerStarted && RPCInstance.CurStatus != PlayerStatus.Gaming)
+            if (IsServerStarted && RPCInstance.CurStatus == PlayerStatus.Gaming &&
+                playersParent.transform.childCount > 0)
             {
                 if (_spawnTimer > 0)
                 {
@@ -210,7 +210,6 @@ namespace GamePlay.Coins
 
         private void FallCoin(Vector2Int pos, int fallHeight = 1)
         {
-            // var pos = ((Vector2)coin.transform.localPosition).ToVectorInt();
             var coin = coinsDict[pos];
             coinsDict.Remove(pos);
             pos.y -= fallHeight;
@@ -267,7 +266,7 @@ namespace GamePlay.Coins
                     pos.y++;
                 }
             }
-            
+
 
             for (int i = 0; i < Weight; i++)
             {
