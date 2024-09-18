@@ -1,7 +1,5 @@
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
 using FishNet;
 using FishNet.CodeGenerating;
 using FishNet.Connection;
@@ -217,13 +215,6 @@ namespace GamePlay.Coins
             coinsDict.Remove(pos);
             pos.y -= fallHeight;
             coinsDict[pos] = coin;
-            // coinsDict.Dirty(pos);
-            // if (coin.shootTween != null && coin.shootTween.IsActive())
-            // {
-            //     coin.shootTween.onComplete();
-            // }
-            // coin.transform.DOKill();
-            // coin.FallTween = coin.transform.DOLocalMove(new Vector3(pos.x, pos.y), coinsFallSpeed).SetSpeedBased();
             coin.movingController.MoveTo(new Vector2(pos.x, pos.y), coinsFallSpeed, -1);
         }
 
@@ -257,7 +248,6 @@ namespace GamePlay.Coins
             newCoin.coinsPool.Value = this;
             Vector2Int key = pos.ToVectorInt();
             coinsDict[key] = newCoin;
-            // coinsDict.Dirty(key);
             InstanceFinder.ServerManager.Spawn(newCoin.gameObject, owner);
             return newCoin;
         }
@@ -265,7 +255,6 @@ namespace GamePlay.Coins
         [Server]
         public void SpawnRowCoins(int count = 1)
         {
-            Vector2Int targetPos;
             if (count >= Height)
                 count = Height;
             for (int i = 0; i < Weight; i++)
@@ -278,21 +267,16 @@ namespace GamePlay.Coins
                     pos.y++;
                 }
             }
-            // var keyValuePairs = coinsDict.ToList();
-            // foreach (var item in keyValuePairs)
-            // {
-            //     FallCoin(item.Key, count);
-            // }
+            
 
             for (int i = 0; i < Weight; i++)
             {
                 for (int j = 0; j < count; j++)
                 {
-                    targetPos = new Vector2Int(i, -j);
+                    var targetPos = new Vector2Int(i, -j);
                     Coin coin = SpawnCoin(CoinsType.C1 + RandomInstance.Next(6), targetPos);
                     coin.transform.localPosition = new Vector3(i, 1);
                     coin.movingController.MoveTo(new Vector2(i, -j), coinsFallSpeed, -1);
-                    // coin.FallTween = coin.transform.DOLocalMoveY(-j, coinsFallSpeed).SetSpeedBased();
                 }
             }
         }

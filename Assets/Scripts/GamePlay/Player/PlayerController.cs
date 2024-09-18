@@ -40,20 +40,10 @@ namespace GamePlay.Player
 
         private void CatchCoin(Vector2Int key, Coin coin)
         {
-            // Transform parent = player.CatchingCoinsParent;
-            // coin.transform.SetParent(parent);
-            // if (coin.shootTween != null && coin.shootTween.IsActive())
-            // {
-            //     coin.shootTween.onComplete();
-            //     coin.transform.DOKill();
-            // }
-
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, null);
             coin.SetCoinStatus(CoinStatus.Catching);
-            // SyncCoinsParentRequest(coin);
-            coin.transform.SetParent(player.CatchingCoinsParent);
-            // coin.catchTween = coin.transform.DOLocalMove(Vector3.zero, player.MoveSpeed * 8f).SetSpeedBased();
+            SyncCoinsParentRequest(coin);
             coin.movingController.MoveTo(Vector2.zero, player.MoveSpeed * 6f, 1);
             player.AddCatchingCoin(coin);
         }
@@ -92,20 +82,10 @@ namespace GamePlay.Player
 
         private void ShootCoin(Coin coin, Vector2Int key)
         {
-            // if (coin.shootTween != null && coin.shootTween.IsActive())
-            // {
-            //     coin.shootTween.onComplete();
-            //     coin.transform.DOKill();
-            // }
-
             var coinsPool = player.coinsPool.Value;
             coinsPool.SetCoinsDict(key, coin);
             coin.SetCoinStatus(CoinStatus.Moving);
-            // SyncCoinsParentRequest(coin, false);
-            coin.transform.SetParent(coin.coinsPool.Value.coinsParent.transform);
-            // coin.shootTween = coin.transform.DOLocalMove(new Vector3(key.x, key.y), player.MoveSpeed * 8f)
-            //     .SetSpeedBased().OnComplete(
-            //         () => { coin.SetCoinStatus(CoinStatus.Idle); });
+            SyncCoinsParentRequest(coin, false);
             coin.movingController.MoveTo(new Vector3(key.x, key.y), player.MoveSpeed * 6f, 1,
                 () => { coin.SetCoinStatus(CoinStatus.Idle); });
         }

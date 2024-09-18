@@ -43,14 +43,12 @@ namespace GamePlay.Player
         [ServerRpc(RunLocally = true)]
         public void SetCatchingCoin(int index, Coin coin, NetworkConnection owner = null)
         {
-            // GetComponent<NetworkObject>().SetLocalOwnership(owner);
             catchingCoins[index] = coin;
         }
 
         [ServerRpc(RunLocally = true)]
         public void AddCatchingCoin(Coin coin, NetworkConnection owner = null)
         {
-            // GetComponent<NetworkObject>().SetLocalOwnership(owner);
             catchingCoins.Add(coin);
         }
 
