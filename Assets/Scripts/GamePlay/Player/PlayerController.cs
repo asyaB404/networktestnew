@@ -109,10 +109,11 @@ namespace GamePlay.Player
                 {
                     if (first)
                     {
+                        CoinsType coinsType = player.CatchingCoins[0].coinsType.Value;
                         ShootCoin(coin, key,
                             () =>
                             {
-                                CheckCoinsSystem.CheckForCoins(coinsPool, player.CatchingCoins[0].coinsType.Value,
+                                CheckCoinsSystem.CheckForCoins(coinsPool, coinsType,
                                     coinsPool.CoinsDict.FirstOrDefault(x => x.Value == coin).Key);
                             });
                     }
