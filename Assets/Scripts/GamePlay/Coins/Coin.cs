@@ -42,6 +42,7 @@ namespace GamePlay.Coins
 
         public SpriteRenderer sr;
 
+        
         public override void OnStartClient()
         {
             base.OnStartClient();

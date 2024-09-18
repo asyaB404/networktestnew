@@ -237,6 +237,13 @@ namespace GamePlay.Coins
             return 1;
         }
 
+        [ServerRpc]
+        public void SpawnCoinRequest(CoinsType coinsType, Vector2 pos,
+            NetworkConnection owner = null)
+        {
+            SpawnCoin(coinsType, pos, owner);
+        }
+
         [Server]
         public Coin SpawnCoin(CoinsType coinsType, Vector2 pos,
             NetworkConnection owner = null)
